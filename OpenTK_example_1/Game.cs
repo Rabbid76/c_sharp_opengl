@@ -23,22 +23,15 @@ namespace OpenTK_example_1
 {
     public class Game
         : GameWindow
-        , IDisposable
     {
         private bool _disposedValue = false;
-
-
 
         private GL_Version _version = new GL_Version();
         private GL_Extensions _extensions = new GL_Extensions();
         private GL_DebugCallback _debug_callback = new GL_DebugCallback();
 
+        private GL_VertexArrayObject<float, uint> _test_vao;
         private GL_Program _test_prog;
-
-        private int _test_vao;
-        private int _test_vbo;
-        private int _test_ibo;
-
 
         public Game(int width, int height, string title)
             : base(width, height, GraphicsMode.Default, title,
@@ -49,24 +42,15 @@ namespace OpenTK_example_1
                 GraphicsContextFlags.Default | GraphicsContextFlags.Debug)
         { }
 
-        public void Dispose()
-        {
-            this.Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
+        protected override void Dispose(bool disposing) 
         {
             if (disposing && !this._disposedValue)
             {
+                _test_vao.Dispose();
                 _test_prog.Dispose();
-
-                int[] buffers = { this._test_vbo, this._test_ibo };
-                GL.DeleteBuffers(2, buffers);
-                GL.DeleteVertexArray(_test_vao);
-
                 this._disposedValue = true;
             }
+            base.Dispose(disposing);
         }
 
         //! On load window (once)
@@ -86,30 +70,22 @@ namespace OpenTK_example_1
             float[] vquad = 
             {
             // x      y     z      r     g     b     a
-            -0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f, 1.0f, 
-                0.5f, -0.5f, 0.0f,  1.0f, 1.0f, 0.0f, 1.0f,
-                0.5f,  0.5f, 0.0f,  0.0f, 1.0f, 0.0f, 1.0f,
-            -0.5f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f, 1.0f
+              -0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f, 1.0f, 
+               0.5f, -0.5f, 0.0f,  1.0f, 1.0f, 0.0f, 1.0f,
+               0.5f,  0.5f, 0.0f,  0.0f, 1.0f, 0.0f, 1.0f,
+              -0.5f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f, 1.0f
             };
 
             uint [] iquad = { 0, 1, 2, 0, 2, 3 };
 
-            this._test_vao = GL.GenVertexArray();
-            this._test_vbo = GL.GenBuffer();
-            this._test_ibo = GL.GenBuffer();
+            GL_TVertexFormat[] format = {
+                new GL_TVertexFormat(0, 0, 3, 0, false),
+                new GL_TVertexFormat(0, 1, 4, 3, false),
+            };
 
-            GL.BindBuffer(BufferTarget.ArrayBuffer, this._test_vbo);
-            GL.BufferData(BufferTarget.ArrayBuffer, vquad.Length * sizeof(float), vquad, BufferUsageHint.StaticDraw);
-
-            GL.BindVertexArray(this._test_vao);
-
-            GL.VertexAttribPointer(0, 3, VertexAttribPointerType.Float, false, 7 * sizeof(float), 0);
-            GL.EnableVertexAttribArray(0);
-            GL.VertexAttribPointer(1, 4, VertexAttribPointerType.Float, false, 7 * sizeof(float), 3 * sizeof(float));
-            GL.EnableVertexAttribArray(1);
-
-            GL.BindBuffer(BufferTarget.ElementArrayBuffer, this._test_ibo);
-            GL.BufferData(BufferTarget.ElementArrayBuffer, iquad.Length * sizeof(uint), iquad, BufferUsageHint.StaticDraw);
+            _test_vao = new GL_VertexArrayObject<float, uint>();
+            _test_vao.AppendVertexBuffer(0, 7, vquad);
+            _test_vao.Create(format, iquad);
 
             // Create shader program
 
@@ -165,8 +141,8 @@ namespace OpenTK_example_1
 
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
-            GL.DrawElements(BeginMode.Triangles, 6, DrawElementsType.UnsignedInt, 0);
-
+            _test_vao.Draw();
+            
             Context.SwapBuffers();
             base.OnUpdateFrame(e);
         }

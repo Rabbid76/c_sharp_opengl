@@ -3,18 +3,20 @@ using OpenTK.Graphics.OpenGL4; // GL, ShaderType
 
 
 // TODO: map shader type sources / spire-v
+// create spire-v asynchronously
 
 namespace OpenTK_library
 {
     public class GL_Program
         : IDisposable
     {
+        private bool _disposed = false;
+
         public int program
         {
             get { return this._program; }
         }
-        private int _program;
-        private bool _disposedValue = false;
+        private int _program = 0;
 
         private string _vert_source; //!< vertex shader source (TODO abstract, map)
         private string _frag_source; //!< vertex shader source (TODO abstract, map)
@@ -32,10 +34,11 @@ namespace OpenTK_library
 
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing && !_disposedValue)
+            if (disposing && !_disposed)
             {
                 GL.DeleteProgram(this._program);
-                _disposedValue = true;
+                this._program = 0;
+                _disposed = true;
             }
         }
 

@@ -42,6 +42,7 @@
     <Compile Include="GL_DebugCallback.cs" />
     <Compile Include="GL_Extensions.cs" />
     <Compile Include="GL_Program.cs" />
+    <Compile Include="GL_VertexArrayObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GL_Version.cs" />
   </ItemGroup>
