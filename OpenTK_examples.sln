@@ -13,6 +13,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		todo.md = todo.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_orbit", "OpenTK_orbit\OpenTK_orbit.csproj", "{1F59C185-8C09-40EC-A4A6-13014E779BDE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E4FC68E0-0E54-4E28-BB40-A5B4F39DE56A} = {E4FC68E0-0E54-4E28-BB40-A5B4F39DE56A}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +32,10 @@ Global
 		{9F5DCE8D-445B-4E09-AB8E-DE57148FBB3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F5DCE8D-445B-4E09-AB8E-DE57148FBB3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F5DCE8D-445B-4E09-AB8E-DE57148FBB3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F59C185-8C09-40EC-A4A6-13014E779BDE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F59C185-8C09-40EC-A4A6-13014E779BDE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F59C185-8C09-40EC-A4A6-13014E779BDE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F59C185-8C09-40EC-A4A6-13014E779BDE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

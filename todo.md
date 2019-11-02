@@ -1,7 +1,5 @@
 # TODO
 
-- `GL_ShaderStroageBuffer`
-
 # Ideas
 
 ## Overlay menue

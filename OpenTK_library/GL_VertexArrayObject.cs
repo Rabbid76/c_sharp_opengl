@@ -27,9 +27,9 @@ namespace OpenTK_library
         }
     }
 
-    public class GL_VertexArrayObject<T_DATA, T_INDEX> 
+    public class GL_VertexArrayObject<T_ATTRIBUTE, T_INDEX> 
         : IDisposable
-        where T_DATA : struct where T_INDEX : struct
+        where T_ATTRIBUTE : struct where T_INDEX : struct
     {
         // TODO
         // - T_DATA has to be `float` or `double`
@@ -47,6 +47,15 @@ namespace OpenTK_library
 
         public GL_VertexArrayObject()
         { }
+
+        ~GL_VertexArrayObject()
+        {
+            List<int> vbos = new List<int>(this._vbos.Values);
+
+            GL.DeleteBuffers(vbos.Count, vbos.ToArray());
+            GL.DeleteBuffer(this._ibo);
+            GL.DeleteVertexArray(this._vao);
+        }
 
         protected virtual void Dispose(bool disposing)
         {
@@ -100,9 +109,9 @@ namespace OpenTK_library
         }
 
         //! Create new OpenGL vertex buffer object
-        public void AppendVertexBuffer(int id, int elems_stride, T_DATA[] attributes)
+        public void AppendVertexBuffer(int id, int elems_stride, T_ATTRIBUTE[] attributes)
         {
-            int data_size = attributes.Length * Marshal.SizeOf(default(T_DATA));
+            int data_size = attributes.Length * Marshal.SizeOf(default(T_ATTRIBUTE));
             IntPtr data_ptr = Marshal.UnsafeAddrOfPinnedArrayElement(attributes, 0);
 
             int vbo = 0;
@@ -128,7 +137,7 @@ namespace OpenTK_library
             this._index_size = Marshal.SizeOf(default(T_INDEX));
             this._no_of_indices = indices.Length;
             IntPtr index_ptr = Marshal.UnsafeAddrOfPinnedArrayElement(indices, 0);
-            int elem_size = Marshal.SizeOf(default(T_DATA));
+            int elem_size = Marshal.SizeOf(default(T_ATTRIBUTE));
 
             if (this._vertex_specification_4)
             {
