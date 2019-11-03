@@ -1,4 +1,4 @@
-﻿using OpenTK;
+﻿using OpenTK;                  // Matrix4
 using OpenTK.Input;            // KeyboardState, Keyboard, Key
 using OpenTK.Graphics;         // GameWindow, GraphicsMode, Context
 using OpenTK.Graphics.OpenGL4; // GL
@@ -87,6 +87,11 @@ namespace OpenTK_orbit
         private GL_VertexArrayObject<float, uint> _test_vao;
         private GL_Program _test_prog;
         private GL_StorageBuffer<TMVP> _mvp_ssbo;
+
+        private Matrix4 _view = Matrix4.Identity;
+        private Matrix4 _projection = Matrix4.Identity;
+        private NavigationController _navigate;
+        private float _wheel_pos = 0.0f;
 
         public Orbit(int width, int height, string title)
             : base(width, height, GraphicsMode.Default, title,
@@ -219,13 +224,30 @@ namespace OpenTK_orbit
             GL.FrontFace(FrontFaceDirection.Ccw);
             GL.CullFace(CullFaceMode.Back);
 
+            // matrices and controller
+
+            this._view = Matrix4.LookAt(-2.0f, -4.0f, 2.0f, 0, 0, 0, 0, 0, 1);
+
+            _navigate = new NavigationController(
+                () => { return new float[] { 0, 0, (float)this.Width, (float)this.Height }; },
+                () => { return this._view; },
+                () => { return this._projection; },
+                this.GetDepth,
+                (cursor_pos) => { return new Vector3(0, 0, 0);  }
+            );
+
             base.OnLoad(e);
         }
 
         //! On resize
         protected override void OnResize(EventArgs e)
         {
+            float angle = 90.0f * (float)Math.PI / 180.0f;
+            float aspect = (float)this.Width / (float)this.Height;
+            this._projection = Matrix4.CreatePerspectiveFieldOfView(angle, aspect, 0.1f, 100.0f);
+
             GL.Viewport(0, 0, this.Width, this.Height);
+
             base.OnResize(e);
         }
 
@@ -243,19 +265,71 @@ namespace OpenTK_orbit
 
             this._test_prog.Use();
 
-            float angle = 90.0f * (float)Math.PI / 180.0f;
-            float aspect = (float)this.Width / (float)this.Height;
-            Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(angle, aspect, 0.1f, 100.0f);
-            Matrix4 view = Matrix4.LookAt(-2.0f, -4.0f, 2.0f, 0, 0, 0, 0, 0, 1);
-
-            TMVP mvp = new TMVP(Matrix4.Identity, view, proj);
-            //this._mvp_ssbo.Update(16*sizeof(float), 16*sizeof(float), mvp.view);
+            TMVP mvp = new TMVP(Matrix4.Identity, this._view, this._projection);
             this._mvp_ssbo.Update(ref mvp);
 
             _test_vao.Draw(36);
 
             Context.SwapBuffers();
             base.OnUpdateFrame(e);
+        }
+
+        // get depth on fragment
+        private float GetDepth(Vector2 cursor_pos)
+        {
+            // TODO $$$
+            return 0.95f;
+        }
+
+        protected override void OnMouseDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseDown(e);
+
+            Vector2 wnd_pos = new Vector2((float)e.Mouse.X, (float)(this.Height - e.Mouse.Y));
+            if (e.Mouse.RightButton == ButtonState.Pressed)
+            {
+                this._navigate.StartPan(wnd_pos);
+            }
+            if (e.Mouse.LeftButton == ButtonState.Pressed)
+            {
+                this._navigate.StartOrbit(wnd_pos, NavigationMode.ORBIT);
+                //this._navigate.StartOrbit(wnd_pos, NavigationMode.ROTATE);
+            }
+        }
+
+        protected override void OnMouseUp(MouseButtonEventArgs e)
+        {
+            base.OnMouseUp(e);
+
+            Vector2 wnd_pos = new Vector2((float)e.Mouse.X, (float)(this.Height - e.Mouse.Y));
+            if (e.Mouse.RightButton == ButtonState.Released)
+            {
+                this._navigate.EndPan(wnd_pos);
+            }
+            if (e.Mouse.LeftButton == ButtonState.Released)
+            {
+                this._navigate.EndOrbit(wnd_pos);
+            }
+        }
+
+        protected override void OnMouseMove(MouseMoveEventArgs e)
+        {
+            base.OnMouseMove(e);
+
+            Vector2 wnd_pos = new Vector2((float)e.Mouse.X, (float)(this.Height - e.Mouse.Y));
+            (Matrix4 view_mat, bool update) = this._navigate.MoveCursorTo(wnd_pos);
+            this._view = view_mat;
+        }
+
+        protected override void OnMouseWheel(MouseWheelEventArgs e)
+        {
+            base.OnMouseWheel(e);
+
+            Vector2 wnd_pos = new Vector2((float)e.Mouse.X, (float)(this.Height - e.Mouse.Y));
+            float direction = e.Mouse.WheelPrecise - this._wheel_pos;
+            this._wheel_pos = e.Mouse.WheelPrecise;
+            (Matrix4 view_mat, bool update) = this._navigate.MoveOnLineOfSight(wnd_pos, direction);
+            this._view = view_mat;
         }
     }
 }
