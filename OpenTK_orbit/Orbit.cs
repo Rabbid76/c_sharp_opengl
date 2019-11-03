@@ -21,32 +21,60 @@ namespace OpenTK_orbit
 
             public TMVP(Matrix4 model, Matrix4 view, Matrix4 projetion)
             {
-                SetModel(model);
-                SetView(view);
-                SetProjection(projetion);
+                this.model = model;
+                this.view = view;
+                this.projetion = projetion;
             }
 
-            //public IntPtr view
-            //{
-            //    get { return new IntPtr(this._view); }
-            //} 
-
-            public void SetModel(Matrix4 m)
+            public Matrix4 model
             {
-                for (int i = 0; i < 16; ++i)
-                    this._model[i] = m[i / 4, i % 4];
+                get
+                {
+                    return new Matrix4(_model[0], _model[1], _model[2], _model[3],
+                                       _model[4], _model[5], _model[6], _model[7],
+                                       _model[8], _model[9], _model[10], _model[11],
+                                       _model[12], _model[13], _model[14], _model[15]);
+                }
+
+                set
+                {
+                    for (int i = 0; i < 16; ++i)
+                        this._model[i] = value[i / 4, i % 4];
+                }
             }
 
-            public void SetView(Matrix4 m)
+            public Matrix4 view
             {
-                for (int i = 0; i < 16; ++i)
-                    this._view[i] = m[i / 4, i % 4];
+                get
+                { 
+                    return new Matrix4(_view[0], _view[1], _view[2], _view[3],
+                                       _view[4], _view[5], _view[6], _view[7],
+                                       _view[8], _view[9], _view[10], _view[11],
+                                       _view[12], _view[13], _view[14], _view[15]);
+                }
+
+                set
+                {
+                    for (int i = 0; i < 16; ++i)
+                        this._view[i] = value[i / 4, i % 4];
+                }
             }
 
-            public void SetProjection(Matrix4 m)
+            public Matrix4 projetion
             {
-                for (int i = 0; i < 16; ++i)
-                    this._projection[i] = m[i / 4, i % 4];
+                get
+                {
+                    return new Matrix4(_projection[0], _projection[1], _projection[2], _projection[3],
+                                       _projection[4], _projection[5], _projection[6], _projection[7],
+                                       _projection[8], _projection[9], _projection[10], _projection[11],
+                                       _projection[12], _projection[13], _projection[14], _projection[15]);
+                }
+
+                set
+                {
+                    for (int i = 0; i < 16; ++i)
+                        this._projection[i] = value[i / 4, i % 4];
+                }
             }
         }
 
@@ -95,35 +123,48 @@ namespace OpenTK_orbit
 
             // create Vertex Array Object, Array Buffer Object and Element Array Buffer Object
 
-            float[] vquad =
+            float[] v = { -1, -1, 1, 1, -1, 1, 1, 1, 1, -1, 1, 1, -1, -1, -1, 1, -1, -1, 1, 1, -1, -1, 1, -1 };
+            float[] c = { 1.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f };
+            float[] n = { 0, 0, 1, 1, 0, 0, 0, 0, -1, -1, 0, 0, 0, 1, 0, 0, -1, 0 };
+            int[] ec = {0, 1, 2, 3, 1, 5, 6, 2, 5, 4, 7, 6, 4, 0, 3, 7, 3, 2, 6, 7, 1, 0, 4, 5};
+            int[] es = { 0, 1, 2, 0, 2, 3 };
+            List<float> attr_array = new List<float>();
+            for (int si = 0; si < 6; ++si)
             {
-            // x      y      z      r     g     b     a
-              -0.5f,  0.0f, -0.5f,  1.0f, 0.0f, 0.0f, 1.0f,
-               0.5f,  0.0f, -0.5f,  1.0f, 1.0f, 0.0f, 1.0f,
-               0.5f,  0.0f,  0.5f,  0.0f, 1.0f, 0.0f, 1.0f,
-              -0.5f,  0.0f,  0.5f,  0.0f, 0.0f, 1.0f, 1.0f
-            };
-
-            uint[] iquad = { 0, 1, 2, 0, 2, 3 };
+                for(int vi = 0; vi <6; ++ vi)
+                {
+                    int ci = es[vi];
+                    int i = si * 4 + ci;
+                    attr_array.AddRange(new float[] { v[ec[i] * 3], v[ec[i] * 3 + 1], v[ec[i] * 3 + 2] });
+                    attr_array.AddRange(new float[] { n[si * 3], n[si * 3 + 1], n[si * 3 + 2] });
+                    attr_array.AddRange(new float[] { c[si * 3], c[si * 3 + 1], c[si * 3 + 2], 1 });
+                }
+            }
+            
+            uint[] icube = {};
 
             GL_TVertexFormat[] format = {
                 new GL_TVertexFormat(0, 0, 3, 0, false),
-                new GL_TVertexFormat(0, 1, 4, 3, false),
+                new GL_TVertexFormat(0, 1, 3, 3, false),
+                new GL_TVertexFormat(0, 2, 4, 6, false),
             };
 
             _test_vao = new GL_VertexArrayObject<float, uint>();
-            _test_vao.AppendVertexBuffer(0, 7, vquad);
-            _test_vao.Create(format, iquad);
+            _test_vao.AppendVertexBuffer(0, 10, attr_array.ToArray());
+            _test_vao.Create(format, icube);
             _test_vao.Bind();
 
             // Create shader program
 
             string vert_shader = @"#version 460 core
             layout (location = 0) in vec4 a_pos;
-            layout (location = 1) in vec4 a_color;
+            layout (location = 1) in vec3 a_nv;
+            layout (location = 2) in vec4 a_color;
       
             layout (location = 0) out TVertexData
             {
+                vec3 pos;
+                vec3 nv;
                 vec4 col;
             } outData;
 
@@ -136,8 +177,14 @@ namespace OpenTK_orbit
 
             void main()
             {
-                outData.col = a_color;
-                gl_Position = mvp.proj * mvp.view * mvp.model * a_pos; 
+                mat4 mv_mat     = mvp.view * mvp.model;
+                mat3 normal_mat = inverse(transpose(mat3(mv_mat))); 
+
+                outData.nv   = normalize(normal_mat * a_nv);
+                outData.col  = a_color;
+                vec4 viewPos = mv_mat * a_pos;
+                outData.pos  = viewPos.xyz / viewPos.w;
+                gl_Position  = mvp.proj * viewPos;
             }";
 
             string frag_shader = @"#version 460 core
@@ -145,6 +192,8 @@ namespace OpenTK_orbit
             
             layout (location = 0) in TVertexData
             {
+                vec3 pos;
+                vec3 nv;
                 vec4 col;
             } inData;
       
@@ -165,6 +214,10 @@ namespace OpenTK_orbit
             // states
 
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            GL.Enable(EnableCap.DepthTest);
+            GL.Enable(EnableCap.CullFace);
+            GL.FrontFace(FrontFaceDirection.Ccw);
+            GL.CullFace(CullFaceMode.Back);
 
             base.OnLoad(e);
         }
@@ -185,21 +238,21 @@ namespace OpenTK_orbit
                 Exit();
             }
 
-            
-            GL.Clear(ClearBufferMask.ColorBufferBit);
+    
+            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             this._test_prog.Use();
 
             float angle = 90.0f * (float)Math.PI / 180.0f;
             float aspect = (float)this.Width / (float)this.Height;
             Matrix4 proj = Matrix4.CreatePerspectiveFieldOfView(angle, aspect, 0.1f, 100.0f);
-            Matrix4 view = Matrix4.LookAt(-1.0f, -2.0f, 1.0f, 0, 0, 0, 0, 0, 1);
+            Matrix4 view = Matrix4.LookAt(-2.0f, -4.0f, 2.0f, 0, 0, 0, 0, 0, 1);
 
             TMVP mvp = new TMVP(Matrix4.Identity, view, proj);
             //this._mvp_ssbo.Update(16*sizeof(float), 16*sizeof(float), mvp.view);
             this._mvp_ssbo.Update(ref mvp);
 
-            _test_vao.Draw();
+            _test_vao.Draw(36);
 
             Context.SwapBuffers();
             base.OnUpdateFrame(e);
