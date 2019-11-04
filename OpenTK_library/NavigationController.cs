@@ -94,11 +94,11 @@ namespace OpenTK_library
             (Matrix4 mat_view, Matrix4 inv_view) = view;
             (Matrix4 mat_wnd, Matrix4 inv_wnd) = window;
 
-            float[] vp_rect = this.viewport_rect;
-            Vector4 pos_h = new Vector4(wnd_pos.X * 2 / (vp_rect[2] - vp_rect[0]) - 1, wnd_pos.Y * 2 / (vp_rect[3] - vp_rect[1]) - 1, wnd_pos.Z * 2 -1, 1.0f);
+            //float[] vp_rect = this.viewport_rect;
+            //Vector4 pos_h = new Vector4(wnd_pos.X * 2 / (vp_rect[2] - vp_rect[0]) - 1, wnd_pos.Y * 2 / (vp_rect[3] - vp_rect[1]) - 1, wnd_pos.Z * 2 -1, 1.0f);
 
-            //Vector4 pos_h = new Vector4(wnd_pos.X, wnd_pos.Y, wnd_pos.Z, 1.0f);
-            //pos_h = Vector4.Transform(pos_h, inv_wnd);
+            Vector4 pos_h = new Vector4(wnd_pos.X, wnd_pos.Y, wnd_pos.Z, 1.0f);
+            pos_h = Vector4.Transform(pos_h, inv_wnd);
             pos_h = Vector4.Transform(pos_h, inv_proj);
             pos_h = Vector4.Transform(pos_h, inv_view);
 
@@ -112,14 +112,30 @@ namespace OpenTK_library
             float x = norm_axis.X;
             float y = norm_axis.Y;
             float z = norm_axis.Z;
-            float c = (float)Math.Cos(angle);
-            float s = (float)Math.Sin(angle);
+            float c = (float)Math.Cos(-angle);
+            float s = (float)Math.Sin(-angle);
 
             return new Matrix4(
               x* x*(1.0f - c) + c,     x* y*(1.0f - c) - z * s, x* z*(1.0f - c) + y * s, 0.0f,
               y* x*(1.0f - c) + z * s, y* y*(1.0f - c) + c,     y* z*(1.0f - c) - x * s, 0.0f,
               z* x*(1.0f - c) - y * s, z* y*(1.0f - c) + x * s, z* z*(1.0f - c) + c,     0.0f,
               0.0f,                    0.0f,                    0.0f,                    1.0f );
+        }
+
+        public Matrix4 CreateRotate(Vector3 pivot, Vector3 axis, Vector2 window_dir, Vector2 window_vec)
+        {
+            // get the viewport rectangle
+            float[] vp_rect = this.viewport_rect;
+
+            // Get the rotation axis and angle
+            Vector2 dist_vec = new Vector2(window_vec.X / (vp_rect[2] - vp_rect[0]), window_vec.Y / (vp_rect[3] - vp_rect[1]));
+            float angle = Vector2.Dot(window_dir.Normalized(), dist_vec) * (float)Math.PI;
+
+            // calculate the rotation matrix and the rotation around the pivot 
+            Matrix4 rot_mat = CreateRotate(angle, axis);
+            Matrix4 rot_pivot = Matrix4.CreateTranslation(-pivot) * rot_mat * Matrix4.CreateTranslation(pivot); // OpenTK `*`-operator is reversed
+
+            return rot_pivot;
         }
 
         public NavigationController(GetViewRect view_rect, GetMatrix view, GetMatrix proj, GetDepthVal depth, GetPivot pivot)
@@ -181,9 +197,8 @@ namespace OpenTK_library
         {
             bool view_changed = false;
 
-            // get view, projection and window matrix
+            // get view matrix
             (Matrix4 mat_view, Matrix4 inv_view) = view;
-            float[] vp_rect = this.viewport_rect;
 
             if (this._pan)
             {
@@ -215,15 +230,12 @@ namespace OpenTK_library
                 Vector3 pivot_w = PivotWorld(cursor_pos);
                 Vector3 pivot = new Vector3(Vector4.Transform(new Vector4(pivot_w.X, pivot_w.Y, pivot_w.Z, 1), mat_view));
                 Vector3 orbit_dir = wnd_to - wnd_from;
-                Vector3 axis = new Vector3(-orbit_dir.Y, orbit_dir.X, 0);
-                Vector2 dist_vec = new Vector2(orbit_dir.X / (vp_rect[2] - vp_rect[0]), orbit_dir.Y / (vp_rect[3] - vp_rect[1]));
-                float angle = Vector2.Distance(new Vector2(0, 0), dist_vec) * (float)Math.PI;
-                Console.WriteLine(angle.ToString());
 
                 // calculate the rotation matrix and the rotation around the pivot 
-                Matrix4 rot_mat = CreateRotate(angle, axis);
-                Matrix4 rot_pivot = Matrix4.CreateTranslation(-pivot) * rot_mat * Matrix4.CreateTranslation(pivot); // OpenTK `*`-operator is reversed
-
+                Vector3 axis = new Vector3(-orbit_dir.Y, orbit_dir.X, 0);
+                Vector2 dir = new Vector2(orbit_dir.X, orbit_dir.Y);
+                Matrix4 rot_pivot = CreateRotate(pivot, axis, dir, dir);
+                
                 // transform and update view matrix
                 mat_view = mat_view * rot_pivot;  // OpenTK `*`-operator is reversed
                 view_changed = true;
@@ -235,40 +247,39 @@ namespace OpenTK_library
                 Vector3 wnd_to = new Vector3(cursor_pos.X, cursor_pos.Y, this._orbit_start.Z);
                 this._orbit_start = wnd_to;
 
-                /*
-                # calculate the pivot, rotation axis and angle
-                pivot_view   = glm.vec3(view * glm.vec4(*self.__pivot_world, 1))
-                orbit_dir    = wnd_to - wnd_from 
+                // calculate the pivot, rotation axis and angle
+                Vector3 pivot_w = PivotWorld(cursor_pos);
+                Vector3 pivot = new Vector3(Vector4.Transform(new Vector4(pivot_w.X, pivot_w.Y, pivot_w.Z, 1), mat_view));
+                Vector3 orbit_dir = wnd_to - wnd_from;
 
-                # get the projection of the up vector to the view port 
-                # TODO
+                // get the projection of the up vector to the view port 
+                // TODO
 
-                # calculate the rotation components for the rotation around the view space x axis and the world up vector 
-                orbit_dir_x  = glm.vec2(0, 1)
-                orbit_vec_x  = glm.vec2(0, orbit_dir.y)
-                orbit_dir_up = glm.vec2(1, 0)
-                orbit_vec_up = glm.vec2(orbit_dir.x, 0)
+                // calculate the rotation components for the rotation around the view space x axis and the world up vector
+                Vector2 orbit_vec_x = new Vector2(0, orbit_dir.Y);
+                Vector2 orbit_vec_up = new Vector2(orbit_dir.X, 0);
 
-                # calculate the rotation matrix around the view space x axis through the pivot
-                rot_pivot_x = glm.mat4(1)
-                if glm.length(orbit_vec_x) > 0.5: 
-                    axis_x      = glm.vec3(-1, 0, 0)
-                    angle_x     = glm.dot(orbit_dir_x, glm.vec2(orbit_vec_x.x/view_rect[2], orbit_vec_x.y/view_rect[3])) * math.pi
-                    rot_mat_x   = glm.rotate(glm.mat4(1), angle_x, axis_x)
-                    rot_pivot_x = glm.translate(glm.mat4(1), pivot_view) * rot_mat_x * glm.translate(glm.mat4(1), -pivot_view)
-            
-                # calculate the rotation matrix around the world space up vector through the pivot
-                rot_pivot_up = glm.mat4(1)
-                if glm.length(orbit_vec_up) > 0.5: 
-                    axis_up      = glm.vec3(0, 0, 1)
-                    angle_up     = glm.dot(orbit_dir_up, glm.vec2(orbit_vec_up.x/view_rect[2], orbit_vec_up.y/view_rect[3])) * math.pi
-                    rot_mat_up   = glm.rotate(glm.mat4(1), angle_up, axis_up)
-                    rot_pivot_up = glm.translate(glm.mat4(1), self.__pivot_world) * rot_mat_up * glm.translate(glm.mat4(1), -self.__pivot_world)
-            
-                #transform and update view matrix
-                view         = rot_pivot_x * view * rot_pivot_up
-                view_changed = True 
-                */
+                // calculate the rotation matrix around the view space x axis through the pivot
+                Matrix4 rot_pivot_x = Matrix4.Identity;
+                if (Vector2.Distance(orbit_vec_x, new Vector2(0, 0)) > 0.5)
+                {
+                    Vector2 orbit_dir_x = new Vector2(0, 1);
+                    Vector3 axis_x = new Vector3(-1, 0, 0);
+                    rot_pivot_x = CreateRotate(pivot, axis_x, orbit_dir_x, orbit_vec_x);
+                }
+
+                // calculate the rotation matrix around the world space up vector through the pivot
+                Matrix4 rot_pivot_up = Matrix4.Identity;
+                if (Vector2.Distance(orbit_vec_x, new Vector2(0, 0)) > 0.5)
+                {
+                    Vector2 orbit_dir_up = new Vector2(1, 0);
+                    Vector3 axis_up = new Vector3(0, 0, 1);
+                    rot_pivot_up = CreateRotate(pivot_w, axis_up, orbit_dir_up, orbit_vec_up);
+                }
+
+                // transform and update view matrix
+                mat_view = rot_pivot_up * mat_view * rot_pivot_x;  // OpenTK `*`-operator is reversed
+                view_changed = true;
             }
 
             // return new view matrix

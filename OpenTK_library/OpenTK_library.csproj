@@ -44,6 +44,7 @@
   <ItemGroup>
     <Compile Include="GL_DebugCallback.cs" />
     <Compile Include="GL_Extensions.cs" />
+    <Compile Include="GL_PixelPackBuffer.cs" />
     <Compile Include="GL_Program.cs" />
     <Compile Include="GL_StorageBuffer.cs" />
     <Compile Include="GL_VertexArrayObject.cs" />

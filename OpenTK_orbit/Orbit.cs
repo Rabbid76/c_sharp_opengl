@@ -87,6 +87,7 @@ namespace OpenTK_orbit
         private GL_VertexArrayObject<float, uint> _test_vao;
         private GL_Program _test_prog;
         private GL_StorageBuffer<TMVP> _mvp_ssbo;
+        private GL_PixelPackBuffer<float> _depth_pack_buffer;
 
         private Matrix4 _view = Matrix4.Identity;
         private Matrix4 _projection = Matrix4.Identity;
@@ -106,6 +107,7 @@ namespace OpenTK_orbit
         {
             if (disposing && !this._disposedValue)
             {
+                _depth_pack_buffer.Dispose();
                 _mvp_ssbo.Dispose();
                 _test_vao.Dispose();
                 _test_prog.Dispose();
@@ -210,11 +212,14 @@ namespace OpenTK_orbit
             this._test_prog = new GL_Program(vert_shader, frag_shader);
             this._test_prog.Generate();
 
-            // Model view projection shader storage block object
+            // Model view projection shader storage block objects and buffers
             TMVP mvp = new TMVP(Matrix4.Identity, Matrix4.Identity, Matrix4.Identity);
             this._mvp_ssbo = new GL_StorageBuffer<TMVP>();
             this._mvp_ssbo.Create(ref mvp);
             this._mvp_ssbo.Bind(1);
+
+            this._depth_pack_buffer = new GL_PixelPackBuffer<float>();
+            this._depth_pack_buffer.Create();
 
             // states
 
@@ -277,8 +282,22 @@ namespace OpenTK_orbit
         // get depth on fragment
         private float GetDepth(Vector2 cursor_pos)
         {
-            // TODO $$$
-            return 0.95f;
+            int x = (int)cursor_pos.X;
+            int y = this.Height - (int)cursor_pos.Y;
+            float[] depth_data = _depth_pack_buffer.ReadDepth(x, y);
+            float depth = depth_data.Length > 0 ? depth_data[0] : 1.0f;
+            if (depth == 1.0f)
+            {
+                Vector3 pt_drag = new Vector3();
+                Vector4 clip_pos_h = new Vector4(pt_drag, 1.0f);
+                clip_pos_h = Vector4.Transform(clip_pos_h, this._view);
+                clip_pos_h = Vector4.Transform(clip_pos_h, this._projection);
+                Vector3 ndc_pos = new Vector3(clip_pos_h.X / clip_pos_h.W, clip_pos_h.Y / clip_pos_h.W, clip_pos_h.Z / clip_pos_h.W);
+                if (ndc_pos.Z > -1 && ndc_pos.Z < 1)
+                    depth = ndc_pos.Z * 0.5f + 0.5f;
+            }
+
+            return depth;
         }
 
         protected override void OnMouseDown(MouseButtonEventArgs e)
@@ -292,8 +311,8 @@ namespace OpenTK_orbit
             }
             if (e.Mouse.LeftButton == ButtonState.Pressed)
             {
-                this._navigate.StartOrbit(wnd_pos, NavigationMode.ORBIT);
-                //this._navigate.StartOrbit(wnd_pos, NavigationMode.ROTATE);
+                //this._navigate.StartOrbit(wnd_pos, NavigationMode.ORBIT);
+                this._navigate.StartOrbit(wnd_pos, NavigationMode.ROTATE);
             }
         }
 

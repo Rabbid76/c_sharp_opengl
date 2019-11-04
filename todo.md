@@ -2,6 +2,12 @@
 
 - multisample anti aliasing
 
+- pixel buffer
+  
+  Read pixel from buffer by pixel buffer and buffer mapping
+
+- spir-v
+
 ## Projects
 
 ### Rubik's Cube
