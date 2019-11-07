@@ -112,20 +112,19 @@ namespace OpenTK_library
         public void AppendVertexBuffer(int id, int elems_stride, T_ATTRIBUTE[] attributes)
         {
             int data_size = attributes.Length * Marshal.SizeOf(default(T_ATTRIBUTE));
-            IntPtr data_ptr = Marshal.UnsafeAddrOfPinnedArrayElement(attributes, 0);
-
+            
             int vbo = 0;
             if (this._vertex_specification_4)
             {
                 GL.CreateBuffers(1, out vbo);
                 //BufferStorageFlags storage = BufferStorageFlags.DynamicStorageBit | BufferStorageFlags.MapWriteBit | BufferStorageFlags.MapPersistentBit;
-                GL.NamedBufferStorage(vbo, data_size, data_ptr, BufferStorageFlags.None);
+                GL.NamedBufferStorage<T_ATTRIBUTE>(vbo, data_size, attributes, BufferStorageFlags.None);
             }
             else
             {
                 vbo = GL.GenBuffer();
                 GL.BindBuffer(BufferTarget.ArrayBuffer, vbo);
-                GL.BufferData(BufferTarget.ArrayBuffer, data_size, data_ptr, BufferUsageHint.StaticDraw);
+                GL.BufferData<T_ATTRIBUTE>(BufferTarget.ArrayBuffer, data_size, attributes, BufferUsageHint.StaticDraw);
             }
             this._vbos[id] = vbo;
             this._vbos_stride[id] = elems_stride;
