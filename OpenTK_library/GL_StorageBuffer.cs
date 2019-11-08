@@ -75,14 +75,10 @@ namespace OpenTK_library
             // map buffer (`_buffer_specification_4`)
 
             int data_size = Marshal.SizeOf(default(T_DATA));
-            IntPtr data_ptr = Marshal.AllocHGlobal(data_size);
-            Marshal.StructureToPtr(data, data_ptr, false);
-
+            
             GL.BindBuffer(BufferTarget.ShaderStorageBuffer, this._ssbo);
-            GL.BufferSubData(BufferTarget.ShaderStorageBuffer, IntPtr.Zero, data_size, data_ptr);
+            GL.BufferSubData<T_DATA>(BufferTarget.ShaderStorageBuffer, IntPtr.Zero, data_size, ref data);
             GL.BindBuffer(BufferTarget.ShaderStorageBuffer, 0);
-
-            Marshal.FreeHGlobal(data_ptr);
         }
 
         //! Update Buffer sub data

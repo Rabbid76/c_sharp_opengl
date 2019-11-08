@@ -7,12 +7,11 @@ using OpenTK_library;
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 namespace OpenTK_example_2
 {
     // TODO $$$
-    // - trefoil knot
-    // - light
     // - spin
 
 
@@ -84,6 +83,38 @@ namespace OpenTK_example_2
             }
         }
 
+        internal unsafe struct TLightSource
+        {
+            public fixed float _light_dir[4];
+            public float _ambient;
+            public float _diffuse;
+            public float _specular;
+            public float _shininess;
+
+            public TLightSource(Vector4 light_dir, float ambient, float diffuse, float specular, float shininess)
+            {
+                this._ambient = ambient;
+                this._diffuse = diffuse;
+                this._specular = specular;
+                this._shininess = shininess;
+                this.lightDir = light_dir;
+            }
+
+            public Vector4 lightDir
+            {
+                get 
+                { 
+                    return new Vector4(this._light_dir[0], this._light_dir[1], this._light_dir[2], this._light_dir[3]); 
+                }
+                set
+                {
+                    float[] data = new float[] { value.X, value.Y, value.Z, value.W };
+                    for (int i = 0; i < 4; ++i)
+                        this._light_dir[i] = data[i];
+                }
+            }
+        }
+
         private bool _disposedValue = false;
 
         private GL_Version _version = new GL_Version();
@@ -93,6 +124,7 @@ namespace OpenTK_example_2
         private GL_VertexArrayObject<float, uint> _test_vao;
         private GL_Program _test_prog;
         private GL_StorageBuffer<TMVP> _mvp_ssbo;
+        private GL_StorageBuffer<TLightSource> _light_ssbo;
         private GL_PixelPackBuffer<float> _depth_pack_buffer;
 
         private Matrix4 _view = Matrix4.Identity;
@@ -114,6 +146,7 @@ namespace OpenTK_example_2
             if (disposing && !this._disposedValue)
             {
                 _depth_pack_buffer.Dispose();
+                _light_ssbo.Dispose();
                 _mvp_ssbo.Dispose();
                 _test_vao.Dispose();
                 _test_prog.Dispose();
@@ -136,7 +169,7 @@ namespace OpenTK_example_2
 
             // create Vertex Array Object, Array Buffer Object and Element Array Buffer Object
 
-            (float[] attributes, uint[] indices) = new TrefoilKnot(64, 16).Create();
+            (float[] attributes, uint[] indices) = new TrefoilKnot(196, 16).Create();
             GL_TVertexFormat[] format = {
                 new GL_TVertexFormat(0, 0, 3, 0, false),
                 new GL_TVertexFormat(0, 1, 3, 3, false),
@@ -191,10 +224,37 @@ namespace OpenTK_example_2
                 vec3 nv;
                 vec4 col;
             } inData;
+
+            layout(std430, binding = 2) buffer TLight
+            {
+                vec4  u_lightDir;
+                float u_ambient;
+                float u_diffuse;
+                float u_specular;
+                float u_shininess;
+            } light_data;
       
             void main()
             {
-                frag_color = inData.col; 
+                vec3 color = inData.col.rgb;
+
+                // ambient part
+                vec3 lightCol = light_data.u_ambient * color;
+                vec3 normalV  = normalize( inData.nv );
+                vec3 eyeV     = normalize( -inData.pos );
+                vec3 lightV   = normalize( -light_data.u_lightDir.xyz );
+
+                // diffuse part
+                float NdotL   = max( 0.0, dot( normalV, lightV ) );
+                lightCol     += NdotL * light_data.u_diffuse * color;
+
+                // specular part
+                vec3  halfV     = normalize( eyeV + lightV );
+                float NdotH     = max( 0.0, dot( normalV, halfV ) );
+                float kSpecular = ( light_data.u_shininess + 2.0 ) * pow( NdotH, light_data.u_shininess ) / ( 2.0 * 3.14159265 );
+                lightCol       += kSpecular * light_data.u_specular * color;
+
+                frag_color = vec4( lightCol.rgb, inData.col.a );
             }";
 
             this._test_prog = new GL_Program(vert_shader, frag_shader);
@@ -205,6 +265,11 @@ namespace OpenTK_example_2
             this._mvp_ssbo = new GL_StorageBuffer<TMVP>();
             this._mvp_ssbo.Create(ref mvp);
             this._mvp_ssbo.Bind(1);
+
+            TLightSource light_source = new TLightSource(new Vector4(-1.0f, -0.5f, -2.0f, 0.0f), 0.2f, 0.8f, 0.8f, 10.0f);
+            this._light_ssbo = new GL_StorageBuffer<TLightSource>();
+            this._light_ssbo.Create(ref light_source);
+            this._light_ssbo.Bind(2);
 
             this._depth_pack_buffer = new GL_PixelPackBuffer<float>();
             this._depth_pack_buffer.Create();
@@ -219,7 +284,7 @@ namespace OpenTK_example_2
 
             // matrices and controller
 
-            this._view = Matrix4.LookAt(-2.0f, -4.0f, 2.0f, 0, 0, 0, 0, 0, 1);
+            this._view = Matrix4.LookAt(0.0f, 0.0f, 1.5f, 0, 0, 0, 0, 1, 0);
 
             _navigate = new NavigationController(
                 () => { return new float[] { 0, 0, (float)this.Width, (float)this.Height }; },

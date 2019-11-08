@@ -135,7 +135,6 @@ namespace OpenTK_library
         {
             this._index_size = Marshal.SizeOf(default(T_INDEX));
             this._no_of_indices = indices.Length;
-            IntPtr index_ptr = Marshal.UnsafeAddrOfPinnedArrayElement(indices, 0);
             int elem_size = Marshal.SizeOf(default(T_ATTRIBUTE));
 
             if (this._vertex_specification_4)
@@ -159,7 +158,7 @@ namespace OpenTK_library
                 if (this._no_of_indices > 0)
                 {
                     GL.CreateBuffers(1, out this._ibo);
-                    GL.NamedBufferStorage(this._ibo, this._no_of_indices * this._index_size, index_ptr, BufferStorageFlags.None);
+                    GL.NamedBufferStorage<T_INDEX>(this._ibo, this._no_of_indices * this._index_size, indices, BufferStorageFlags.None);
 
                     GL.BindVertexArray(this._vao);
                     GL.BindBuffer(BufferTarget.ElementArrayBuffer, this._ibo);
@@ -184,7 +183,7 @@ namespace OpenTK_library
                 {
                     this._ibo = GL.GenBuffer();
                     GL.BindBuffer(BufferTarget.ElementArrayBuffer, this._ibo);
-                    GL.BufferData(BufferTarget.ElementArrayBuffer, this._no_of_indices * this._index_size, index_ptr, BufferUsageHint.StaticDraw);
+                    GL.BufferData<T_INDEX>(BufferTarget.ElementArrayBuffer, this._no_of_indices * this._index_size, indices, BufferUsageHint.StaticDraw);
                 }
             }
 
