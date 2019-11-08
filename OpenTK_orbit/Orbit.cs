@@ -91,7 +91,7 @@ namespace OpenTK_orbit
 
         private Matrix4 _view = Matrix4.Identity;
         private Matrix4 _projection = Matrix4.Identity;
-        private NavigationController _navigate;
+        private NavigationControls _navigate;
         private float _wheel_pos = 0.0f;
 
         public Orbit(int width, int height, string title)
@@ -231,9 +231,9 @@ namespace OpenTK_orbit
 
             // matrices and controller
 
-            this._view = Matrix4.LookAt(-2.0f, -4.0f, 2.0f, 0, 0, 0, 0, 0, 1);
+            this._view = Matrix4.LookAt(0.0f, -4.0f, 0.0f, 0, 0, 0, 0, 0, 1);
 
-            _navigate = new NavigationController(
+            _navigate = new NavigationControls(
                 () => { return new float[] { 0, 0, (float)this.Width, (float)this.Height }; },
                 () => { return this._view; },
                 () => { return this._projection; },
@@ -312,7 +312,7 @@ namespace OpenTK_orbit
             if (e.Mouse.LeftButton == ButtonState.Pressed)
             {
                 //this._navigate.StartOrbit(wnd_pos, NavigationMode.ORBIT);
-                this._navigate.StartOrbit(wnd_pos, NavigationMode.ROTATE);
+                this._navigate.StartOrbit(wnd_pos, BaseControls.NavigationMode.ROTATE);
             }
         }
 

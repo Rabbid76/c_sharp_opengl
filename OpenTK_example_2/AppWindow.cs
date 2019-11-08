@@ -125,13 +125,12 @@ namespace OpenTK_example_2
         private GL_Program _test_prog;
         private GL_StorageBuffer<TMVP> _mvp_ssbo;
         private GL_StorageBuffer<TLightSource> _light_ssbo;
-        private GL_PixelPackBuffer<float> _depth_pack_buffer;
-
+        
         private Matrix4 _view = Matrix4.Identity;
         private Matrix4 _projection = Matrix4.Identity;
-        private NavigationController _navigate;
-        private float _wheel_pos = 0.0f;
-
+        private ModelSpinningControls _spin;
+        double _period = 0;
+        
         public AppWindow(int width, int height, string title)
             : base(width, height, GraphicsMode.Default, title,
                 GameWindowFlags.Default,
@@ -145,7 +144,6 @@ namespace OpenTK_example_2
         {
             if (disposing && !this._disposedValue)
             {
-                _depth_pack_buffer.Dispose();
                 _light_ssbo.Dispose();
                 _mvp_ssbo.Dispose();
                 _test_vao.Dispose();
@@ -271,9 +269,6 @@ namespace OpenTK_example_2
             this._light_ssbo.Create(ref light_source);
             this._light_ssbo.Bind(2);
 
-            this._depth_pack_buffer = new GL_PixelPackBuffer<float>();
-            this._depth_pack_buffer.Create();
-
             // states
 
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -286,13 +281,11 @@ namespace OpenTK_example_2
 
             this._view = Matrix4.LookAt(0.0f, 0.0f, 1.5f, 0, 0, 0, 0, 1, 0);
 
-            _navigate = new NavigationController(
-                () => { return new float[] { 0, 0, (float)this.Width, (float)this.Height }; },
-                () => { return this._view; },
-                () => { return this._projection; },
-                this.GetDepth,
-                (cursor_pos) => { return new Vector3(0, 0, 0); }
+            this._spin = new ModelSpinningControls(
+                () => { return this._period; },
+                () => { return new float[] { 0, 0, (float)this.Width, (float)this.Height }; }
             );
+            this._spin.SetAttenuation(1.0f, 0.05f, 0.0f);
 
             base.OnLoad(e);
         }
@@ -318,12 +311,16 @@ namespace OpenTK_example_2
                 Exit();
             }
 
+            this._period += this.RenderPeriod;
+
+            this._spin.Update();
+            Matrix4 model_mat = this._spin.autoModelMatrix * this._spin.orbit; // OpenTK `*`-operator is reversed
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             this._test_prog.Use();
 
-            TMVP mvp = new TMVP(Matrix4.Identity, this._view, this._projection);
+            TMVP mvp = new TMVP(model_mat, this._view, this._projection);
             this._mvp_ssbo.Update(ref mvp);
 
             _test_vao.Draw(36);
@@ -332,41 +329,12 @@ namespace OpenTK_example_2
             base.OnUpdateFrame(e);
         }
 
-        // get depth on fragment
-        private float GetDepth(Vector2 cursor_pos)
-        {
-            int x = (int)cursor_pos.X;
-            int y = this.Height - (int)cursor_pos.Y;
-            float[] depth_data = _depth_pack_buffer.ReadDepth(x, y);
-            float depth = depth_data.Length > 0 ? depth_data[0] : 1.0f;
-            if (depth == 1.0f)
-            {
-                Vector3 pt_drag = new Vector3();
-                Vector4 clip_pos_h = new Vector4(pt_drag, 1.0f);
-                clip_pos_h = Vector4.Transform(clip_pos_h, this._view);
-                clip_pos_h = Vector4.Transform(clip_pos_h, this._projection);
-                Vector3 ndc_pos = new Vector3(clip_pos_h.X / clip_pos_h.W, clip_pos_h.Y / clip_pos_h.W, clip_pos_h.Z / clip_pos_h.W);
-                if (ndc_pos.Z > -1 && ndc_pos.Z < 1)
-                    depth = ndc_pos.Z * 0.5f + 0.5f;
-            }
-
-            return depth;
-        }
-
         protected override void OnMouseDown(MouseButtonEventArgs e)
         {
             base.OnMouseDown(e);
 
             Vector2 wnd_pos = new Vector2((float)e.Mouse.X, (float)(this.Height - e.Mouse.Y));
-            if (e.Mouse.RightButton == ButtonState.Pressed)
-            {
-                this._navigate.StartPan(wnd_pos);
-            }
-            if (e.Mouse.LeftButton == ButtonState.Pressed)
-            {
-                //this._navigate.StartOrbit(wnd_pos, NavigationMode.ORBIT);
-                this._navigate.StartOrbit(wnd_pos, NavigationMode.ROTATE);
-            }
+            this._spin.MosueDown(wnd_pos, e.Mouse.LeftButton == ButtonState.Pressed);
         }
 
         protected override void OnMouseUp(MouseButtonEventArgs e)
@@ -374,14 +342,7 @@ namespace OpenTK_example_2
             base.OnMouseUp(e);
 
             Vector2 wnd_pos = new Vector2((float)e.Mouse.X, (float)(this.Height - e.Mouse.Y));
-            if (e.Mouse.RightButton == ButtonState.Released)
-            {
-                this._navigate.EndPan(wnd_pos);
-            }
-            if (e.Mouse.LeftButton == ButtonState.Released)
-            {
-                this._navigate.EndOrbit(wnd_pos);
-            }
+            this._spin.MosueUp(wnd_pos, e.Mouse.LeftButton == ButtonState.Released);
         }
 
         protected override void OnMouseMove(MouseMoveEventArgs e)
@@ -389,19 +350,7 @@ namespace OpenTK_example_2
             base.OnMouseMove(e);
 
             Vector2 wnd_pos = new Vector2((float)e.Mouse.X, (float)(this.Height - e.Mouse.Y));
-            (Matrix4 view_mat, bool update) = this._navigate.MoveCursorTo(wnd_pos);
-            this._view = view_mat;
-        }
-
-        protected override void OnMouseWheel(MouseWheelEventArgs e)
-        {
-            base.OnMouseWheel(e);
-
-            Vector2 wnd_pos = new Vector2((float)e.Mouse.X, (float)(this.Height - e.Mouse.Y));
-            float direction = e.Mouse.WheelPrecise - this._wheel_pos;
-            this._wheel_pos = e.Mouse.WheelPrecise;
-            (Matrix4 view_mat, bool update) = this._navigate.MoveOnLineOfSight(wnd_pos, direction);
-            this._view = view_mat;
+            this._spin.MosueMove(wnd_pos);
         }
     }
 }

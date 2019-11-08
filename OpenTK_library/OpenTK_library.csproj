@@ -42,6 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseControls.cs" />
+    <Compile Include="ModelSpinningControls.cs" />
     <Compile Include="TrefoilKnot.cs" />
     <Compile Include="GL_DebugCallback.cs" />
     <Compile Include="GL_Extensions.cs" />
@@ -49,7 +51,7 @@
     <Compile Include="GL_Program.cs" />
     <Compile Include="GL_StorageBuffer.cs" />
     <Compile Include="GL_VertexArrayObject.cs" />
-    <Compile Include="NavigationController.cs" />
+    <Compile Include="NavigationControls.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GL_Version.cs" />
   </ItemGroup>

@@ -5,14 +5,8 @@ using OpenTK; // Vector2, Vector3, Vector4, Matrix4
 
 namespace OpenTK_library
 {
-    public enum NavigationMode { OFF, ORBIT, ROTATE };
-
-    public delegate Matrix4 GetMatrix();
-    public delegate float[] GetViewRect();
-    public delegate float GetDepthVal(Vector2 cursor_pos);
-    public delegate Vector3 GetPivot(Vector2 cursor_pos);
-
-    public class NavigationController
+    public class NavigationControls
+        : BaseControls
     {
         GetViewRect _get_view_rect;
         GetMatrix _get_view_mat;
@@ -106,22 +100,6 @@ namespace OpenTK_library
             return world_pos;
         }
 
-        public static Matrix4 CreateRotate(float angle, Vector3 axis)
-        {
-            Vector3 norm_axis = axis.Normalized();
-            float x = norm_axis.X;
-            float y = norm_axis.Y;
-            float z = norm_axis.Z;
-            float c = (float)Math.Cos(-angle);
-            float s = (float)Math.Sin(-angle);
-
-            return new Matrix4(
-              x* x*(1.0f - c) + c,     x* y*(1.0f - c) - z * s, x* z*(1.0f - c) + y * s, 0.0f,
-              y* x*(1.0f - c) + z * s, y* y*(1.0f - c) + c,     y* z*(1.0f - c) - x * s, 0.0f,
-              z* x*(1.0f - c) - y * s, z* y*(1.0f - c) + x * s, z* z*(1.0f - c) + c,     0.0f,
-              0.0f,                    0.0f,                    0.0f,                    1.0f );
-        }
-
         public Matrix4 CreateRotate(Vector3 pivot, Vector3 axis, Vector2 window_dir, Vector2 window_vec)
         {
             // get the viewport rectangle
@@ -138,7 +116,7 @@ namespace OpenTK_library
             return rot_pivot;
         }
 
-        public NavigationController(GetViewRect view_rect, GetMatrix view, GetMatrix proj, GetDepthVal depth, GetPivot pivot)
+        public NavigationControls(GetViewRect view_rect, GetMatrix view, GetMatrix proj, GetDepthVal depth, GetPivot pivot)
         {
             this._get_view_rect = view_rect;
             this._get_view_mat = view;

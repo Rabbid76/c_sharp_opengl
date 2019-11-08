@@ -10,6 +10,14 @@
 
 ## Projects
 
+### Parallax mapping
+
+- Relief Parallax Mapping
+- Cone Step Mapping
+  - compute shader generator
+  - mapping
+- generalized displacement mapping
+
 ### Rubik's Cube
 
 ### Asimp
