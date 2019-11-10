@@ -1,9 +1,9 @@
 ﻿using System;
 using OpenTK.Graphics.OpenGL4; // GL
 
-namespace OpenTK_library
+namespace OpenTK_library.OpenGL
 {
-    public class GL_Version
+    public class Version
     {
         private string _vendor;
         private string _renderer;
@@ -12,7 +12,7 @@ namespace OpenTK_library
         private int _major;
         private int _minor;
 
-        public GL_Version()
+        public Version()
         {}
 
         // Get OpenGL version information

@@ -7,9 +7,9 @@ using OpenTK.Graphics.OpenGL4; // GL, ShaderType
 // - separate Vertex Buffer Object
 // - multiple configurations (multiple manged objects?)
 
-namespace OpenTK_library
+namespace OpenTK_library.OpenGL
 {
-    public struct GL_TVertexFormat
+    public struct TVertexFormat
     {
         public int buffer_id;
         public int attribute_index;
@@ -17,7 +17,7 @@ namespace OpenTK_library
         public int elems_offset;
         public bool normalize;
 
-        public GL_TVertexFormat(int buffer_id, int attribute_index, int tuple_size, int elems_offset, bool normalize)
+        public TVertexFormat(int buffer_id, int attribute_index, int tuple_size, int elems_offset, bool normalize)
         {
             this.buffer_id = buffer_id;
             this.attribute_index = attribute_index;
@@ -27,7 +27,7 @@ namespace OpenTK_library
         }
     }
 
-    public class GL_VertexArrayObject<T_ATTRIBUTE, T_INDEX> 
+    public class VertexArrayObject<T_ATTRIBUTE, T_INDEX> 
         : IDisposable
         where T_ATTRIBUTE : struct where T_INDEX : struct
     {
@@ -45,10 +45,10 @@ namespace OpenTK_library
         int _index_size = 0;
         int _vao = 0;
 
-        public GL_VertexArrayObject()
+        public VertexArrayObject()
         { }
 
-        ~GL_VertexArrayObject()
+        ~VertexArrayObject()
         {
             List<int> vbos = new List<int>(this._vbos.Values);
 
@@ -131,7 +131,7 @@ namespace OpenTK_library
         }
 
         //! Create Vertex Array Object
-        public void Create(GL_TVertexFormat[] formats, T_INDEX[] indices)
+        public void Create(TVertexFormat[] formats, T_INDEX[] indices)
         {
             this._index_size = Marshal.SizeOf(default(T_INDEX));
             this._no_of_indices = indices.Length;

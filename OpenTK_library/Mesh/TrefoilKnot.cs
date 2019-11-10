@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using OpenTK; // Vector3
 
-namespace OpenTK_library
+namespace OpenTK_library.Mesh
 {
     // TODO generic
 

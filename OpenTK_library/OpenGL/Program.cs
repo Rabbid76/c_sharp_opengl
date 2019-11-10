@@ -5,9 +5,9 @@ using OpenTK.Graphics.OpenGL4; // GL, ShaderType
 // TODO: map shader type sources / spire-v
 // create spire-v asynchronously
 
-namespace OpenTK_library
+namespace OpenTK_library.OpenGL
 {
-    public class GL_Program
+    public class Program
         : IDisposable
     {
         private bool _disposed = false;
@@ -21,13 +21,13 @@ namespace OpenTK_library
         private string _vert_source; //!< vertex shader source (TODO abstract, map)
         private string _frag_source; //!< vertex shader source (TODO abstract, map)
 
-        public GL_Program(string VertexShaderSource, string FragmentShaderSource)
+        public Program(string VertexShaderSource, string FragmentShaderSource)
         {
             this._vert_source = VertexShaderSource;
             this._frag_source = FragmentShaderSource;
         }
 
-        ~GL_Program()
+        ~Program()
         {
             GL.DeleteProgram(this._program);
         }

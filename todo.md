@@ -8,6 +8,14 @@
 
 - spir-v
 
+- wpf view overlay UI
+
+## WPF
+
+[Integrating WPF and Microsoft Kinect SDK with OpenTK](http://igordcard.blogspot.com/2011/12/integrating-wpf-and-kinect-with-opentk.html)
+[A faster way to use OpenTk in WPF without Forms dependencies](https://github.com/jayhf/OpenTkControl) 
+[Examples of how to using OpenGL via OpenTK in WPF applications](https://github.com/freakinpenguin/OpenTK-WPF)  
+
 ## Projects
 
 ### Parallax mapping
@@ -17,6 +25,12 @@
   - compute shader generator
   - mapping
 - generalized displacement mapping
+
+- light model
+
+### Control
+
+Angular mobile application (controller) which controls WPF desktop application
 
 ### Rubik's Cube
 

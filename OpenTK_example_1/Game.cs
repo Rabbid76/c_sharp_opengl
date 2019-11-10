@@ -15,6 +15,7 @@ using OpenTK.Graphics;         // GameWindow, GraphicsMode, Context
 using OpenTK.Graphics.OpenGL4; // GL
 
 using OpenTK_library;
+using OpenTK_library.OpenGL;
 
 using System;
 using System.Collections.Generic;
@@ -26,12 +27,12 @@ namespace OpenTK_example_1
     {
         private bool _disposedValue = false;
 
-        private GL_Version _version = new GL_Version();
-        private GL_Extensions _extensions = new GL_Extensions();
-        private GL_DebugCallback _debug_callback = new GL_DebugCallback();
+        private OpenTK_library.OpenGL.Version _version = new OpenTK_library.OpenGL.Version();
+        private Extensions _extensions = new Extensions();
+        private DebugCallback _debug_callback = new DebugCallback();
 
-        private GL_VertexArrayObject<float, uint> _test_vao;
-        private GL_Program _test_prog;
+        private VertexArrayObject<float, uint> _test_vao;
+        private OpenTK_library.OpenGL.Program _test_prog;
 
         public Game(int width, int height, string title)
             : base(width, height, GraphicsMode.Default, title,
@@ -78,12 +79,12 @@ namespace OpenTK_example_1
 
             uint [] iquad = { 0, 1, 2, 0, 2, 3 };
 
-            GL_TVertexFormat[] format = {
-                new GL_TVertexFormat(0, 0, 3, 0, false),
-                new GL_TVertexFormat(0, 1, 4, 3, false),
+            TVertexFormat[] format = {
+                new TVertexFormat(0, 0, 3, 0, false),
+                new TVertexFormat(0, 1, 4, 3, false),
             };
 
-            _test_vao = new GL_VertexArrayObject<float, uint>();
+            _test_vao = new VertexArrayObject<float, uint>();
             _test_vao.AppendVertexBuffer(0, 7, vquad);
             _test_vao.Create(format, iquad);
 
@@ -110,7 +111,7 @@ namespace OpenTK_example_1
                 frag_color = v_color; 
             }";
 
-            this._test_prog = new GL_Program(vert_shader, frag_shader);
+            this._test_prog = new OpenTK_library.OpenGL.Program(vert_shader, frag_shader);
             this._test_prog.Generate();
 
             this._test_prog.Use();

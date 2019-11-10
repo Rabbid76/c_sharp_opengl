@@ -3,11 +3,11 @@ using OpenTK.Graphics.OpenGL4; // GL
 
 using System.Runtime.InteropServices;
 
-namespace OpenTK_library
+namespace OpenTK_library.OpenGL
 {
-    public class GL_DebugCallback
+    public class DebugCallback
     {
-        public GL_DebugCallback()
+        public DebugCallback()
         {}
 
         // Callback for OpenGL debug message

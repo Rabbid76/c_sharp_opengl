@@ -4,6 +4,9 @@ using OpenTK.Graphics;         // GameWindow, GraphicsMode, Context
 using OpenTK.Graphics.OpenGL4; // GL
 
 using OpenTK_library;
+using OpenTK_library.Type;
+using OpenTK_library.Controls;
+using OpenTK_library.OpenGL;
 
 using System;
 using System.Collections.Generic;
@@ -13,81 +16,16 @@ namespace OpenTK_orbit
     public class Orbit
         : GameWindow
     {
-        internal unsafe struct TMVP
-        {
-            public fixed float _model[16];
-            public fixed float _view[16];
-            public fixed float _projection[16];
-
-            public TMVP(Matrix4 model, Matrix4 view, Matrix4 projetion)
-            {
-                this.model = model;
-                this.view = view;
-                this.projetion = projetion;
-            }
-
-            public Matrix4 model
-            {
-                get
-                {
-                    return new Matrix4(_model[0], _model[1], _model[2], _model[3],
-                                       _model[4], _model[5], _model[6], _model[7],
-                                       _model[8], _model[9], _model[10], _model[11],
-                                       _model[12], _model[13], _model[14], _model[15]);
-                }
-
-                set
-                {
-                    for (int i = 0; i < 16; ++i)
-                        this._model[i] = value[i / 4, i % 4];
-                }
-            }
-
-            public Matrix4 view
-            {
-                get
-                { 
-                    return new Matrix4(_view[0], _view[1], _view[2], _view[3],
-                                       _view[4], _view[5], _view[6], _view[7],
-                                       _view[8], _view[9], _view[10], _view[11],
-                                       _view[12], _view[13], _view[14], _view[15]);
-                }
-
-                set
-                {
-                    for (int i = 0; i < 16; ++i)
-                        this._view[i] = value[i / 4, i % 4];
-                }
-            }
-
-            public Matrix4 projetion
-            {
-                get
-                {
-                    return new Matrix4(_projection[0], _projection[1], _projection[2], _projection[3],
-                                       _projection[4], _projection[5], _projection[6], _projection[7],
-                                       _projection[8], _projection[9], _projection[10], _projection[11],
-                                       _projection[12], _projection[13], _projection[14], _projection[15]);
-                }
-
-                set
-                {
-                    for (int i = 0; i < 16; ++i)
-                        this._projection[i] = value[i / 4, i % 4];
-                }
-            }
-        }
-
         private bool _disposedValue = false;
 
-        private GL_Version _version = new GL_Version();
-        private GL_Extensions _extensions = new GL_Extensions();
-        private GL_DebugCallback _debug_callback = new GL_DebugCallback();
+        private OpenTK_library.OpenGL.Version _version = new OpenTK_library.OpenGL.Version();
+        private Extensions _extensions = new Extensions();
+        private DebugCallback _debug_callback = new DebugCallback();
 
-        private GL_VertexArrayObject<float, uint> _test_vao;
-        private GL_Program _test_prog;
-        private GL_StorageBuffer<TMVP> _mvp_ssbo;
-        private GL_PixelPackBuffer<float> _depth_pack_buffer;
+        private VertexArrayObject<float, uint> _test_vao;
+        private OpenTK_library.OpenGL.Program _test_prog;
+        private StorageBuffer<TMVP> _mvp_ssbo;
+        private PixelPackBuffer<float> _depth_pack_buffer;
 
         private Matrix4 _view = Matrix4.Identity;
         private Matrix4 _projection = Matrix4.Identity;
@@ -150,13 +88,13 @@ namespace OpenTK_orbit
             
             uint[] icube = {};
 
-            GL_TVertexFormat[] format = {
-                new GL_TVertexFormat(0, 0, 3, 0, false),
-                new GL_TVertexFormat(0, 1, 3, 3, false),
-                new GL_TVertexFormat(0, 2, 4, 6, false),
+            TVertexFormat[] format = {
+                new TVertexFormat(0, 0, 3, 0, false),
+                new TVertexFormat(0, 1, 3, 3, false),
+                new TVertexFormat(0, 2, 4, 6, false),
             };
 
-            _test_vao = new GL_VertexArrayObject<float, uint>();
+            _test_vao = new VertexArrayObject<float, uint>();
             _test_vao.AppendVertexBuffer(0, 10, attr_array.ToArray());
             _test_vao.Create(format, icube);
             _test_vao.Bind();
@@ -209,16 +147,16 @@ namespace OpenTK_orbit
                 frag_color = inData.col; 
             }";
 
-            this._test_prog = new GL_Program(vert_shader, frag_shader);
+            this._test_prog = new OpenTK_library.OpenGL.Program(vert_shader, frag_shader);
             this._test_prog.Generate();
 
             // Model view projection shader storage block objects and buffers
             TMVP mvp = new TMVP(Matrix4.Identity, Matrix4.Identity, Matrix4.Identity);
-            this._mvp_ssbo = new GL_StorageBuffer<TMVP>();
+            this._mvp_ssbo = new StorageBuffer<TMVP>();
             this._mvp_ssbo.Create(ref mvp);
             this._mvp_ssbo.Bind(1);
 
-            this._depth_pack_buffer = new GL_PixelPackBuffer<float>();
+            this._depth_pack_buffer = new PixelPackBuffer<float>();
             this._depth_pack_buffer.Create();
 
             // states

@@ -1,26 +1,23 @@
-﻿using OpenTK;
-using OpenTK.Input;            // KeyboardState, Keyboard, Key
-using OpenTK.Graphics;         // GameWindow, GraphicsMode, Context
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using OpenTK; // Vector2, Vector3, Vector4, Matrix4
 using OpenTK.Graphics.OpenGL4; // GL
+
+using OpenTK_WPF_example_1.ViewModel;
 
 using OpenTK_library;
 using OpenTK_library.Type;
-using OpenTK_library.Controls;
 using OpenTK_library.Mesh;
+using OpenTK_library.Controls;
 using OpenTK_library.OpenGL;
 
-using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-
-namespace OpenTK_example_2
+namespace OpenTK_WPF_example_1.Model
 {
-    // TODO $$$
-    // - spin
-
-
-    public class AppWindow
-        : GameWindow
+    public class OpenTK_Model
+        : IDisposable
     {
         internal unsafe struct TLightSource
         {
@@ -41,9 +38,9 @@ namespace OpenTK_example_2
 
             public Vector4 lightDir
             {
-                get 
-                { 
-                    return new Vector4(this._light_dir[0], this._light_dir[1], this._light_dir[2], this._light_dir[3]); 
+                get
+                {
+                    return new Vector4(this._light_dir[0], this._light_dir[1], this._light_dir[2], this._light_dir[3]);
                 }
                 set
                 {
@@ -55,7 +52,8 @@ namespace OpenTK_example_2
         }
 
         private bool _disposed = false;
-
+        private int _cx = 0;
+        private int _cy = 0;
         private OpenTK_library.OpenGL.Version _version = new OpenTK_library.OpenGL.Version();
         private Extensions _extensions = new Extensions();
         private DebugCallback _debug_callback = new DebugCallback();
@@ -64,37 +62,36 @@ namespace OpenTK_example_2
         private OpenTK_library.OpenGL.Program _test_prog;
         private StorageBuffer<TMVP> _mvp_ssbo;
         private StorageBuffer<TLightSource> _light_ssbo;
-        
+
         private Matrix4 _view = Matrix4.Identity;
         private Matrix4 _projection = Matrix4.Identity;
-        private ModelSpinningControls _spin;
-        double _period = 0;
-        
-        public AppWindow(int width, int height, string title)
-            : base(width, height, GraphicsMode.Default, title,
-                GameWindowFlags.Default,
-                DisplayDevice.Default,
-                4,
-                6,
-                GraphicsContextFlags.Default | GraphicsContextFlags.Debug)
+
+        public OpenTK_Model()
         { }
 
-        protected override void Dispose(bool disposing)
+        protected virtual void Dispose(bool disposing)
         {
-            if (disposing && !this._disposed)
+            if (disposing && !_disposed)
             {
                 _light_ssbo.Dispose();
                 _mvp_ssbo.Dispose();
                 _test_vao.Dispose();
                 _test_prog.Dispose();
-                this._disposed = true;
+                _disposed = true;
             }
-            base.Dispose(disposing);
         }
 
-        //! On load window (once)
-        protected override void OnLoad(EventArgs e)
+        public void Dispose()
         {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        public void Setup(int cx, int cy)
+        {
+            this._cx = cx;
+            this._cy = cy;
+
             // Version strings
             _version.Retrieve();
 
@@ -210,7 +207,9 @@ namespace OpenTK_example_2
 
             // states
 
-            GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+            GL.Viewport(0, 0, this._cx, this._cy);
+            GL.ClearColor(System.Drawing.Color.Beige);
+            //GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             GL.Enable(EnableCap.DepthTest);
             GL.Enable(EnableCap.CullFace);
             GL.FrontFace(FrontFaceDirection.Ccw);
@@ -220,76 +219,33 @@ namespace OpenTK_example_2
 
             this._view = Matrix4.LookAt(0.0f, 0.0f, 1.5f, 0, 0, 0, 0, 1, 0);
 
-            this._spin = new ModelSpinningControls(
-                () => { return this._period; },
-                () => { return new float[] { 0, 0, (float)this.Width, (float)this.Height }; }
-            );
-            this._spin.SetAttenuation(1.0f, 0.05f, 0.0f);
-
-            base.OnLoad(e);
-        }
-
-        //! On resize
-        protected override void OnResize(EventArgs e)
-        {
             float angle = 90.0f * (float)Math.PI / 180.0f;
-            float aspect = (float)this.Width / (float)this.Height;
+            float aspect = (float)this._cx / (float)this._cy;
             this._projection = Matrix4.CreatePerspectiveFieldOfView(angle, aspect, 0.1f, 100.0f);
-
-            GL.Viewport(0, 0, this.Width, this.Height);
-
-            base.OnResize(e);
         }
 
-        //! On update window
-        protected override void OnUpdateFrame(FrameEventArgs e)
+        public void Draw(int cx, int cy)
         {
-            KeyboardState input = Keyboard.GetState();
-            if (input.IsKeyDown(Key.Escape))
+            bool resized = this._cx != cx || this._cy != cy;
+            if (resized)
             {
-                Exit();
+                this._cx = cx;
+                this._cy = cy;
+                GL.Viewport(0, 0, this._cx, this._cy);
+
+                float angle = 90.0f * (float)Math.PI / 180.0f;
+                float aspect = (float)this._cx / (float)this._cy;
+                this._projection = Matrix4.CreatePerspectiveFieldOfView(angle, aspect, 0.1f, 100.0f);
             }
-
-            this._period += this.RenderPeriod;
-
-            this._spin.Update();
-            Matrix4 model_mat = this._spin.autoModelMatrix * this._spin.orbit; // OpenTK `*`-operator is reversed
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             this._test_prog.Use();
 
-            TMVP mvp = new TMVP(model_mat, this._view, this._projection);
+            TMVP mvp = new TMVP(Matrix4.Identity, this._view, this._projection);
             this._mvp_ssbo.Update(ref mvp);
 
             _test_vao.Draw(36);
-
-            Context.SwapBuffers();
-            base.OnUpdateFrame(e);
-        }
-
-        protected override void OnMouseDown(MouseButtonEventArgs e)
-        {
-            base.OnMouseDown(e);
-
-            Vector2 wnd_pos = new Vector2((float)e.Mouse.X, (float)(this.Height - e.Mouse.Y));
-            this._spin.MosueDown(wnd_pos, e.Mouse.LeftButton == ButtonState.Pressed);
-        }
-
-        protected override void OnMouseUp(MouseButtonEventArgs e)
-        {
-            base.OnMouseUp(e);
-
-            Vector2 wnd_pos = new Vector2((float)e.Mouse.X, (float)(this.Height - e.Mouse.Y));
-            this._spin.MosueUp(wnd_pos, e.Mouse.LeftButton == ButtonState.Released);
-        }
-
-        protected override void OnMouseMove(MouseMoveEventArgs e)
-        {
-            base.OnMouseMove(e);
-
-            Vector2 wnd_pos = new Vector2((float)e.Mouse.X, (float)(this.Height - e.Mouse.Y));
-            this._spin.MosueMove(wnd_pos);
         }
     }
 }

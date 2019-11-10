@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using OpenTK.Graphics.OpenGL4; // GL, ShaderType
 
-namespace OpenTK_library
+namespace OpenTK_library.OpenGL
 {
-    public class GL_StorageBuffer<T_DATA>
+    public class StorageBuffer<T_DATA>
         : IDisposable
         where T_DATA : struct
     {
@@ -14,10 +14,10 @@ namespace OpenTK_library
 
         private int _ssbo = 0;
 
-        public GL_StorageBuffer()
+        public StorageBuffer()
         { }
 
-        ~GL_StorageBuffer()
+        ~StorageBuffer()
         {
             GL.DeleteBuffer(this._ssbo);
         }

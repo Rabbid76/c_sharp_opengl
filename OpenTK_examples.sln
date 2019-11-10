@@ -23,6 +23,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_example_2", "OpenTK_
 		{E4FC68E0-0E54-4E28-BB40-A5B4F39DE56A} = {E4FC68E0-0E54-4E28-BB40-A5B4F39DE56A}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_WPF_example_1", "OpenTK_WPF_example_1\OpenTK_WPF_example_1.csproj", "{5C3FC284-49E7-42E3-9124-40BBAD4B9291}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfViewModelModule", "WpfViewModelModule\WpfViewModelModule.csproj", "{93619D2B-BCB4-4751-84AB-2399A9BE058F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,14 @@ Global
 		{B759924B-F70F-4F86-9232-0C419C3FBAE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B759924B-F70F-4F86-9232-0C419C3FBAE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B759924B-F70F-4F86-9232-0C419C3FBAE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C3FC284-49E7-42E3-9124-40BBAD4B9291}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C3FC284-49E7-42E3-9124-40BBAD4B9291}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C3FC284-49E7-42E3-9124-40BBAD4B9291}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C3FC284-49E7-42E3-9124-40BBAD4B9291}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93619D2B-BCB4-4751-84AB-2399A9BE058F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93619D2B-BCB4-4751-84AB-2399A9BE058F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93619D2B-BCB4-4751-84AB-2399A9BE058F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93619D2B-BCB4-4751-84AB-2399A9BE058F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

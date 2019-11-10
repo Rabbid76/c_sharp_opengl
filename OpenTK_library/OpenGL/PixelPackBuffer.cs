@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using OpenTK.Graphics.OpenGL4; // GL, ShaderType
 
-namespace OpenTK_library
+namespace OpenTK_library.OpenGL
 {
-    public class GL_PixelPackBuffer<T_DATA>
+    public class PixelPackBuffer<T_DATA>
     {
         private bool _disposed = false;
         private bool _buffer_specification_4 = true;
 
         private int _ppbo = 0;
 
-        public GL_PixelPackBuffer()
+        public PixelPackBuffer()
         { }
 
-        ~GL_PixelPackBuffer()
+        ~PixelPackBuffer()
         {
             GL.DeleteBuffer(this._ppbo);
         }

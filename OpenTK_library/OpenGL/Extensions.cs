@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL4; // GL
 
-namespace OpenTK_library
+namespace OpenTK_library.OpenGL
 {
-    public class GL_Extensions
+    public class Extensions
     {
         private List<string> _extensions = new List<string>();
 
-        public GL_Extensions()
+        public Extensions()
         { }
 
         // Get OpenGL extension list

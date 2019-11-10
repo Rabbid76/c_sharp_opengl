@@ -1,10 +1,9 @@
 ﻿using System;
-using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using OpenTK; // Vector2, Vector3, Vector4, Matrix4
 
-namespace OpenTK_library
+namespace OpenTK_library.Controls
 {
     public class BaseControls
     {

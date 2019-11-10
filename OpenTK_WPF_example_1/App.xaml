@@ -1,0 +1,9 @@
+﻿<Application x:Class="OpenTK_WPF_example_1.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:OpenTK_WPF_example_1"
+             StartupUri="View/ViewOpenTK.xaml">
+    <Application.Resources>
+         
+    </Application.Resources>
+</Application>
