@@ -106,7 +106,7 @@ namespace OpenTK_example_2
 
             // create Vertex Array Object, Array Buffer Object and Element Array Buffer Object
 
-            (float[] attributes, uint[] indices) = new TrefoilKnot(196, 16).Create();
+            (float[] attributes, uint[] indices) = new TrefoilKnot(256, 16).Create();
             TVertexFormat[] format = {
                 new TVertexFormat(0, 0, 3, 0, false),
                 new TVertexFormat(0, 1, 3, 3, false),

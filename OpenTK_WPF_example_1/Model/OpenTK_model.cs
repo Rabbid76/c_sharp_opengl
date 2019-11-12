@@ -65,6 +65,8 @@ namespace OpenTK_WPF_example_1.Model
 
         private Matrix4 _view = Matrix4.Identity;
         private Matrix4 _projection = Matrix4.Identity;
+        private ModelSpinningControls _spin;
+        double _period = 0;
 
         public OpenTK_Model()
         { }
@@ -87,6 +89,21 @@ namespace OpenTK_WPF_example_1.Model
             GC.SuppressFinalize(this);
         }
 
+        public void MouseDown(Vector2 wnd_pos, bool left)
+        {
+            this._spin.MosueDown(wnd_pos, left);
+        }
+
+        public void MouseUp(Vector2 wnd_pos, bool left)
+        {
+            this._spin.MosueUp(wnd_pos, left);
+        }
+
+        public void MouseMove(Vector2 wnd_pos)
+        {
+            this._spin.MosueMove(wnd_pos);
+        }
+
         public void Setup(int cx, int cy)
         {
             this._cx = cx;
@@ -103,7 +120,7 @@ namespace OpenTK_WPF_example_1.Model
 
             // create Vertex Array Object, Array Buffer Object and Element Array Buffer Object
 
-            (float[] attributes, uint[] indices) = new TrefoilKnot(196, 16).Create();
+            (float[] attributes, uint[] indices) = new TrefoilKnot(256, 16).Create();
             TVertexFormat[] format = {
                 new TVertexFormat(0, 0, 3, 0, false),
                 new TVertexFormat(0, 1, 3, 3, false),
@@ -222,10 +239,18 @@ namespace OpenTK_WPF_example_1.Model
             float angle = 90.0f * (float)Math.PI / 180.0f;
             float aspect = (float)this._cx / (float)this._cy;
             this._projection = Matrix4.CreatePerspectiveFieldOfView(angle, aspect, 0.1f, 100.0f);
+
+            this._spin = new ModelSpinningControls(
+                () => { return this._period; },
+                () => { return new float[] { 0, 0, (float)this._cx, (float)this._cy }; }
+            );
+            this._spin.SetAttenuation(1.0f, 0.05f, 0.0f);
         }
 
-        public void Draw(int cx, int cy)
+        public void Draw(int cx, int cy, double delta_t)
         {
+            this._period += delta_t;
+
             bool resized = this._cx != cx || this._cy != cy;
             if (resized)
             {
@@ -238,11 +263,14 @@ namespace OpenTK_WPF_example_1.Model
                 this._projection = Matrix4.CreatePerspectiveFieldOfView(angle, aspect, 0.1f, 100.0f);
             }
 
+            this._spin.Update();
+            Matrix4 model_mat = this._spin.autoModelMatrix * this._spin.orbit; // OpenTK `*`-operator is reversed
+
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             this._test_prog.Use();
 
-            TMVP mvp = new TMVP(Matrix4.Identity, this._view, this._projection);
+            TMVP mvp = new TMVP(model_mat, this._view, this._projection);
             this._mvp_ssbo.Update(ref mvp);
 
             _test_vao.Draw(36);

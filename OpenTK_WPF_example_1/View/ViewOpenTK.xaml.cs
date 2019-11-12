@@ -32,11 +32,5 @@ namespace OpenTK_WPF_example_1.View
             _gl_vm.Formular = this;
             this.DataContext = _gl_vm;
         }
-
-        private void window_view_Loaded(object sender, RoutedEventArgs e)
-        {
-            // Assign the GLControl as the host control's child.
-            host.Child = _gl_vm.GLC; // TODO $$$ [Binding WindowsFormsHost Child property](https://stackoverflow.com/questions/38529025/binding-windowsformshost-child-property) 
-        }
     }
 }
