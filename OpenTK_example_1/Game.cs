@@ -111,7 +111,7 @@ namespace OpenTK_example_1
                 frag_color = v_color; 
             }";
 
-            this._test_prog = new OpenTK_library.OpenGL.Program(vert_shader, frag_shader);
+            this._test_prog = OpenTK_library.OpenGL.Program.VertexAndFragmentShaderProgram(vert_shader, frag_shader);
             this._test_prog.Generate();
 
             this._test_prog.Use();

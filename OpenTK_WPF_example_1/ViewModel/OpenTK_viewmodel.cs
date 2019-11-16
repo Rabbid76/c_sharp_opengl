@@ -22,7 +22,6 @@ namespace OpenTK_WPF_example_1.ViewModel
     class OpenTK_ViewModel
         : INotifyPropertyChanged
     {
-        public OpenTK_View Formular { get; set; }
         public event PropertyChangedEventHandler PropertyChanged;
 
 
@@ -33,9 +32,7 @@ namespace OpenTK_WPF_example_1.ViewModel
         private int _cy = 0;
 
         public OpenTK_ViewModel()
-        {
-
-        }
+        {}
 
         public WindowsFormsHost GLHostControl
         {
@@ -46,7 +43,8 @@ namespace OpenTK_WPF_example_1.ViewModel
                 if (_glc == null)
                 {
                     // Create the GLControl.
-                    _glc = new GLControl(GraphicsMode.Default, 4, 6, GraphicsContextFlags.Default | GraphicsContextFlags.Debug);
+                    GraphicsMode mode = new GraphicsMode(32, 24, 8, 8);
+                    _glc = new GLControl(mode, 4, 6, GraphicsContextFlags.Default | GraphicsContextFlags.Debug);
 
                     // Assign Load and Paint events of GLControl.
                     _glc.Load += new EventHandler(GLC_OnLoad);

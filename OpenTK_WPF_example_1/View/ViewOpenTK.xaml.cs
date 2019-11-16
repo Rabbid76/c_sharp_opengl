@@ -23,14 +23,9 @@ namespace OpenTK_WPF_example_1.View
     public partial class OpenTK_View 
         : Window
     {
-        OpenTK_ViewModel _gl_vm = new OpenTK_ViewModel();
-
         public OpenTK_View()
         {
             InitializeComponent();
-
-            _gl_vm.Formular = this;
-            this.DataContext = _gl_vm;
         }
     }
 }

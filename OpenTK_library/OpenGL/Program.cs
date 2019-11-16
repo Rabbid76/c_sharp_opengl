@@ -21,6 +21,11 @@ namespace OpenTK_library.OpenGL
         private string _vert_source; //!< vertex shader source (TODO abstract, map)
         private string _frag_source; //!< vertex shader source (TODO abstract, map)
 
+        public static Program VertexAndFragmentShaderProgram(string VertexShaderSource, string FragmentShaderSource)
+        {
+            return new Program(VertexShaderSource, FragmentShaderSource);
+        }
+
         public Program(string VertexShaderSource, string FragmentShaderSource)
         {
             this._vert_source = VertexShaderSource;

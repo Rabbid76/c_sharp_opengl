@@ -208,7 +208,7 @@ namespace OpenTK_WPF_example_1.Model
                 frag_color = vec4( lightCol.rgb, inData.col.a );
             }";
 
-            this._test_prog = new OpenTK_library.OpenGL.Program(vert_shader, frag_shader);
+            this._test_prog = OpenTK_library.OpenGL.Program.VertexAndFragmentShaderProgram(vert_shader, frag_shader);
             this._test_prog.Generate();
 
             // Model view projection shader storage block objects and buffers
