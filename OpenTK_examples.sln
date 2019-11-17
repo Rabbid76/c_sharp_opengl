@@ -27,6 +27,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_WPF_example_1", "Ope
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfViewModelModule", "WpfViewModelModule\WpfViewModelModule.csproj", "{93619D2B-BCB4-4751-84AB-2399A9BE058F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_example_3", "OpenTK_example_3\OpenTK_example_3.csproj", "{E30DF08C-7B40-48BB-A1EC-1D9B1C684BCD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E4FC68E0-0E54-4E28-BB40-A5B4F39DE56A} = {E4FC68E0-0E54-4E28-BB40-A5B4F39DE56A}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +62,10 @@ Global
 		{93619D2B-BCB4-4751-84AB-2399A9BE058F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93619D2B-BCB4-4751-84AB-2399A9BE058F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93619D2B-BCB4-4751-84AB-2399A9BE058F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E30DF08C-7B40-48BB-A1EC-1D9B1C684BCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E30DF08C-7B40-48BB-A1EC-1D9B1C684BCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E30DF08C-7B40-48BB-A1EC-1D9B1C684BCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E30DF08C-7B40-48BB-A1EC-1D9B1C684BCD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
