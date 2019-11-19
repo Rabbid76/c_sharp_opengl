@@ -1,5 +1,4 @@
 ﻿using System;
-using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using OpenTK; // Vector2, Vector3, Vector4, Matrix4

@@ -1,7 +1,5 @@
 # TODO
 
-- orbit example -> wpf
-
 - pixel buffer
   
   Read pixel from buffer by pixel buffer and buffer mapping
