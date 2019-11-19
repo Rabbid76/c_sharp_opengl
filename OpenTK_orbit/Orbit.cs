@@ -5,6 +5,7 @@ using OpenTK.Graphics.OpenGL4; // GL
 
 using OpenTK_library;
 using OpenTK_library.Type;
+using OpenTK_library.Mesh;
 using OpenTK_library.Controls;
 using OpenTK_library.OpenGL;
 
@@ -70,35 +71,17 @@ namespace OpenTK_orbit
 
             // create Vertex Array Object, Array Buffer Object and Element Array Buffer Object
 
-            float[] v = { -1, -1, 1, 1, -1, 1, 1, 1, 1, -1, 1, 1, -1, -1, -1, 1, -1, -1, 1, 1, -1, -1, 1, -1 };
-            float[] c = { 1.0f, 0.0f, 0.0f, 1.0f, 0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f };
-            float[] n = { 0, 0, 1, 1, 0, 0, 0, 0, -1, -1, 0, 0, 0, 1, 0, 0, -1, 0 };
-            int[] ec = {0, 1, 2, 3, 1, 5, 6, 2, 5, 4, 7, 6, 4, 0, 3, 7, 3, 2, 6, 7, 1, 0, 4, 5};
-            int[] es = { 0, 1, 2, 0, 2, 3 };
-            List<float> attr_array = new List<float>();
-            for (int si = 0; si < 6; ++si)
-            {
-                for(int vi = 0; vi <6; ++ vi)
-                {
-                    int ci = es[vi];
-                    int i = si * 4 + ci;
-                    attr_array.AddRange(new float[] { v[ec[i] * 3], v[ec[i] * 3 + 1], v[ec[i] * 3 + 2] });
-                    attr_array.AddRange(new float[] { n[si * 3], n[si * 3 + 1], n[si * 3 + 2] });
-                    attr_array.AddRange(new float[] { c[si * 3], c[si * 3 + 1], c[si * 3 + 2], 1 });
-                }
-            }
-            
-            uint[] icube = {};
-
+            (float[] attributes, uint[] indices) = new Cube().Create();
             TVertexFormat[] format = {
                 new TVertexFormat(0, 0, 3, 0, false),
                 new TVertexFormat(0, 1, 3, 3, false),
-                new TVertexFormat(0, 2, 4, 6, false),
+                //new GL_TVertexFormat(0, ?, 2, 6, false),
+                new TVertexFormat(0, 2, 4, 8, false),
             };
 
             _test_vao = new VertexArrayObject<float, uint>();
-            _test_vao.AppendVertexBuffer(0, 10, attr_array.ToArray());
-            _test_vao.Create(format, icube);
+            _test_vao.AppendVertexBuffer(0, 12, attributes);
+            _test_vao.Create(format, indices);
             _test_vao.Bind();
 
             // Create shader program

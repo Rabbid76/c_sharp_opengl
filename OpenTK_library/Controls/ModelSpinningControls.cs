@@ -49,7 +49,7 @@ namespace OpenTK_library.Controls
             get
             {
                 return (this._mouse_drag || (this._auto_rotate && this._auto_spin)) ?
-                    (this._current_model_mat * this._current_orbit_mat) : // OpenTK `*`-operator is reversed
+                    (this._current_orbit_mat * this._orbit_mat) : // OpenTK `*`-operator is reversed
                     this._orbit_mat;
             }
         }
