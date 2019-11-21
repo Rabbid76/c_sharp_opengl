@@ -87,34 +87,9 @@ namespace OpenTK_example_3
             Assembly assembly = Assembly.GetExecutingAssembly();
             //string[] names = assembly.GetManifestResourceNames();
             Stream resource_stream = assembly.GetManifestResourceStream("OpenTK_example_3.Resource.background.jpg");
-            Bitmap bm = new Bitmap(resource_stream);
-
-            byte[] textur_image = new byte[bm.Width * bm.Height * 4];
-
-            // TODO $$$ improve that nested loops
             
-            for (int x = 0; x < bm.Width; ++ x)
-            {
-                for (int y = 0; y < bm.Height; ++y)
-                {
-                    int i = (y * bm.Width + x) * 4;
-                    Color c = bm.GetPixel(x, y);
-                    textur_image[i + 0] = c.R;
-                    textur_image[i + 1] = c.G;
-                    textur_image[i + 2] = c.B;
-                    textur_image[i + 3] = c.A;
-                }
-            }
-            /*
-            using (MemoryStream ms = new MemoryStream())
-            {
-                img.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                textur_image = ms.ToArray();
-            }
-            */
-
             _test_texture = new Texture();
-            _test_texture.Create2D(bm.Width, bm.Height, textur_image);
+            _test_texture.Create2D(new Bitmap(resource_stream));
 
             // Create shader program
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using OpenTK.Graphics.OpenGL4; // GL, ShaderType
@@ -35,6 +36,35 @@ namespace OpenTK_library.OpenGL
         {
             Dispose(true);
             GC.SuppressFinalize(this);
+        }
+
+        public void Create2D(Bitmap bm)
+        {
+            byte[] textur_image = new byte[bm.Width * bm.Height * 4];
+
+            // TODO $$$ improve that nested loops
+
+            for (int x = 0; x < bm.Width; ++x)
+            {
+                for (int y = 0; y < bm.Height; ++y)
+                {
+                    int i = (y * bm.Width + x) * 4;
+                    Color c = bm.GetPixel(x, y);
+                    textur_image[i + 0] = c.R;
+                    textur_image[i + 1] = c.G;
+                    textur_image[i + 2] = c.B;
+                    textur_image[i + 3] = c.A;
+                }
+            }
+            /*
+            using (MemoryStream ms = new MemoryStream())
+            {
+                img.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+                textur_image = ms.ToArray();
+            }
+            */
+
+            Create2D(bm.Width, bm.Height, textur_image);
         }
 
         public void Create2D(int cx, int cy, byte []pixel)

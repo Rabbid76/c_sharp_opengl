@@ -112,7 +112,7 @@ namespace OpenTK_example_2
             TVertexFormat[] format = {
                 new TVertexFormat(0, 0, 3, 0, false),
                 new TVertexFormat(0, 1, 3, 3, false),
-                //new GL_TVertexFormat(0, ?, 2, 6, false),
+                //new TVertexFormat(0, ?, 2, 6, false),
                 new TVertexFormat(0, 2, 4, 8, false),
             };
 
