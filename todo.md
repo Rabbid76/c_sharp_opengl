@@ -22,9 +22,12 @@
 
 ## Projects
 
+### Controls
+
+- first person controls
+
 ### Parallax mapping
 
-- Relief Parallax Mapping
 - Cone Step Mapping
   - compute shader generator
   - mapping

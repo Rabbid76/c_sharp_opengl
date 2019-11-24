@@ -192,13 +192,13 @@ namespace OpenTK_parallax_mapping.Model
 
             void main()
             {
-                mat3 normal_mat = inverse(transpose(mat3(mvp.view * mvp.model))); 
+                mat3 normal_mat = inverse(transpose(mat3(mvp.model))); 
 
                 outData.w_nv    = normalize(normal_mat * a_nv);
                 outData.uv      = a_uv;
-                vec4 viewPos    = mvp.view * mvp.model * a_pos;
-                outData.w_pos   = viewPos.xyz / viewPos.w;
-                outData.eye_pos = vec3(0.0);
+                vec4 worldPos   = mvp.model * a_pos;
+                outData.w_pos   = worldPos.xyz / worldPos.w;
+                outData.eye_pos = inverse(mvp.view)[3].xyz;
                 gl_Position     = mvp.proj * mvp.view * mvp.model * a_pos;
             }";
 
@@ -275,11 +275,12 @@ namespace OpenTK_parallax_mapping.Model
                 if (uv.x > 1.0 || uv.y > 1.0 || uv.x < 0.0 || uv.y < 0.0)
                     discard;
 
-                vec4 color = texture(u_diffuse, uv.xy);
+                vec4 color   = texture(u_diffuse, uv.xy);
+                vec3 normalV = texture2D(u_normal_map, uv.st).xyz * 2.0 - 1.0;
+                normalV      = normalize(vec3(normalV.xy, normalV.z / max(0.001, 10.0 * u_height_scale)));
 
                 // ambient part
                 vec3 lightCol = light_data.u_ambient * color.rgb;
-                vec3 normalV  = normalize(texture2D(u_normal_map, uv.st).xyz * 2.0 - 1.0); 
                 vec3 eyeV     = normalize(inData.eye_pos - inData.w_pos);
                 vec3 lightV   = tbn_inv * normalize( -light_data.u_lightDir.xyz );
 

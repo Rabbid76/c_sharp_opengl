@@ -17,6 +17,9 @@ namespace OpenTK_library.Controls
 
         public static Matrix4 CreateRotate(float angle, Vector3 axis)
         {
+            if (axis.X == 0.0f && axis.Y == 0.0f && axis.Z == 0.0f)
+                return Matrix4.Identity;
+
             Vector3 norm_axis = axis.Normalized();
             float x = norm_axis.X;
             float y = norm_axis.Y;
@@ -35,5 +38,33 @@ namespace OpenTK_library.Controls
         {
             return value - (float)Math.Truncate(value);
         }
+
+        #region EulerAngles
+        // [Pitch, yaw, and roll](https://simple.wikipedia.org/wiki/Pitch,_yaw,_and_roll)
+        // [Maths - Conversion Quaternion to Euler](https://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToEuler/)
+
+        public static float Pitch(Quaternion q)
+        {
+            const float epsi = 0.0001f;
+            float y = 2.0f * (q.Y * q.Z + q.W * q.X);
+            float x = q.W * q.W - q.X * q.X - q.Y * q.Y + q.Z * q.Z;
+            
+            float pitch = (float)((Math.Abs(q.X) < epsi && Math.Abs(q.Y) < epsi) ? 2.0 * Math.Atan2(q.X, q.W) : Math.Atan2(y, x));
+            return pitch;
+        }
+
+        public static float Yaw(Quaternion q)
+        {
+            float yaw = (float)Math.Asin(Math.Min(Math.Max(-2.0f * (q.X * q.Z - q.W * q.Y), -1.0f), 1.0f));
+            return yaw;
+        }
+
+        public static float Roll(Quaternion q)
+        {
+            float roll = (float)Math.Atan2(2.0f * (q.X * q.Y + q.W * q.Z), q.W * q.W + q.X * q.X - q.Y * q.Y - q.Z * q.Z);
+            return roll;
+        }
+
+        #endregion
     }
 }
