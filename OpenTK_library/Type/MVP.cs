@@ -9,9 +9,9 @@ namespace OpenTK_library.Type
 {
     public unsafe struct TMVP
     {
-        public fixed float _model[16];
-        public fixed float _view[16];
         public fixed float _projection[16];
+        public fixed float _view[16];
+        public fixed float _model[16];
 
         public TMVP(Matrix4 model, Matrix4 view, Matrix4 projetion)
         {

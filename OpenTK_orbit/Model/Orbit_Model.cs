@@ -173,9 +173,9 @@ namespace OpenTK_orbit.Model
 
             layout(std430, binding = 1) buffer MVP
             {
-                mat4 model;
-                mat4 view;
                 mat4 proj;
+                mat4 view;
+                mat4 model;
             } mvp;
 
             void main()

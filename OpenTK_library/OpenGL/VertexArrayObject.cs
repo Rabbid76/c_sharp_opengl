@@ -108,6 +108,29 @@ namespace OpenTK_library.OpenGL
             }
         }
 
+        /// Draw Mesh Instanced
+        /// [Vertex Rendering - Instancing](https://www.khronos.org/opengl/wiki/Vertex_Rendering#Instancing)
+        public void DrawInstanced(int no_of_instances, int no_of_vertices = 0)
+        {
+            // TODO $$$ primitive type
+
+            GL.BindVertexArray(this._vao);
+
+            if (this._no_of_indices > 0)
+            {
+                DrawElementsType t_elem = DrawElementsType.UnsignedInt;
+                if (this._index_size == 2)
+                    t_elem = DrawElementsType.UnsignedShort;
+                else if (this._index_size == 1)
+                    t_elem = DrawElementsType.UnsignedByte;
+                GL.DrawElementsInstanced(PrimitiveType.Triangles, this._no_of_indices, t_elem, IntPtr.Zero, no_of_instances);
+            }
+            else if (no_of_vertices > 0)
+            {
+                GL.DrawArraysInstanced(PrimitiveType.Triangles, 0, no_of_vertices, no_of_instances);
+            }
+        }
+
         //! Create new OpenGL vertex buffer object
         public void AppendVertexBuffer(int id, int elems_stride, T_ATTRIBUTE[] attributes)
         {

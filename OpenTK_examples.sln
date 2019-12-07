@@ -31,6 +31,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_parallax_mapping", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_orbit", "OpenTK_orbit\OpenTK_orbit.csproj", "{33BD7DA4-EB60-49E4-983E-C3AF0286679B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_rubiks", "OpenTK_rubiks\OpenTK_rubiks.csproj", "{8A359A3C-B15B-42A3-AAF5-0D24A357B3EC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +71,10 @@ Global
 		{33BD7DA4-EB60-49E4-983E-C3AF0286679B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33BD7DA4-EB60-49E4-983E-C3AF0286679B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33BD7DA4-EB60-49E4-983E-C3AF0286679B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A359A3C-B15B-42A3-AAF5-0D24A357B3EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A359A3C-B15B-42A3-AAF5-0D24A357B3EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A359A3C-B15B-42A3-AAF5-0D24A357B3EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A359A3C-B15B-42A3-AAF5-0D24A357B3EC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

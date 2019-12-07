@@ -10,6 +10,7 @@ namespace OpenTK_library.Controls
     {
         GetTime _get_time;
         GetViewRect _get_view_rect;
+        GetMatrix _get_view_mat;
         Matrix4 _orbit_mat = Matrix4.Identity;
         Matrix4 _current_orbit_mat = Matrix4.Identity;
         Matrix4 _model_mat = Matrix4.Identity;
@@ -29,10 +30,11 @@ namespace OpenTK_library.Controls
         double _rotate_start_T = 0;
         float[] _attenuation = new float[] { 0, 0, 0 };
 
-        public ModelSpinningControls(GetTime get_time, GetViewRect view_rect)
+        public ModelSpinningControls(GetTime get_time, GetViewRect view_rect, GetMatrix view)
         {
             this._get_time = get_time;
             this._get_view_rect = view_rect;
+            this._get_view_mat = view;
             this._drag_start_T = this._rotate_start_T = this.time;
         }
 
@@ -40,6 +42,15 @@ namespace OpenTK_library.Controls
         private double time { get { return this._get_time(); } }
 
         protected float[] viewport_rect { get { return this._get_view_rect(); } }
+
+        protected (Matrix4 matrix, Matrix4 inverse) view
+        {
+            get
+            {
+                Matrix4 m = this._get_view_mat();
+                return (matrix: m, inverse: m.Inverted());
+            }
+        }
 
         public Matrix4 orbit { get { return this.orbitMatrix; } }
 
@@ -183,8 +194,12 @@ namespace OpenTK_library.Controls
             float len = (float)Math.Sqrt(dx * dx + dy * dy);
             if (this._mouse_drag && len > 0)
             {
+                // get view, projection and window matrix
+                //(Matrix4 mat_proj, Matrix4 inv_proj) = projection;
+                (Matrix4 mat_view, Matrix4 inv_view) = view;
+
                 this._mouse_drag_angle = (float)Math.PI * len;
-                this._mouse_drag_axis = new Vector3(-dy / len, dx / len, 0);
+                this._mouse_drag_axis = Vector3.TransformVector(new Vector3(-dy / len, dx / len, 0), inv_view);
                 this._mouse_drag_time = this.time - this._drag_start_T;
             }
             return this;

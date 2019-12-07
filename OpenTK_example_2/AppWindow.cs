@@ -137,9 +137,9 @@ namespace OpenTK_example_2
 
             layout(std430, binding = 1) buffer MVP
             {
-                mat4 model;
-                mat4 view;
                 mat4 proj;
+                mat4 view;
+                mat4 model;
             } mvp;
 
             void main()
@@ -224,7 +224,8 @@ namespace OpenTK_example_2
 
             this._spin = new ModelSpinningControls(
                 () => { return this._period; },
-                () => { return new float[] { 0, 0, (float)this.Width, (float)this.Height }; }
+                () => { return new float[] { 0, 0, (float)this.Width, (float)this.Height }; },
+                () => { return this._view; }
             );
             this._spin.SetAttenuation(1.0f, 0.05f, 0.0f);
 
