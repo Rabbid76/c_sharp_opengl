@@ -8,6 +8,7 @@ namespace OpenTK_library.Controls
     public class ModelSpinningControls
         : BaseControls
     {
+        /// <summary>time getter delegate (time in seconds)</summary>
         GetTime _get_time;
         GetViewRect _get_view_rect;
         GetMatrix _get_view_mat;
@@ -30,6 +31,12 @@ namespace OpenTK_library.Controls
         double _rotate_start_T = 0;
         float[] _attenuation = new float[] { 0, 0, 0 };
 
+        /// <summary>
+        /// constructor
+        /// </summary>
+        /// <param name="get_time">time getter delegate (time in seconds)</param>
+        /// <param name="view_rect"></param>
+        /// <param name="view"></param>
         public ModelSpinningControls(GetTime get_time, GetViewRect view_rect, GetMatrix view)
         {
             this._get_time = get_time;
@@ -38,7 +45,12 @@ namespace OpenTK_library.Controls
             this._drag_start_T = this._rotate_start_T = this.time;
         }
 
-        // get the render time in seconds
+        public bool AutoRotate { get { return _auto_rotate; } }
+        public bool AutoSpin { get { return _auto_spin; } }
+
+        /// <summary>
+        /// get the render time in seconds
+        /// </summary>
         private double time { get { return this._get_time(); } }
 
         protected float[] viewport_rect { get { return this._get_view_rect(); } }
@@ -148,8 +160,7 @@ namespace OpenTK_library.Controls
             {
                 if (this._auto_rotate_mode)
                 {
-                    this._mouse_start = this._mouse;
-                    this.ChangeMotionMode(true, false, false);
+                    StartRotate(mouse_pos);
                 }
                 else
                 {
@@ -167,7 +178,7 @@ namespace OpenTK_library.Controls
             {
                 if (this._auto_rotate_mode)
                 {
-                    this.ChangeMotionMode(false, true, true);
+                    this.FinishRotate(mouse_pos);
                 }
             }
             else if (left == false)
@@ -185,6 +196,14 @@ namespace OpenTK_library.Controls
             {
                 return this;
             }
+            return UpdatePosition(mouse_pos);
+        }
+
+        public ModelSpinningControls UpdatePosition(Vector2 mouse_pos)
+        {
+            if (_mouse_drag == false )
+                return this;
+
             this._mouse = mouse_pos;
             float[] vp_rect = this.viewport_rect;
             Vector2 dist = Vector2.Subtract(this._mouse, this._mouse_start);
@@ -192,7 +211,7 @@ namespace OpenTK_library.Controls
             float dx = dist.X / vp_dia.X;
             float dy = dist.Y / vp_dia.Y;
             float len = (float)Math.Sqrt(dx * dx + dy * dy);
-            if (this._mouse_drag && len > 0)
+            if (len > 0)
             {
                 // get view, projection and window matrix
                 //(Matrix4 mat_proj, Matrix4 inv_proj) = projection;
@@ -203,6 +222,23 @@ namespace OpenTK_library.Controls
                 this._mouse_drag_time = this.time - this._drag_start_T;
             }
             return this;
+        }
+
+        public ModelSpinningControls StartRotate(Vector2 mouse_pos)
+        {
+            _mouse_start = mouse_pos;
+            return ChangeMotionMode(true, false, false);
+        }
+
+        public ModelSpinningControls FinishRotate(Vector2 mouse_pos)
+        {
+            UpdatePosition(mouse_pos);
+            return ChangeMotionMode(false, true, true);
+        }
+
+        public ModelSpinningControls ToogleRotate()
+        {
+            return ChangeMotionMode(false, false, !_auto_rotate);
         }
     }
 }

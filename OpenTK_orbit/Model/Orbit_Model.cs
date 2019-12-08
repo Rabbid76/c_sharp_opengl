@@ -276,9 +276,9 @@ namespace OpenTK_orbit.Model
             );
         }
 
-        public void Draw(int cx, int cy, double delta_t)
+        public void Draw(int cx, int cy, double app_t)
         {
-            this._period += delta_t;
+            this._period = app_t;
 
             bool resized = this._cx != cx || this._cy != cy;
             if (resized)

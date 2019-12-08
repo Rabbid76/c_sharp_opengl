@@ -248,9 +248,9 @@ namespace OpenTK_WPF_example_1.Model
             this._spin.SetAttenuation(1.0f, 0.05f, 0.0f);
         }
 
-        public void Draw(int cx, int cy, double delta_t)
+        public void Draw(int cx, int cy, double app_t)
         {
-            this._period += delta_t;
+            this._period = app_t;
 
             bool resized = this._cx != cx || this._cy != cy;
             if (resized)

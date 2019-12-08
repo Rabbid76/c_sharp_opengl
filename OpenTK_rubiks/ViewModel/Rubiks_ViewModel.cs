@@ -5,32 +5,27 @@ using System.Windows.Media;
 using System.Windows.Input;
 using System.Windows.Forms.Integration;
 using System.Diagnostics;
-using OpenTK_orbit.View;
-using OpenTK_orbit.Model;
 using OpenTK;                  // GLControl
 using OpenTK.Input;            // KeyboardState, Keyboard, Key
 using OpenTK.Graphics;         // GraphicsMode, Context
+using OpenTK_rubiks.View;
+using OpenTK_rubiks.Model;
 
-/// <summary>
-/// See [Integrating WPF and Microsoft Kinect SDK with OpenTK](http://igordcard.blogspot.com/2011/12/integrating-wpf-and-kinect-with-opentk.html)
-/// </summary>
-
-namespace OpenTK_orbit.ViewModel
+namespace OpenTK_rubiks.ViewModel
 {
-    class Orbit_ViewModel
+    public class Rubiks_ViewModel
         : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-
         WindowsFormsHost _formsHost;
         GLControl _glc;
-        private Orbit_Model _gl_model = new Orbit_Model();
+        private Rubiks _gl_model = new Rubiks();
         private int _cx = 0;
         private int _cy = 0;
         private Stopwatch _stopWatch = new Stopwatch();
 
-        public Orbit_ViewModel()
+        public Rubiks_ViewModel()
         { }
 
         public WindowsFormsHost GLHostControl

@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Windows.Media;
 using System.Windows.Input;
 using System.Windows.Forms.Integration;
+using System.Diagnostics;
 using OpenTK_WPF_example_1.View;
 using OpenTK_WPF_example_1.Model;
 using OpenTK;                  // GLControl
@@ -30,6 +31,7 @@ namespace OpenTK_WPF_example_1.ViewModel
         private OpenTK_Model _gl_model = new OpenTK_Model();
         private int _cx = 0;
         private int _cy = 0;
+        private Stopwatch _stopWatch = new Stopwatch();
 
         public OpenTK_ViewModel()
         {}
@@ -75,6 +77,7 @@ namespace OpenTK_WPF_example_1.ViewModel
             _cy = _glc.Height;
             if (this._gl_model != null)
                 this._gl_model.Setup(_cx, _cy);
+            _stopWatch.Start();
         }
 
         protected void GLC_OnDestroy(object sender, EventArgs e)
@@ -85,12 +88,13 @@ namespace OpenTK_WPF_example_1.ViewModel
 
         protected void GLC_OnPaint(object sender, System.Windows.Forms.PaintEventArgs e)
         {
-            double delta_t = 60.0 / 1000.0; // TODO $$$ delta time
+            var span = _stopWatch.Elapsed;
+            double app_t = span.TotalMilliseconds / 1000.0;
 
             _cx = _glc.Width;
             _cy = _glc.Height;
             if (this._gl_model != null)
-                this._gl_model.Draw(_cx, _cy, delta_t);
+                this._gl_model.Draw(_cx, _cy, app_t);
             this._glc.SwapBuffers();
             this._glc.Invalidate();
         }

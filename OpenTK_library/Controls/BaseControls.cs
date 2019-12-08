@@ -15,6 +15,22 @@ namespace OpenTK_library.Controls
         public delegate Vector3 GetPivot(Vector2 cursor_pos);
         public delegate double GetTime();
 
+
+        public static double Radians(double val)
+        {
+            return val * Math.PI / 180.0;
+        }
+
+        public static double Degrees(double val)
+        {
+            return val * 180.0 / Math.PI;
+        }
+
+        public static float Fract(float value)
+        {
+            return value - (float)Math.Truncate(value);
+        }
+
         public static Matrix4 CreateRotate(float angle, Vector3 axis)
         {
             if (axis.X == 0.0f && axis.Y == 0.0f && axis.Z == 0.0f)
@@ -32,11 +48,6 @@ namespace OpenTK_library.Controls
               y * x * (1.0f - c) + z * s, y * y * (1.0f - c) + c, y * z * (1.0f - c) - x * s, 0.0f,
               z * x * (1.0f - c) - y * s, z * y * (1.0f - c) + x * s, z * z * (1.0f - c) + c, 0.0f,
               0.0f, 0.0f, 0.0f, 1.0f);
-        }
-
-        public static float Fract(float value)
-        {
-            return value - (float)Math.Truncate(value);
         }
 
         #region EulerAngles

@@ -126,7 +126,7 @@ namespace OpenTK_example_1
         //! On resize
         protected override void OnResize(EventArgs e)
         {
-            GL.Viewport(0, 0, this.Width,this.Height);
+            GL.Viewport(0, 0, this.Width, this.Height);
             base.OnResize(e);
         }
 
@@ -138,8 +138,7 @@ namespace OpenTK_example_1
             {
                 Exit();
             }
-
-
+            
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
             _test_vao.Draw();

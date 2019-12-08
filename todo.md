@@ -35,6 +35,8 @@
 
 ## Projects
 
+### Compmute Shader
+
 ### Controls
 
 - first person controls
@@ -51,8 +53,6 @@
 ### Control
 
 Angular mobile application (controller) which controls WPF desktop application
-
-### Rubik's Cube
 
 ### Asimp
 
