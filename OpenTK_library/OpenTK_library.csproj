@@ -47,6 +47,8 @@
     <Compile Include="Controls\BaseControls.cs" />
     <Compile Include="Controls\ModelSpinningControls.cs" />
     <Compile Include="Mesh\Cube.cs" />
+    <Compile Include="OpenGL\Framebuffer.cs" />
+    <Compile Include="OpenGL\Renderbuffer.cs" />
     <Compile Include="OpenGL\Texture.cs" />
     <Compile Include="Type\MVP.cs" />
     <Compile Include="Mesh\TrefoilKnot.cs" />
