@@ -13,6 +13,12 @@ namespace OpenTK_library.OpenGL
         private bool _buffer_specification_4 = true;
 
         private int _tbo = 0;
+        private int _cx = 0;
+        private int _cy = 0;
+        private bool _depth = false;
+        private bool _stencil = false;
+
+        public int Object { get { return this._tbo; } }
 
         public Texture()
         { }
@@ -69,6 +75,11 @@ namespace OpenTK_library.OpenGL
 
         public void Create2D(int cx, int cy, byte []pixel)
         {
+            _cx = cx;
+            _cy = cy;
+            _depth = false;
+            _stencil = false;
+
             if (_buffer_specification_4)
             {
                 // [What's the DSA version of glTexImage2D?](https://gamedev.stackexchange.com/questions/134177/whats-the-dsa-version-of-glteximage2d)
@@ -90,6 +101,39 @@ namespace OpenTK_library.OpenGL
                 GL.BindTexture(TextureTarget.Texture2D, this._tbo);
                 GL.TexImage2D<byte>(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, cx, cy, 0, PixelFormat.Rgba, PixelType.UnsignedByte, pixel);
                 GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
+            }
+        }
+
+        public void Create2D(int cx, int cy, bool depth, bool stencil)
+        {
+            if (/*depth &&*/ stencil)
+                Create2D(cx, cy, PixelInternalFormat.DepthStencil, PixelFormat.DepthStencil, PixelType.UnsignedByte);
+            else if (depth)
+                Create2D(cx, cy, PixelInternalFormat.DepthComponent, PixelFormat.DepthComponent, PixelType.Float);
+            else
+                Create2D(cx, cy, PixelInternalFormat.Rgba, PixelFormat.Rgba, PixelType.UnsignedByte);
+        }
+
+        public void Create2D(int cx, int cy, PixelInternalFormat internalFormat, PixelFormat format, PixelType type)
+        {
+            _cx = cx;
+            _cy = cy;
+            _depth = false;
+            _stencil = false;
+
+            if (false /*_buffer_specification_4*/)
+            {
+                // [What's the DSA version of glTexImage2D?](https://gamedev.stackexchange.com/questions/134177/whats-the-dsa-version-of-glteximage2d)
+                // TODO $$$
+            }
+            else
+            {
+                this._tbo = GL.GenTexture();
+                GL.ActiveTexture(TextureUnit.Texture0);
+                GL.BindTexture(TextureTarget.Texture2D, this._tbo);
+                GL.TexImage2D(TextureTarget.Texture2D, 0, internalFormat, cx, cy, 0, format, type, IntPtr.Zero );
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
             }
         }
 
