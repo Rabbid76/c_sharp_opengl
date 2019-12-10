@@ -8,10 +8,14 @@ namespace OpenTK_library.OpenGL
         : IDisposable
         where T_DATA : struct
     {
+        public enum Usage { Read, Write, ReadWrite };
+
         private bool _disposed = false;
         private bool _buffer_specification_4 = true;
 
         private int _ssbo = 0;
+
+        public int Object { get { return this._ssbo; } }
 
         public StorageBuffer()
         { }
@@ -38,7 +42,7 @@ namespace OpenTK_library.OpenGL
         }
 
         //! Create shader storage buffer object
-        public void Create(ref T_DATA data)
+        public void Create(ref T_DATA data, Usage usage = Usage.Write)
         {
             int data_size = Marshal.SizeOf(default(T_DATA));
             IntPtr data_ptr = Marshal.AllocHGlobal(data_size);
@@ -46,15 +50,26 @@ namespace OpenTK_library.OpenGL
 
             if (_buffer_specification_4)
             {
+                BufferStorageFlags storage = BufferStorageFlags.DynamicStorageBit | BufferStorageFlags.MapPersistentBit;
+                if (usage == Usage.Write || usage == Usage.ReadWrite)
+                    storage = storage | BufferStorageFlags.MapWriteBit;
+                if (usage == Usage.Read || usage == Usage.ReadWrite)
+                    storage = storage | BufferStorageFlags.MapReadBit;
+
                 GL.CreateBuffers(1, out this._ssbo);
-                BufferStorageFlags storage = BufferStorageFlags.DynamicStorageBit | BufferStorageFlags.MapWriteBit | BufferStorageFlags.MapPersistentBit;
                 GL.NamedBufferStorage(this._ssbo, data_size, data_ptr, storage);
             }
             else
             {
+                BufferUsageHint hint = BufferUsageHint.DynamicCopy;
+                if (usage == Usage.Write)
+                    hint = BufferUsageHint.DynamicDraw;
+                else if (usage == Usage.Write)
+                    hint = BufferUsageHint.DynamicRead;
+
                 this._ssbo = GL.GenBuffer();
                 GL.BindBuffer(BufferTarget.ShaderStorageBuffer, this._ssbo);
-                GL.BufferData(BufferTarget.ShaderStorageBuffer, data_size, data_ptr, BufferUsageHint.DynamicDraw);
+                GL.BufferData(BufferTarget.ShaderStorageBuffer, data_size, data_ptr, hint);
                 GL.BindBuffer(BufferTarget.ShaderStorageBuffer, 0);
             }
 

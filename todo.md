@@ -37,15 +37,7 @@
 
 ### Compmute Shader
 
-- Barnsley fern
-
-# Barnsley fern
-# https://en.wikipedia.org/wiki/Barnsley_fern
-
-# Having issues trying to use a dictionary to define parameters for Barnsley's Fern
-# https://stackoverflow.com/questions/56913062/having-issues-trying-to-use-a-dictionary-to-define-parameters-for-barnsleys-fer
-
-- ray trace
+- Cone Step genertor, height map genrator + test texture generator 
 
 ### Controls
 

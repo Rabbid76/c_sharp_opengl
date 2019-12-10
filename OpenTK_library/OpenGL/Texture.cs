@@ -9,6 +9,8 @@ namespace OpenTK_library.OpenGL
     public class Texture
         : IDisposable
     {
+        public enum Format { RGBA_8, RGBA_F32, Depth, DepthStencil };
+
         private bool _disposed = false;
         private bool _buffer_specification_4 = true;
 
@@ -104,14 +106,15 @@ namespace OpenTK_library.OpenGL
             }
         }
 
-        public void Create2D(int cx, int cy, bool depth, bool stencil)
+        public void Create2D(int cx, int cy, Format format)
         {
-            if (/*depth &&*/ stencil)
-                Create2D(cx, cy, PixelInternalFormat.DepthStencil, PixelFormat.DepthStencil, PixelType.UnsignedByte);
-            else if (depth)
-                Create2D(cx, cy, PixelInternalFormat.DepthComponent, PixelFormat.DepthComponent, PixelType.Float);
-            else
-                Create2D(cx, cy, PixelInternalFormat.Rgba, PixelFormat.Rgba, PixelType.UnsignedByte);
+            switch (format)
+            {
+                case Format.RGBA_8: Create2D(cx, cy, PixelInternalFormat.Rgba8, PixelFormat.Rgba, PixelType.UnsignedByte); break;
+                case Format.RGBA_F32: Create2D(cx, cy, PixelInternalFormat.Rgba32f, PixelFormat.Rgba, PixelType.Float); break;
+                case Format.Depth: Create2D(cx, cy, PixelInternalFormat.DepthComponent, PixelFormat.DepthComponent, PixelType.Float); break;
+                case Format.DepthStencil: Create2D(cx, cy, PixelInternalFormat.DepthStencil, PixelFormat.DepthStencil, PixelType.UnsignedByte); break;
+            }
         }
 
         public void Create2D(int cx, int cy, PixelInternalFormat internalFormat, PixelFormat format, PixelType type)

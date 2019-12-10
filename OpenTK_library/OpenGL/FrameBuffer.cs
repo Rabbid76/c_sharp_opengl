@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using OpenTK.Graphics;         // Color4
 using OpenTK.Graphics.OpenGL4; // GL
 
 namespace OpenTK_library.OpenGL
@@ -8,6 +9,7 @@ namespace OpenTK_library.OpenGL
     {
         public enum Target { Read, Draw, ReadDraw};
         public enum Kind { renderbuffer, texture };
+        public enum Format { RGBA_8, RGBA_F32 };
 
         private bool _disposed = false;
         private bool _buffer_specification_4 = true;
@@ -24,6 +26,8 @@ namespace OpenTK_library.OpenGL
         private bool _stencil = false;
 
         public int Object { get { return this._fbo; } }
+        public List<Renderbuffer> Renderbuffers { get { return this._rbos; } }
+        public List<Texture> Textures { get { return this._tbos; } }
 
         public Framebuffer()
         { }
@@ -64,12 +68,12 @@ namespace OpenTK_library.OpenGL
         public static Framebuffer CreateFrambuffer(int cx, int cy, Kind kind, bool depth, bool stencil)
         {
             var fb = new Framebuffer();
-            fb.Create(cx, cy, kind, depth, stencil);
+            fb.Create(cx, cy, kind, Format.RGBA_8, depth, stencil);
             return fb;
         }
           
         // Crate framebuffer object
-        public void Create(int cx, int cy, Kind kind, bool depth, bool stencil)
+        public void Create(int cx, int cy, Kind kind, Format format, bool depth, bool stencil)
         {
             _cx = cx;
             _cy = cy;
@@ -86,19 +90,32 @@ namespace OpenTK_library.OpenGL
 
                     var tbo_ca0 = new Texture();
                     this._tbos.Add(tbo_ca0);
-                    tbo_ca0.Create2D(cx, cy, false, false);
+                    Texture.Format texture_format = Texture.Format.RGBA_8;
+                    if (format == Format.RGBA_F32)
+                        texture_format = Texture.Format.RGBA_F32;
+                    tbo_ca0.Create2D(cx, cy, texture_format);
                     GL.NamedFramebufferTexture(this._fbo, FramebufferAttachment.ColorAttachment0, tbo_ca0.Object, 0);
 
                     if (depth || stencil)
                     {
                         var tbo_ds = new Texture();
                         this._tbos.Add(tbo_ds);
-                        tbo_ds.Create2D(cx, cy, depth, stencil);
-                        FramebufferAttachment attachment = FramebufferAttachment.DepthStencilAttachment;
+                        FramebufferAttachment attachment;
                         if (depth && stencil == false)
+                        {
+                            tbo_ds.Create2D(cx, cy, Texture.Format.Depth);
                             attachment = FramebufferAttachment.DepthAttachment;
+                        }
                         else if (depth == false && stencil)
+                        {
+                            tbo_ds.Create2D(cx, cy, Texture.Format.DepthStencil);
                             attachment = FramebufferAttachment.StencilAttachment;
+                        }
+                        else
+                        {
+                            tbo_ds.Create2D(cx, cy, Texture.Format.DepthStencil);
+                            attachment = FramebufferAttachment.DepthStencilAttachment;
+                        }
                         GL.NamedFramebufferTexture(this._fbo, attachment, tbo_ds.Object, 0);
                     }
                 }
@@ -139,19 +156,32 @@ namespace OpenTK_library.OpenGL
 
                     var tbo_ca0 = new Texture();
                     this._tbos.Add(tbo_ca0);
-                    tbo_ca0.Create2D(cx, cy, false, false);
+                    Texture.Format texture_format = Texture.Format.RGBA_8;
+                    if (format == Format.RGBA_F32)
+                        texture_format = Texture.Format.RGBA_F32;
+                    tbo_ca0.Create2D(cx, cy, texture_format);
                     GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, tbo_ca0.Object, 0);
 
                     if (depth || stencil)
                     {
                         var tbo_ds = new Texture();
                         this._tbos.Add(tbo_ds);
-                        tbo_ds.Create2D(cx, cy, depth, stencil);
-                        FramebufferAttachment attachment = FramebufferAttachment.DepthStencilAttachment;
+                        FramebufferAttachment attachment;
                         if (depth && stencil == false)
+                        {
+                            tbo_ds.Create2D(cx, cy, Texture.Format.Depth);
                             attachment = FramebufferAttachment.DepthAttachment;
+                        }
                         else if (depth == false && stencil)
+                        {
+                            tbo_ds.Create2D(cx, cy, Texture.Format.DepthStencil);
                             attachment = FramebufferAttachment.StencilAttachment;
+                        }
+                        else
+                        {
+                            tbo_ds.Create2D(cx, cy, Texture.Format.DepthStencil);
+                            attachment = FramebufferAttachment.DepthStencilAttachment;
+                        }
                         GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, attachment, TextureTarget.Texture2D, tbo_ds.Object, 0);
                     }
                 }
@@ -225,6 +255,38 @@ namespace OpenTK_library.OpenGL
                     mask |= ClearBufferMask.DepthBufferBit;
                 if (this._stencil)
                     mask |= ClearBufferMask.StencilBufferBit;
+                GL.Clear(mask);
+            }
+        }
+
+        public void Clear(Color4 clear_color)
+        {
+            if (_buffer_specification_4)
+            {
+                float[] color = { clear_color.R, clear_color.G, clear_color.B, clear_color.A };
+                GL.ClearNamedFramebuffer(this._fbo, ClearBuffer.Color, 0, color);
+                if (this._depth)
+                {
+                    float depth = 1.0f;
+                    GL.ClearNamedFramebuffer(this._fbo, ClearBuffer.Depth, 0, ref depth);
+                }
+                if (this._stencil)
+                {
+                    int stencil = 0;
+                    GL.ClearNamedFramebuffer(this._fbo, ClearBuffer.Stencil, 0, ref stencil);
+                }
+            }
+            else
+            {
+                GL.BindFramebuffer(FramebufferTarget.Framebuffer, this._fbo);
+
+                ClearBufferMask mask = ClearBufferMask.ColorBufferBit;
+                if (this._depth)
+                    mask |= ClearBufferMask.DepthBufferBit;
+                if (this._stencil)
+                    mask |= ClearBufferMask.StencilBufferBit;
+
+                GL.ClearColor(clear_color);
                 GL.Clear(mask);
             }
         }

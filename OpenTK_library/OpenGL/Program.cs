@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL4; // GL, ShaderType
 
 
@@ -12,24 +13,29 @@ namespace OpenTK_library.OpenGL
     {
         private bool _disposed = false;
 
-        public int program
-        {
-            get { return this._program; }
-        }
+        public int Object { get { return this._program; } }
+
         private int _program = 0;
 
-        private string _vert_source; //!< vertex shader source (TODO abstract, map)
-        private string _frag_source; //!< vertex shader source (TODO abstract, map)
+        List<(ShaderType, string)> _shader_source = new List<(ShaderType, string)>();
 
         public static Program VertexAndFragmentShaderProgram(string VertexShaderSource, string FragmentShaderSource)
         {
-            return new Program(VertexShaderSource, FragmentShaderSource);
+            (ShaderType, string)[] shader_source =
+            { (ShaderType.VertexShader, VertexShaderSource), (ShaderType.FragmentShader, FragmentShaderSource) };
+            return new Program(shader_source);
         }
 
-        public Program(string VertexShaderSource, string FragmentShaderSource)
+        public static Program ComputeShaderProgram(string ComputeShaderSource)
         {
-            this._vert_source = VertexShaderSource;
-            this._frag_source = FragmentShaderSource;
+            (ShaderType, string)[] shader_source = { (ShaderType.ComputeShader, ComputeShaderSource) };
+            return new Program(shader_source);
+        }
+
+        public Program((ShaderType, string)[] shader_source)
+        {
+            foreach (var shader in shader_source)
+                this._shader_source.Add(shader);
         }
 
         ~Program()
@@ -62,16 +68,16 @@ namespace OpenTK_library.OpenGL
         // generate a shader program
         public bool Generate()
         {
-            int vert_shader = this.GenerateShader(ShaderType.VertexShader, _vert_source);
-            int frag_shader = this.GenerateShader(ShaderType.FragmentShader, _frag_source);
-
-            this.CompileShader(vert_shader);
-            this.CompileShader(frag_shader);
-
             this._program = GL.CreateProgram();
 
-            GL.AttachShader(this._program, vert_shader);
-            GL.AttachShader(this._program, frag_shader);
+            List<int> shader_list = new  List<int>();
+            foreach (var shader in this._shader_source)
+            {
+                int shader_object = this.GenerateShader(shader.Item1, shader.Item2);
+                this.CompileShader(shader_object);
+                GL.AttachShader(this._program, shader_object);
+                shader_list.Add(shader_object);
+            }
 
             GL.LinkProgram(this._program);
             string infoLogProg = GL.GetProgramInfoLog(this._program);
@@ -81,10 +87,11 @@ namespace OpenTK_library.OpenGL
               return false; // TODO exception
             }
 
-            GL.DetachShader(this._program, vert_shader);
-            GL.DetachShader(this._program, frag_shader);
-            GL.DeleteShader(vert_shader);
-            GL.DeleteShader(frag_shader);
+            foreach (var shader_object in shader_list)
+            {
+                GL.DetachShader(this._program, shader_object);
+                GL.DeleteShader(shader_object);
+            }
 
             return true;
         }
