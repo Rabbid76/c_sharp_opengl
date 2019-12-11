@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:OpenTK_WPF_example_1"
         xmlns:ViewModel="clr-namespace:OpenTK_WPF_example_1.ViewModel"
         mc:Ignorable="d"
-        Title="OpenTK View" Height="500" Width="500">
+        Title="OpenTK WPF 3D mesh" Height="400" Width="400">
     <Window.DataContext>
         <ViewModel:OpenTK_ViewModel/>
     </Window.DataContext>

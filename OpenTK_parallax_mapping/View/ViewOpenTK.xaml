@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:OpenTK_parallax_mapping"
         xmlns:ViewModel="clr-namespace:OpenTK_parallax_mapping.ViewModel"
         mc:Ignorable="d"
-        Title="OpenTK View" Height="500" Width="500">
+        Title="OpenTK WPF parallax mappig" Height="400" Width="400">
     <Window.DataContext>
         <ViewModel:OpenTK_ViewModel/>
     </Window.DataContext>

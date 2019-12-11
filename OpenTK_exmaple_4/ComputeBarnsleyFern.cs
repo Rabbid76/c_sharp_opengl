@@ -52,8 +52,8 @@ namespace OpenTK_exmaple_4
         private OpenTK_library.OpenGL.Program _compute_prog;
         private StorageBuffer<TCoordinate> _coord_ssbo;
         private Framebuffer _fbo;
-        private int _image_cx = 500;
-        private int _image_cy = 500;
+        private int _image_cx = 512;
+        private int _image_cy = 512;
         private int _frame = 0;
         private Random _rand = new Random();
 

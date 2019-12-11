@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:OpenTK_orbit"
         xmlns:ViewModel="clr-namespace:OpenTK_orbit.ViewModel"
         mc:Ignorable="d"
-        Title="OpenTK View" Height="500" Width="500">
+        Title="OpenTK WPF 3D orpit/pan/zoom" Height="400" Width="400">
     <Window.DataContext>
         <ViewModel:Orbit_ViewModel/>
     </Window.DataContext>
@@ -20,4 +20,3 @@
         <ContentControl x:Name="host" Margin="0" Grid.ColumnSpan="2" Content="{Binding GLHostControl}" />
     </Grid>
 </Window>
-

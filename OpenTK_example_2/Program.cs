@@ -10,7 +10,7 @@ namespace OpenTK_example_2
         {
             Console.WriteLine("create OpeTK window");
 
-            using (AppWindow game = new AppWindow(800, 600, "OpenTK"))
+            using (AppWindow game = new AppWindow(400, 300, "OpenTK 3D mesh"))
             {
                 //Run takes a double, which is how many frames per second it should strive to reach.
                 //You can leave that out and it'll just update as fast as the hardware will allow it.

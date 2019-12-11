@@ -12,7 +12,7 @@ namespace OpenTK_exmaple_4
         {
             Console.WriteLine("create OpeTK window");
 
-            using (ComputeBarnsleyFern window = new ComputeBarnsleyFern(800, 600, "OpenTK texture object"))
+            using (ComputeBarnsleyFern window = new ComputeBarnsleyFern(400, 400, "OpenTK compute shader - Barnsley fern"))
             {
                 window.Run(60.0);
             }
