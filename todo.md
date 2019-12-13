@@ -35,10 +35,6 @@
 
 ## Projects
 
-### Compmute Shader
-
-- Cone Step genertor, height map genrator + test texture generator 
-
 ### Controls
 
 - first person controls
@@ -50,7 +46,7 @@
   - mapping
 - generalized displacement mapping
 
-- light model
+### Light model
 
 ### Control
 

@@ -343,11 +343,9 @@ namespace OpenTK_compute_raytracing.Model
             int i_read = (this._frame % 2) == 0 ? 1 : 0;
             int i_write = (this._frame % 2) == 0 ? 0 : 1;
 
-            var tobj_in = _fbos[i_read].Textures[0].Object;
-            GL.BindImageTexture(1, tobj_in, 0, false, 0, TextureAccess.ReadOnly, SizedInternalFormat.Rgba32f);
-            var tobj_out = _fbos[i_write].Textures[0].Object;
-            GL.BindImageTexture(2, tobj_out, 0, false, 0, TextureAccess.WriteOnly, SizedInternalFormat.Rgba32f);
-
+            _fbos[i_read].Textures[0].BindImage(1, Texture.Access.Read);
+            _fbos[i_write].Textures[0].BindImage(2, Texture.Access.Write);
+            
             GL.ProgramUniform1(_compute_prog.Object, 1, this._frame);
             GL.ProgramUniform1(_compute_prog.Object, 2, (float)this._period);
 

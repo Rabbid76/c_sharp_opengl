@@ -37,6 +37,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_compute_raytracing",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_exmaple_4", "OpenTK_exmaple_4\OpenTK_exmaple_4.csproj", "{B6072C48-6387-485E-9BB5-5A63CBE97701}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_compute_conestepmap", "OpenTK_compute_conestepmap\OpenTK_compute_conestepmap.csproj", "{0A31B1A0-EA61-434A-B606-9F8C9764CA51}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +89,10 @@ Global
 		{B6072C48-6387-485E-9BB5-5A63CBE97701}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6072C48-6387-485E-9BB5-5A63CBE97701}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6072C48-6387-485E-9BB5-5A63CBE97701}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A31B1A0-EA61-434A-B606-9F8C9764CA51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A31B1A0-EA61-434A-B606-9F8C9764CA51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A31B1A0-EA61-434A-B606-9F8C9764CA51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A31B1A0-EA61-434A-B606-9F8C9764CA51}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

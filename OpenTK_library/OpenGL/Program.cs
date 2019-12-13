@@ -14,8 +14,10 @@ namespace OpenTK_library.OpenGL
         private bool _disposed = false;
 
         public int Object { get { return this._program; } }
+        public bool Valid { get { return this._valid; } }
 
         private int _program = 0;
+        private bool _valid = false;
 
         List<(ShaderType, string)> _shader_source = new List<(ShaderType, string)>();
 
@@ -93,6 +95,7 @@ namespace OpenTK_library.OpenGL
                 GL.DeleteShader(shader_object);
             }
 
+            _valid = true;
             return true;
         }
 

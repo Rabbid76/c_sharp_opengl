@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{28943155-9798-4430-BA9C-3C5A10745A11}</ProjectGuid>
+    <ProjectGuid>{0A31B1A0-EA61-434A-B606-9F8C9764CA51}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>OpenTK_compute_raytracing</RootNamespace>
-    <AssemblyName>OpenTK_compute_raytracing</AssemblyName>
+    <RootNamespace>OpenTK_compute_conestepmap</RootNamespace>
+    <AssemblyName>OpenTK_compute_conestepmap</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -65,7 +65,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="View\RayTracing_View.xaml">
+    <Page Include="View\OpenTK_View.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -73,10 +73,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ViewModel\RayTracing_ModelView.cs" />
-    <Compile Include="Model\RayTracing_Model.cs" />
-    <Compile Include="View\RayTracing_View.xaml.cs">
-      <DependentUpon>RayTracing_View.xaml</DependentUpon>
+    <Compile Include="Model\ComputeModel.cs" />
+    <Compile Include="ViewModel\OpenTK_ViewModel.cs" />
+    <Compile Include="View\OpenTK_View.xaml.cs">
+      <DependentUpon>OpenTK_View.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -108,7 +108,6 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\OpenTK_library\OpenTK_library.csproj">
       <Project>{e4fc68e0-0e54-4e28-bb40-a5b4f39de56a}</Project>

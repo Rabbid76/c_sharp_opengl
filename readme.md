@@ -1,3 +1,5 @@
+<a href="https://stackexchange.com/users/7322082/rabbid76"><img src="https://stackexchange.com/users/flair/7322082.png" width="208" height="58" alt="profile for Rabbid76 on Stack Exchange, a network of free, community-driven Q&amp;A sites" title="profile for Rabbid76 on Stack Exchange, a network of free, community-driven Q&amp;A sites" /></a>
+
 # [OpenTK](https://opentk.net/) examples
 
 A quad
@@ -30,8 +32,8 @@ WPF Parallax mapping
 
 Rubik's cube
 
-![](doc/image/OpenTK_rubiks.png) Texture
+![](doc/image/OpenTK_rubiks.png)
 
 Compute shader raytracing
 
-![](doc/image/OpenTK_compute_raytracing.png) Texture
+![](doc/image/OpenTK_compute_raytracing.png)

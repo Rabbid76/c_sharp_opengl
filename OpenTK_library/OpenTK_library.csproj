@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Controls\BaseControls.cs" />
     <Compile Include="Controls\ModelSpinningControls.cs" />
+    <Compile Include="Generator\TextureGenerator.cs" />
     <Compile Include="Mesh\Cube.cs" />
     <Compile Include="OpenGL\Framebuffer.cs" />
     <Compile Include="OpenGL\Renderbuffer.cs" />
@@ -66,5 +67,6 @@
     <None Include="OpenTK.dll.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

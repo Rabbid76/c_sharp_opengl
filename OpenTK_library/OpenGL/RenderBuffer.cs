@@ -4,6 +4,7 @@ using OpenTK.Graphics.OpenGL4; // GL
 namespace OpenTK_library.OpenGL
 {
     public class Renderbuffer
+        : IDisposable
     {
         private bool _disposed = false;
         private bool _buffer_specification_4 = true;

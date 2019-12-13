@@ -10,6 +10,7 @@ namespace OpenTK_library.OpenGL
         : IDisposable
     {
         public enum Format { RGBA_8, RGBA_F32, Depth, DepthStencil };
+        public enum Access { Read, Write, ReadWrite };
 
         private bool _disposed = false;
         private bool _buffer_specification_4 = true;
@@ -19,8 +20,12 @@ namespace OpenTK_library.OpenGL
         private int _cy = 0;
         private bool _depth = false;
         private bool _stencil = false;
+        private Format _foramt = Format.RGBA_8;
 
         public int Object { get { return this._tbo; } }
+        public int CX { get { return this._cx; } }
+        public int CY { get { return this._cy; } }
+        public Format InternalFormat { get { return this._foramt; } }
 
         public Texture()
         { }
@@ -81,6 +86,7 @@ namespace OpenTK_library.OpenGL
             _cy = cy;
             _depth = false;
             _stencil = false;
+            _foramt = Format.RGBA_8;
 
             if (_buffer_specification_4)
             {
@@ -108,6 +114,8 @@ namespace OpenTK_library.OpenGL
 
         public void Create2D(int cx, int cy, Format format)
         {
+            _foramt = format;
+
             switch (format)
             {
                 case Format.RGBA_8: Create2D(cx, cy, PixelInternalFormat.Rgba8, PixelFormat.Rgba, PixelType.UnsignedByte); break;
@@ -117,7 +125,7 @@ namespace OpenTK_library.OpenGL
             }
         }
 
-        public void Create2D(int cx, int cy, PixelInternalFormat internalFormat, PixelFormat format, PixelType type)
+        private void Create2D(int cx, int cy, PixelInternalFormat internalFormat, PixelFormat format, PixelType type)
         {
             _cx = cx;
             _cy = cy;
@@ -140,6 +148,7 @@ namespace OpenTK_library.OpenGL
             }
         }
 
+        // bind the texture to target (for texture sampler)
         public void Bind(int binding_point)
         {
             if (_buffer_specification_4)
@@ -151,6 +160,27 @@ namespace OpenTK_library.OpenGL
                 GL.ActiveTexture(TextureUnit.Texture0 + binding_point);
                 GL.BindTexture(TextureTarget.Texture2D, this._tbo);
             }
+        }
+
+        // bind the texture for image load and store operation
+        public void BindImage(int binding_point, Access access)
+        {
+            TextureAccess tex_access = TextureAccess.ReadWrite;
+            switch (access)
+            {
+                case Access.Read: tex_access = TextureAccess.ReadOnly; break;
+                case Access.Write: tex_access = TextureAccess.WriteOnly; break;
+                case Access.ReadWrite: tex_access = TextureAccess.ReadWrite; break;
+            }
+
+            SizedInternalFormat tex_format = SizedInternalFormat.Rgba32f;
+            switch (_foramt)
+            {
+                case Format.RGBA_8: tex_format = SizedInternalFormat.Rgba8; break;
+                case Format.RGBA_F32: tex_format = SizedInternalFormat.Rgba32f; break;
+            }
+
+            GL.BindImageTexture(binding_point, Object, 0, false, 0, tex_access, tex_format);
         }
     }
 }

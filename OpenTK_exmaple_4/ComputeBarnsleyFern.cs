@@ -186,10 +186,9 @@ namespace OpenTK_exmaple_4
 
             int i_read = (this._frame % 2) == 0 ? 1 : 0;
             int i_write = (this._frame % 2) == 0 ? 1 : 0;
-            
-            var tobj_in = _fbo.Textures[0].Object;
-            GL.BindImageTexture(1, tobj_in, 0, false, 0, TextureAccess.WriteOnly, SizedInternalFormat.Rgba32f);
 
+            _fbo.Textures[0].BindImage(1, Texture.Access.Write);
+            
             float margin = 0.5f;
             Color4 color = new Color4(0.5f, 1.0f, 0.25f, 1.0f);
             float random_number = (float)_rand.Next(1000) / 1000.0f;
