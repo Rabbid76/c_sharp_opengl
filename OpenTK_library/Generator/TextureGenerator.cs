@@ -9,7 +9,7 @@ namespace OpenTK_library.Generator
         : IDisposable
     {
         private bool _disposed = false;
-        private bool _buffer_specification_4 = true;
+        //private bool _buffer_specification_4 = true;
 
         public enum TType
         { 
@@ -168,7 +168,7 @@ namespace OpenTK_library.Generator
                     else if (uv_tile.y < 2.0/3.0)
                         color = vec3(1.0);
                     else
-                        color = vec3(0.0);
+                        color = vec3(0.1);
                 }
 
                 return vec4(color.rgb, 1.0);

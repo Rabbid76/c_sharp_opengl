@@ -25,8 +25,10 @@ namespace OpenTK_library.OpenGL
         public int Object { get { return this._tbo; } }
         public int CX { get { return this._cx; } }
         public int CY { get { return this._cy; } }
+        public bool Depth { get { return this._depth; } }
+        public bool Stencil { get { return this._stencil; } }
         public Format InternalFormat { get { return this._foramt; } }
-
+        
         public Texture()
         { }
 

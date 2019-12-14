@@ -30,6 +30,10 @@ WPF Parallax mapping
 
 ![](doc/image/OpenTK_parallax_mapping.png)
 
+WPF Cone step mapping
+
+![](doc/image/OpeneTK_cone_step_mapping.png)
+
 Rubik's cube
 
 ![](doc/image/OpenTK_rubiks.png)

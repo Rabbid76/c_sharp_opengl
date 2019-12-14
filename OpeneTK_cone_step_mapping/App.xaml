@@ -1,8 +1,8 @@
-﻿<Application x:Class="OpenTK_parallax_mapping.App"
+﻿<Application x:Class="OpeneTK_cone_step_mapping.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:OpenTK_parallax_mapping"
-             StartupUri="View\OpenTK_View.xaml">
+             xmlns:local="clr-namespace:OpeneTK_cone_step_mapping"
+             StartupUri="View/OpenTK_view.xaml">
     <Application.Resources>
          
     </Application.Resources>

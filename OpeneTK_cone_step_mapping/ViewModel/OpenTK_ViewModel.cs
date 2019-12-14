@@ -2,13 +2,13 @@
 using System.ComponentModel;
 using System.Windows.Forms.Integration;
 using System.Diagnostics;
-using OpenTK_parallax_mapping.View;
-using OpenTK_parallax_mapping.Model;
+using OpeneTK_cone_step_mapping.View;
+using OpeneTK_cone_step_mapping.Model;
 using OpenTK;                  // GLControl
 using OpenTK.Graphics;         // GraphicsMode, Context
 
 
-namespace OpenTK_parallax_mapping.ViewModel
+namespace OpeneTK_cone_step_mapping.ViewModel
 {
     public class OpenTK_ViewModel
         : INotifyPropertyChanged
@@ -67,6 +67,13 @@ namespace OpenTK_parallax_mapping.ViewModel
         {
             get { return this._height_scale; }
             set { this._height_scale = value; this.OnPropertyChanged("HeightScale"); }
+        }
+
+        private int _quality_scale;
+        public int QualityScale
+        {
+            get { return this._quality_scale; }
+            set { this._quality_scale = value; this.OnPropertyChanged("QualityScale"); }
         }
 
         protected void GLC_OnLoad(object sender, EventArgs e)
