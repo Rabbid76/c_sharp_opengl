@@ -1,0 +1,9 @@
+﻿<Application x:Class="OpenTK_generalized_displacement_mapping.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:OpenTK_generalized_displacement_mapping"
+             StartupUri="View/OpenTK_View.xaml">
+    <Application.Resources>
+         
+    </Application.Resources>
+</Application>

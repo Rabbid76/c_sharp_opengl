@@ -39,13 +39,6 @@
 
 - first person controls
 
-### Parallax mapping
-
-- Cone Step Mapping
-  - compute shader generator
-  - mapping
-- generalized displacement mapping
-
 ### Light model
 
 ### Control

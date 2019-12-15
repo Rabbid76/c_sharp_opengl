@@ -28,6 +28,15 @@ namespace OpenTK_library.OpenGL
             return new Program(shader_source);
         }
 
+        public static Program VertexGeometryFragmentShaderProgram(string VertexShaderSource, string GeometryShaderSource, string FragmentShaderSource)
+        {
+            (ShaderType, string)[] shader_source =
+            { (ShaderType.VertexShader, VertexShaderSource), 
+              (ShaderType.GeometryShader, GeometryShaderSource),
+              (ShaderType.FragmentShader, FragmentShaderSource) };
+            return new Program(shader_source);
+        }
+
         public static Program ComputeShaderProgram(string ComputeShaderSource)
         {
             (ShaderType, string)[] shader_source = { (ShaderType.ComputeShader, ComputeShaderSource) };

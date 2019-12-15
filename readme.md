@@ -34,6 +34,10 @@ WPF Cone step mapping
 
 ![](doc/image/OpeneTK_cone_step_mapping.png)
 
+WPF Generalized_displacement_mapping
+
+![](doc/image/OpenTK_generalized_displacement_mapping.png)
+
 Rubik's cube
 
 ![](doc/image/OpenTK_rubiks.png)

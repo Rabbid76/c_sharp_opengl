@@ -1,7 +1,4 @@
 ﻿using System;
-using System.IO;
-using System.Reflection;
-using System.Drawing;
 using System.Collections.Generic;
 using OpenTK; // Vector2, Vector3, Vector4, Matrix4
 using OpenTK.Graphics.OpenGL4; // GL
@@ -214,7 +211,7 @@ namespace OpeneTK_cone_step_mapping.Model
                 vec4 viewPos   = mvp.view * worldPos;
                 out_data.pos   = viewPos.xyz / viewPos.w;
                 gl_Position    = mvp.proj * viewPos;
-                vec4 clipPlane = vec4(normalize(mat3( mvp.view) * u_clipPlane.xyz), u_clipPlane.w);
+                vec4 clipPlane = vec4(normalize(u_clipPlane.xyz), u_clipPlane.w);
                 out_data.clip  = dot(worldPos, clipPlane);
             }";
 
@@ -527,7 +524,7 @@ namespace OpeneTK_cone_step_mapping.Model
                 texCoords.st = newTexCoords.xy;
                 vec4 normalVec = CalculateNormal(texCoords);
                 //vec3  nvMappedEs   = normalize( tbnMat * normalVec.xyz );
-                vec3 nvMappedEs = normalize(transpose(inv_tbnMat) * normalVec.xyz);
+                vec3 nvMappedEs = u_displacement_scale < 0.001 ? normalize(objNormalEs) : (normalize(transpose(inv_tbnMat) * normalVec.xyz));
 
                 //vec3 color = in_data.col;
                 vec3 color = texture(u_texture, texCoords.st).rgb;
@@ -552,7 +549,7 @@ namespace OpeneTK_cone_step_mapping.Model
 
                 vec4 proj_pos_displ = mvp.proj * vec4(view_pos_displ.xyz, 1.0);
                 float depth = 0.5 + 0.5 * proj_pos_displ.z / proj_pos_displ.w;
-                gl_FragDepth = depth;
+                gl_FragDepth = u_displacement_scale < 0.001 ? gl_FragCoord.z : depth;
 
                 //fragColor = vec4( vec3(1.0-depth), 1.0 );
             }";
@@ -577,7 +574,9 @@ namespace OpeneTK_cone_step_mapping.Model
             //GL.ClearColor(System.Drawing.Color.Beige);
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             GL.Enable(EnableCap.DepthTest);
-            GL.Enable(EnableCap.CullFace);
+
+            // no face culling, because of clipping
+            //GL.Enable(EnableCap.CullFace);
             GL.FrontFace(FrontFaceDirection.Ccw);
             GL.CullFace(CullFaceMode.Back);
 
@@ -597,8 +596,9 @@ namespace OpeneTK_cone_step_mapping.Model
             this._spin.SetAttenuation(1.0f, 0.05f, 0.0f);
 
             // properties 
-            ViewModel.HeightScale = 100;
-            ViewModel.QualityScale = 100;
+            ViewModel.HeightScale = 50;
+            ViewModel.QualityScale = 50;
+            ViewModel.ClipScale = 50;
         }
 
         public void Draw(int cx, int cy, double app_t)
@@ -627,11 +627,11 @@ namespace OpeneTK_cone_step_mapping.Model
             this._tbos[0].Bind(1);
             this._tbos[2].Bind(2);
 
-            float clip_scale = 1.0f;
-            float height_scale = (float)ViewModel.HeightScale / 1000.0f;
-            float quality_scale = (float)ViewModel.QualityScale / 200.0f;
+            float clip_scale = (float)ViewModel.ClipScale / 100.0f;
+            float height_scale = (float)ViewModel.HeightScale / 500.0f;
+            float quality_scale = (float)ViewModel.QualityScale / 100.0f;
 
-            GL.Uniform4(1, -1.0f, -1.0f, -1.0f, clip_scale * 1.7321f);
+            GL.Uniform4(1, -2.0f, -1.0f, -2.0f, clip_scale * 1.7321f);
             GL.Uniform1(2, height_scale);
             GL.Uniform2(3, quality_scale, (float)1.0);
 

@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_compute_conestepmap"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpeneTK_cone_step_mapping", "OpeneTK_cone_step_mapping\OpeneTK_cone_step_mapping.csproj", "{D4C8FA7C-FDEF-4DCE-8F4C-F2E55AC6E5FC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_generalized_displacement_mapping", "OpenTK_generalized_displacement_mapping\OpenTK_generalized_displacement_mapping.csproj", "{61B60939-096A-4DE8-A378-7B789B13D7A6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -99,6 +101,10 @@ Global
 		{D4C8FA7C-FDEF-4DCE-8F4C-F2E55AC6E5FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4C8FA7C-FDEF-4DCE-8F4C-F2E55AC6E5FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4C8FA7C-FDEF-4DCE-8F4C-F2E55AC6E5FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61B60939-096A-4DE8-A378-7B789B13D7A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61B60939-096A-4DE8-A378-7B789B13D7A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61B60939-096A-4DE8-A378-7B789B13D7A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61B60939-096A-4DE8-A378-7B789B13D7A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

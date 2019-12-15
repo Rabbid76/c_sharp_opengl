@@ -2,13 +2,13 @@
 using System.ComponentModel;
 using System.Windows.Forms.Integration;
 using System.Diagnostics;
-using OpeneTK_cone_step_mapping.View;
-using OpeneTK_cone_step_mapping.Model;
+using OpenTK_generalized_displacement_mapping.View;
+using OpenTK_generalized_displacement_mapping.Model;
 using OpenTK;                  // GLControl
 using OpenTK.Graphics;         // GraphicsMode, Context
 
 
-namespace OpeneTK_cone_step_mapping.ViewModel
+namespace OpenTK_generalized_displacement_mapping.ViewModel
 {
     public class OpenTK_ViewModel
         : INotifyPropertyChanged
@@ -133,3 +133,4 @@ namespace OpeneTK_cone_step_mapping.ViewModel
         }
     }
 }
+
