@@ -12,10 +12,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using OpenTK_orbit.ViewModel;
+using OpenTK_controls_orbit.ViewModel;
 using OpenTK; // GLControl
 
-namespace OpenTK_orbit.View
+namespace OpenTK_controls_orbit.View
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

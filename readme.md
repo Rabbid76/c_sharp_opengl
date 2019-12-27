@@ -22,9 +22,13 @@ WPF 3D mesh
 
 ![](doc/image/OpenTK_WPF_example_1.png)
 
- WPF Orbit, pan, zoom
+WPF Orbit, pan, zoom
 
 ![](doc/image/OpenTK_orbit.png)
+
+WPF First person
+
+![](doc/image/OpenTK_controls_firstperson.png)
 
 WPF Parallax mapping
 
@@ -32,7 +36,7 @@ WPF Parallax mapping
 
 WPF Cone step mapping
 
-![](doc/image/OpeneTK_cone_step_mapping.png)
+![](doc/image/OpenTK_cone_step_mapping.png)
 
 WPF Generalized_displacement_mapping
 

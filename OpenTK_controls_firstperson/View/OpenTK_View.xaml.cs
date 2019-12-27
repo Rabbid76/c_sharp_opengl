@@ -13,13 +13,12 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace OpenTK_cone_step_mapping.View
+namespace OpenTK_controls_firstperson.View
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class OpenTK_View
-        : Window
+    public partial class OpenTK_View : Window
     {
         public OpenTK_View()
         {

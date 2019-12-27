@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OpeneTK_cone_step_mapping"
-        xmlns:ViewModel="clr-namespace:OpeneTK_cone_step_mapping.ViewModel" x:Name="window_view" x:Class="OpeneTK_cone_step_mapping.View.OpenTK_View"
+        xmlns:ViewModel="clr-namespace:OpenTK_cone_step_mapping.ViewModel" x:Name="window_view" x:Class="OpenTK_cone_step_mapping.View.OpenTK_View"
         mc:Ignorable="d"
         Title="OpenTK WPF cone step mappig" Height="400" Width="400">
     <Window.DataContext>

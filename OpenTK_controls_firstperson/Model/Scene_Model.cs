@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using OpenTK; // Vector2, Vector3, Vector4, Matrix4
 using OpenTK.Graphics.OpenGL4; // GL
 
-using OpenTK_controls_orbit.ViewModel;
+using OpenTK_controls_firstperson.ViewModel;
 
 using OpenTK_library;
 using OpenTK_library.Type;
@@ -14,9 +14,9 @@ using OpenTK_library.Mesh;
 using OpenTK_library.Controls;
 using OpenTK_library.OpenGL;
 
-namespace OpenTK_controls_orbit.Model
+namespace OpenTK_controls_firstperson.Model
 {
-    public class Orbit_Model
+    public class Scene_Model
         : IDisposable
     {
         internal unsafe struct TLightSource
@@ -66,10 +66,10 @@ namespace OpenTK_controls_orbit.Model
 
         private Matrix4 _view = Matrix4.Identity;
         private Matrix4 _projection = Matrix4.Identity;
-        private NavigationControls _navigate;
+        private FirstPersonControls _navigate;
         private double _period = 0;
 
-        public Orbit_Model()
+        public Scene_Model()
         { }
 
         protected virtual void Dispose(bool disposing)
@@ -96,11 +96,7 @@ namespace OpenTK_controls_orbit.Model
             if (left)
             {
                 //this._navigate.StartOrbit(wnd_pos, NavigationMode.ORBIT);
-                this._navigate.StartOrbit(wnd_pos, BaseControls.NavigationMode.ROTATE);
-            }
-            if (right)
-            {
-                this._navigate.StartPan(wnd_pos);
+                this._navigate.StartRotate(wnd_pos, BaseControls.NavigationMode.ROTATE);
             }
         }
 
@@ -108,11 +104,7 @@ namespace OpenTK_controls_orbit.Model
         {
             if (left)
             {
-                this._navigate.EndOrbit(wnd_pos);
-            }
-            if (right)
-            {
-                this._navigate.EndPan(wnd_pos);
+                this._navigate.EndRotate(wnd_pos);
             }
         }
 
@@ -124,8 +116,7 @@ namespace OpenTK_controls_orbit.Model
 
         public void MouseWheel(Vector2 wnd_pos, int wheel_delta)
         {
-            (Matrix4 view_mat, bool update) = this._navigate.MoveOnLineOfSight(wnd_pos, (float)wheel_delta*0.005f);
-            this._view = view_mat;
+            
         }
 
         public void Setup(int cx, int cy)
@@ -267,17 +258,15 @@ namespace OpenTK_controls_orbit.Model
             float aspect = (float)this._cx / (float)this._cy;
             this._projection = Matrix4.CreatePerspectiveFieldOfView(angle, aspect, 0.1f, 100.0f);
 
-            _navigate = new NavigationControls(
+            _navigate = new FirstPersonControls(
                 () => { return new float[] { 0, 0, (float)this._cx, (float)this._cy }; },
-                () => { return this._view; },
-                () => { return this._projection; },
-                this.GetDepth,
-                (cursor_pos) => { return new Vector3(0, 0, 0); }
+                () => { return this._view; }
             );
         }
 
         public void Draw(int cx, int cy, double app_t)
         {
+            double delta_t = app_t - this._period;
             this._period = app_t;
 
             bool resized = this._cx != cx || this._cy != cy;
@@ -291,6 +280,21 @@ namespace OpenTK_controls_orbit.Model
                 float aspect = (float)this._cx / (float)this._cy;
                 this._projection = Matrix4.CreatePerspectiveFieldOfView(angle, aspect, 0.1f, 100.0f);
             }
+
+            var keyboardState = OpenTK.Input.Keyboard.GetState();
+            Vector3 move_vec = new Vector3(0, 0, 0);
+            if (keyboardState[OpenTK.Input.Key.Up])
+                move_vec.Y += 1.0f;
+            if (keyboardState[OpenTK.Input.Key.Down])
+                move_vec.Y -= 1.0f;
+            if (keyboardState[OpenTK.Input.Key.Right])
+                move_vec.X += 1.0f;
+            if (keyboardState[OpenTK.Input.Key.Left])
+                move_vec.X -= 1.0f;
+            move_vec *= (float)delta_t;
+
+            (Matrix4 view_mat, bool update) = this._navigate.Move(move_vec);
+            this._view = view_mat;
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
@@ -324,3 +328,4 @@ namespace OpenTK_controls_orbit.Model
         }
     }
 }
+

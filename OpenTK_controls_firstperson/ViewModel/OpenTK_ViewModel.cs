@@ -1,31 +1,37 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.ComponentModel;
+using System.Windows.Media;
+using System.Windows.Input;
 using System.Windows.Forms.Integration;
 using System.Diagnostics;
-using OpenTK_cone_step_mapping.View;
-using OpenTK_cone_step_mapping.Model;
+using OpenTK_controls_firstperson.View;
+using OpenTK_controls_firstperson.Model;
 using OpenTK;                  // GLControl
+using OpenTK.Input;            // KeyboardState, Keyboard, Key
 using OpenTK.Graphics;         // GraphicsMode, Context
 
+/// <summary>
+/// See [Integrating WPF and Microsoft Kinect SDK with OpenTK](http://igordcard.blogspot.com/2011/12/integrating-wpf-and-kinect-with-opentk.html)
+/// </summary>
 
-namespace OpenTK_cone_step_mapping.ViewModel
+namespace OpenTK_controls_firstperson.ViewModel
 {
-    public class OpenTK_ViewModel
+    class OpenTK_ViewModel
         : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
+
         WindowsFormsHost _formsHost;
         GLControl _glc;
-        private OpenTK_Model _gl_model = new OpenTK_Model();
+        private Scene_Model _gl_model = new Scene_Model();
         private int _cx = 0;
         private int _cy = 0;
         private Stopwatch _stopWatch = new Stopwatch();
 
         public OpenTK_ViewModel()
-        {
-            _gl_model.ViewModel = this;
-        }
+        { }
 
         public WindowsFormsHost GLHostControl
         {
@@ -46,6 +52,7 @@ namespace OpenTK_cone_step_mapping.ViewModel
                     _glc.MouseDown += GLC_OnMouseDown;
                     _glc.MouseUp += GLC_OnMouseUp;
                     _glc.MouseMove += GLC_OnMouseMove;
+                    _glc.MouseWheel += GLC_OnMouseWheel;
                 }
                 if (_formsHost == null)
                 {
@@ -60,27 +67,6 @@ namespace OpenTK_cone_step_mapping.ViewModel
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyname));
-        }
-
-        private int _height_scale;
-        public int HeightScale
-        {
-            get { return this._height_scale; }
-            set { this._height_scale = value; this.OnPropertyChanged("HeightScale"); }
-        }
-
-        private int _quality_scale;
-        public int QualityScale
-        {
-            get { return this._quality_scale; }
-            set { this._quality_scale = value; this.OnPropertyChanged("QualityScale"); }
-        }
-
-        private int _clip_scale;
-        public int ClipScale
-        {
-            get { return this._clip_scale; }
-            set { this._clip_scale = value; this.OnPropertyChanged("ClipScale"); }
         }
 
         protected void GLC_OnLoad(object sender, EventArgs e)
@@ -115,14 +101,14 @@ namespace OpenTK_cone_step_mapping.ViewModel
         {
             Vector2 wnd_pos = new Vector2((float)e.X, (float)(this._cy - e.Y));
             if (_gl_model != null)
-                _gl_model.MouseDown(wnd_pos, e.Button == System.Windows.Forms.MouseButtons.Left);
+                _gl_model.MouseDown(wnd_pos, e.Button == System.Windows.Forms.MouseButtons.Left, e.Button == System.Windows.Forms.MouseButtons.Right);
         }
 
         protected void GLC_OnMouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             Vector2 wnd_pos = new Vector2((float)e.X, (float)(this._cy - e.Y));
             if (_gl_model != null)
-                _gl_model.MouseUp(wnd_pos, e.Button == System.Windows.Forms.MouseButtons.Left);
+                _gl_model.MouseUp(wnd_pos, e.Button == System.Windows.Forms.MouseButtons.Left, e.Button == System.Windows.Forms.MouseButtons.Right);
         }
 
         protected void GLC_OnMouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -131,5 +117,13 @@ namespace OpenTK_cone_step_mapping.ViewModel
             if (_gl_model != null)
                 _gl_model.MouseMove(wnd_pos);
         }
+
+        protected void GLC_OnMouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            Vector2 wnd_pos = new Vector2((float)e.X, (float)(this._cy - e.Y));
+            if (_gl_model != null)
+                _gl_model.MouseWheel(wnd_pos, e.Delta);
+        }
     }
 }
+

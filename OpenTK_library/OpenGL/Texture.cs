@@ -92,16 +92,9 @@ namespace OpenTK_library.OpenGL
 
             if (_buffer_specification_4)
             {
-                // [What's the DSA version of glTexImage2D?](https://gamedev.stackexchange.com/questions/134177/whats-the-dsa-version-of-glteximage2d)
-
                 GL.CreateTextures(TextureTarget.Texture2D, 1, out this._tbo);
-                //GL.TextureStorage2D(this._tbo, 1, SizedInternalFormat.Rgba8, cx, cy);
-                //int base_level = 0;
-                //GL.TextureParameter(this._tbo, TextureParameterName.TextureBaseLevel, (int)0);
-                
-                GL.BindTexture(TextureTarget.Texture2D, this._tbo);
-                GL.TexImage2D<byte>(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, cx, cy, 0, PixelFormat.Rgba, PixelType.UnsignedByte, pixel);
-                GL.BindTexture(TextureTarget.Texture2D, 0);
+                GL.TextureStorage2D(this._tbo, 1, SizedInternalFormat.Rgba8, cx, cy);
+                GL.TextureSubImage2D<byte>(this._tbo, 0, 0, 0, cx, cy, PixelFormat.Rgba, PixelType.UnsignedByte, pixel);
                 GL.GenerateTextureMipmap(this._tbo);
             }
             else
@@ -118,13 +111,41 @@ namespace OpenTK_library.OpenGL
         {
             _foramt = format;
 
-            switch (format)
+            if (_buffer_specification_4)
             {
-                case Format.RGBA_8: Create2D(cx, cy, PixelInternalFormat.Rgba8, PixelFormat.Rgba, PixelType.UnsignedByte); break;
-                case Format.RGBA_F32: Create2D(cx, cy, PixelInternalFormat.Rgba32f, PixelFormat.Rgba, PixelType.Float); break;
-                case Format.Depth: Create2D(cx, cy, PixelInternalFormat.DepthComponent, PixelFormat.DepthComponent, PixelType.Float); break;
-                case Format.DepthStencil: Create2D(cx, cy, PixelInternalFormat.DepthStencil, PixelFormat.DepthStencil, PixelType.UnsignedByte); break;
+                switch (format)
+                {
+                    case Format.RGBA_8: Create2D(cx, cy, SizedInternalFormat.Rgba8); break;
+                    case Format.RGBA_F32: Create2D(cx, cy, SizedInternalFormat.Rgba32f); break;
+                    
+                    // TODO $$$ depth and stencil format for depth and stencil
+                    case Format.Depth: Create2D(cx, cy, PixelInternalFormat.DepthComponent, PixelFormat.DepthComponent, PixelType.Float); break;
+                    case Format.DepthStencil: Create2D(cx, cy, PixelInternalFormat.DepthStencil, PixelFormat.DepthStencil, PixelType.UnsignedByte); break;
+                }
             }
+            else
+            {
+                switch (format)
+                {
+                    case Format.RGBA_8: Create2D(cx, cy, PixelInternalFormat.Rgba8, PixelFormat.Rgba, PixelType.UnsignedByte); break;
+                    case Format.RGBA_F32: Create2D(cx, cy, PixelInternalFormat.Rgba32f, PixelFormat.Rgba, PixelType.Float); break;
+                    case Format.Depth: Create2D(cx, cy, PixelInternalFormat.DepthComponent, PixelFormat.DepthComponent, PixelType.Float); break;
+                    case Format.DepthStencil: Create2D(cx, cy, PixelInternalFormat.DepthStencil, PixelFormat.DepthStencil, PixelType.UnsignedByte); break;
+                }
+            }
+        }
+
+        private void Create2D(int cx, int cy, SizedInternalFormat internalFormat)
+        {
+            _cx = cx;
+            _cy = cy;
+            _depth = false;
+            _stencil = false;
+
+            GL.CreateTextures(TextureTarget.Texture2D, 1, out this._tbo);
+            GL.TextureStorage2D(this._tbo, 1, internalFormat, cx, cy);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
         }
 
         private void Create2D(int cx, int cy, PixelInternalFormat internalFormat, PixelFormat format, PixelType type)
@@ -134,20 +155,12 @@ namespace OpenTK_library.OpenGL
             _depth = false;
             _stencil = false;
 
-            if (false /*_buffer_specification_4*/)
-            {
-                // [What's the DSA version of glTexImage2D?](https://gamedev.stackexchange.com/questions/134177/whats-the-dsa-version-of-glteximage2d)
-                // TODO $$$
-            }
-            else
-            {
-                this._tbo = GL.GenTexture();
-                GL.ActiveTexture(TextureUnit.Texture0);
-                GL.BindTexture(TextureTarget.Texture2D, this._tbo);
-                GL.TexImage2D(TextureTarget.Texture2D, 0, internalFormat, cx, cy, 0, format, type, IntPtr.Zero );
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
-            }
+            this._tbo = GL.GenTexture();
+            GL.ActiveTexture(TextureUnit.Texture0);
+            GL.BindTexture(TextureTarget.Texture2D, this._tbo);
+            GL.TexImage2D(TextureTarget.Texture2D, 0, internalFormat, cx, cy, 0, format, type, IntPtr.Zero );
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
         }
 
         // bind the texture to target (for texture sampler)

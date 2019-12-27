@@ -29,7 +29,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_example_3", "OpenTK_
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_parallax_mapping", "OpenTK_parallax_mapping\OpenTK_parallax_mapping.csproj", "{B4F5EB9A-23D9-464F-B470-6F37DC57B1A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_orbit", "OpenTK_orbit\OpenTK_orbit.csproj", "{33BD7DA4-EB60-49E4-983E-C3AF0286679B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_controls_orbit", "OpenTK_orbit\OpenTK_controls_orbit.csproj", "{33BD7DA4-EB60-49E4-983E-C3AF0286679B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_rubiks", "OpenTK_rubiks\OpenTK_rubiks.csproj", "{8A359A3C-B15B-42A3-AAF5-0D24A357B3EC}"
 EndProject
@@ -39,9 +39,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_exmaple_4", "OpenTK_
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_compute_conestepmap", "OpenTK_compute_conestepmap\OpenTK_compute_conestepmap.csproj", "{0A31B1A0-EA61-434A-B606-9F8C9764CA51}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpeneTK_cone_step_mapping", "OpeneTK_cone_step_mapping\OpeneTK_cone_step_mapping.csproj", "{D4C8FA7C-FDEF-4DCE-8F4C-F2E55AC6E5FC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_cone_step_mapping", "OpeneTK_cone_step_mapping\OpenTK_cone_step_mapping.csproj", "{D4C8FA7C-FDEF-4DCE-8F4C-F2E55AC6E5FC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_generalized_displacement_mapping", "OpenTK_generalized_displacement_mapping\OpenTK_generalized_displacement_mapping.csproj", "{61B60939-096A-4DE8-A378-7B789B13D7A6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_controls_firstperson", "OpenTK_controls_firstperson\OpenTK_controls_firstperson.csproj", "{4FA19D1B-5F21-4DE3-9BBE-7EA19974DAE5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,6 +107,10 @@ Global
 		{61B60939-096A-4DE8-A378-7B789B13D7A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61B60939-096A-4DE8-A378-7B789B13D7A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61B60939-096A-4DE8-A378-7B789B13D7A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FA19D1B-5F21-4DE3-9BBE-7EA19974DAE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FA19D1B-5F21-4DE3-9BBE-7EA19974DAE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FA19D1B-5F21-4DE3-9BBE-7EA19974DAE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FA19D1B-5F21-4DE3-9BBE-7EA19974DAE5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

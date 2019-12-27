@@ -35,10 +35,6 @@
 
 ## Projects
 
-### Controls
-
-- first person controls
-
 ### Light model
 
 ### Control

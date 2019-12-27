@@ -5,8 +5,8 @@ using System.Windows.Media;
 using System.Windows.Input;
 using System.Windows.Forms.Integration;
 using System.Diagnostics;
-using OpenTK_orbit.View;
-using OpenTK_orbit.Model;
+using OpenTK_controls_orbit.View;
+using OpenTK_controls_orbit.Model;
 using OpenTK;                  // GLControl
 using OpenTK.Input;            // KeyboardState, Keyboard, Key
 using OpenTK.Graphics;         // GraphicsMode, Context
@@ -15,7 +15,7 @@ using OpenTK.Graphics;         // GraphicsMode, Context
 /// See [Integrating WPF and Microsoft Kinect SDK with OpenTK](http://igordcard.blogspot.com/2011/12/integrating-wpf-and-kinect-with-opentk.html)
 /// </summary>
 
-namespace OpenTK_orbit.ViewModel
+namespace OpenTK_controls_orbit.ViewModel
 {
     class Orbit_ViewModel
         : INotifyPropertyChanged
