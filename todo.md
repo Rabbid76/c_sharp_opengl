@@ -44,12 +44,6 @@ Angular mobile application (controller) which controls WPF desktop application
 - bluetooth
 - web-server
 
-### Asimp
-
-Read scenes with [Open Asset Import Library](https://github.com/assimp)
-
-[assimp-net](https://github.com/assimp/assimp-net)
-
 ## Render
 
 Use compute shader to visualize rendering (Peter Shirley) 

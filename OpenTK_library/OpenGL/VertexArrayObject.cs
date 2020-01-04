@@ -29,14 +29,13 @@ namespace OpenTK_library.OpenGL
     }
 
     public class VertexArrayObject<T_ATTRIBUTE, T_INDEX> 
-        : IDisposable
+        : Object
         where T_ATTRIBUTE : struct where T_INDEX : struct
     {
         // TODO
         // - T_DATA has to be `float` or `double`
         // - T_INDEX has to be `ubyte`, `ushort` or `uint`
 
-        private bool _disposed = false;
         private bool _vertex_specification_4 = true;
 
         SortedDictionary<int, int> _vbos = new SortedDictionary<int, int>();
@@ -46,39 +45,18 @@ namespace OpenTK_library.OpenGL
         int _index_size = 0;
         int _vao = 0;
 
+        public int Object { get { return this._vao; } }
+
         public VertexArrayObject()
         { }
 
-        ~VertexArrayObject()
+        protected override void DisposeObjects()
         {
             List<int> vbos = new List<int>(this._vbos.Values);
 
             GL.DeleteBuffers(vbos.Count, vbos.ToArray());
             GL.DeleteBuffer(this._ibo);
             GL.DeleteVertexArray(this._vao);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing && !_disposed)
-            {
-                List<int> vbos = new List<int>(this._vbos.Values);
-                
-                GL.DeleteBuffers(vbos.Count, vbos.ToArray());
-                GL.DeleteBuffer(this._ibo);
-                GL.DeleteVertexArray(this._vao);
-
-                this._vbos.Clear();
-                this._ibo = 0;
-
-                _disposed = true;
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
         //! Bind Vertex Array Object

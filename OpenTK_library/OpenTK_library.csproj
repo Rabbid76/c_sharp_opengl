@@ -52,6 +52,7 @@
     <Compile Include="Mathematics\Operations.cs" />
     <Compile Include="Mesh\Cube.cs" />
     <Compile Include="OpenGL\Framebuffer.cs" />
+    <Compile Include="OpenGL\Object.cs" />
     <Compile Include="OpenGL\Renderbuffer.cs" />
     <Compile Include="OpenGL\Texture.cs" />
     <Compile Include="Type\MVP.cs" />
