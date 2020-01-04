@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using OpenTK; // Vector2, Vector3, Vector4, Matrix4
+using OpenTK_library.Mathematics;
+
+using static OpenTK_library.Mathematics.Operations;
 
 namespace OpenTK_library.Controls
 {
     public class FirstPersonControls
-        : BaseControls
+        : IControls
     {
         GetViewRect _get_view_rect;
         GetMatrix _get_view_mat;
@@ -33,13 +36,18 @@ namespace OpenTK_library.Controls
             this._get_view_mat = view;
         }
 
-        public void StartRotate(Vector2 cursor_pos, NavigationMode mode = NavigationMode.ROTATE)
+        public (Matrix4 matrix, bool changed) Update()
         {
-            this._mode = mode;
+            return (matrix: Matrix4.Identity, changed: false);
+        }
+
+        public void Start(int mode, Vector2 cursor_pos)
+        {
+            this._mode = mode == 0 ? NavigationMode.ROTATE : NavigationMode.ORBIT;
             this._rotate_start = new Vector2(cursor_pos.X, cursor_pos.Y);
         }
 
-        public void EndRotate(Vector2 cursor_pos)
+        public void End(int mode, Vector2 cursor_pos)
         {
             this._mode = NavigationMode.OFF;
         }
@@ -54,7 +62,7 @@ namespace OpenTK_library.Controls
             float angle = Vector2.Dot(window_dir.Normalized(), dist_vec) * (float)Math.PI;
 
             // calculate the rotation matrix and the rotation around the pivot 
-            Matrix4 rot_mat = CreateRotate(angle, axis);
+            Matrix4 rot_mat = Operations.CreateRotate(angle, axis);
             Matrix4 rot_pivot = Matrix4.CreateTranslation(-pivot) * rot_mat * Matrix4.CreateTranslation(pivot); // OpenTK `*`-operator is reversed
 
             return rot_pivot;
@@ -97,7 +105,7 @@ namespace OpenTK_library.Controls
 
                 // calculate the rotation matrix around the world space up vector through the pivot
                 Matrix4 rot_pivot_up = Matrix4.Identity;
-                if (Vector2.Distance(orbit_vec_x, new Vector2(0, 0)) > 0.5)
+                if (Vector2.Distance(orbit_vec_up, new Vector2(0, 0)) > 0.5)
                 {
                     Vector2 orbit_dir_up = new Vector2(1, 0);
                     Vector3 axis_up = new Vector3(0, 0, 1);
@@ -126,6 +134,11 @@ namespace OpenTK_library.Controls
 
             // return new view matrix
             return (matrix: mat_view, changed: view_changed);
+        }
+
+        public (Matrix4 matrix, bool changed) MoveWheel(Vector2 cursor_pos, float delta)
+        {
+            return Move(new Vector3(0.0f, 0.0f, delta));
         }
     }
 }

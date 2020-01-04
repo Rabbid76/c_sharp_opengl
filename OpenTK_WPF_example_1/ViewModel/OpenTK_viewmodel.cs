@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel;
-using System.Windows.Media;
-using System.Windows.Input;
 using System.Windows.Forms.Integration;
 using System.Diagnostics;
 using OpenTK_WPF_example_1.View;

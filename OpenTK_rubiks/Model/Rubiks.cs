@@ -84,7 +84,7 @@ namespace OpenTK_rubiks.Model
 
         private Matrix4 _view = Matrix4.Identity;
         private Matrix4 _projection = Matrix4.Identity;
-        private ModelSpinningControls _spin;
+        private ModelSpinningControls _controls; // TODO $$$ IControls
         private RubiksControls _rubiks_cube;
         private double _period = 0;
         Vector2 _wnd_cursor_pos = Vector2.Zero;
@@ -127,7 +127,7 @@ namespace OpenTK_rubiks.Model
             if (left)
             {
                 if (_mode == TMode.roatate)
-                    this._spin.StartRotate(wnd_pos);
+                    this._controls.Start(0, wnd_pos);
                 else
                     _hit = true;
             }
@@ -139,19 +139,19 @@ namespace OpenTK_rubiks.Model
             if (left)
             {
                 if (_mode == TMode.roatate)
-                    this._spin.FinishRotate(wnd_pos);
+                    this._controls.End(0, wnd_pos);
             }
             else
             {
-                this._spin.ToogleRotate();
-                _mode = this._spin.AutoRotate ? TMode.roatate : TMode.change;
+                this._controls.ToogleRotate();
+                _mode = this._controls.AutoRotate ? TMode.roatate : TMode.change;
             }
         }
 
         public void MouseMove(Vector2 wnd_pos)
         {
             _wnd_cursor_pos = wnd_pos;
-            this._spin.UpdatePosition(wnd_pos);
+            this._controls.UpdatePosition(wnd_pos);
         }
 
         public void MouseWheel(Vector2 wnd_pos, int wheel_delta)
@@ -368,12 +368,13 @@ namespace OpenTK_rubiks.Model
 
             // controller
 
-            this._spin = new ModelSpinningControls(
+            var spin = new ModelSpinningControls(
                 () => { return this._period; },
                 () => { return new float[] { 0, 0, (float)this._cx, (float)this._cy }; },
                 () => { return this._view; }
             );
-            this._spin.SetAttenuation(1.0f, 0.05f, 0.0f);
+            spin.SetAttenuation(1.0f, 0.05f, 0.0f);
+            _controls = spin;
 
             float offset = 2.0f * 1.1f;
             float scale = 1.0f / 3.0f;
@@ -405,7 +406,6 @@ namespace OpenTK_rubiks.Model
                 this._mvp_data.projetion = this._projection;
             }
 
-            this._spin.Update();
             this._rubiks_cube.Update();
             Render();
         }
@@ -427,7 +427,7 @@ namespace OpenTK_rubiks.Model
 
         void UpdateRenderData()
         {
-            Matrix4 model = this._spin.autoModelMatrix * this._spin.orbit; // OpenTK `*`-operator is reversed
+            (Matrix4 model, bool update) = this._controls.Update();
             this._mvp_data.model = model;
 
             this._rubiks_cube.Data.cube_hit = -1;

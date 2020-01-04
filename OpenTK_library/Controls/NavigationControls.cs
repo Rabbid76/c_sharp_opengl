@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using OpenTK; // Vector2, Vector3, Vector4, Matrix4
+using OpenTK_library.Mathematics;
+
+using static OpenTK_library.Mathematics.Operations;
 
 namespace OpenTK_library.Controls
 {
     public class NavigationControls
-        : BaseControls
+        : IControls
     {
         GetViewRect _get_view_rect;
         GetMatrix _get_view_mat;
@@ -110,7 +113,7 @@ namespace OpenTK_library.Controls
             float angle = Vector2.Dot(window_dir.Normalized(), dist_vec) * (float)Math.PI;
 
             // calculate the rotation matrix and the rotation around the pivot 
-            Matrix4 rot_mat = CreateRotate(angle, axis);
+            Matrix4 rot_mat = Operations.CreateRotate(angle, axis);
             Matrix4 rot_pivot = Matrix4.CreateTranslation(-pivot) * rot_mat * Matrix4.CreateTranslation(pivot); // OpenTK `*`-operator is reversed
 
             return rot_pivot;
@@ -125,30 +128,62 @@ namespace OpenTK_library.Controls
             this._get_pivot = pivot;
         }
 
-        public void StartPan(Vector2 cursor_pos)
+        public (Matrix4 matrix, bool changed) Update()
         {
-            this._pan = true;
-            this._pan_start = new Vector3(cursor_pos.X, cursor_pos.Y, Depth(cursor_pos));
+            return (matrix: Matrix4.Identity, changed: false);
         }
 
-        public void EndPan(Vector2 cursor_pos)
+        public (Matrix4 matrix, bool changed) Move(Vector3 move_vec)
         {
-            this._pan = false;
+            bool view_changed = false;
+
+            // get view matrix
+            (Matrix4 mat_view, Matrix4 inv_view) = view;
+
+            view_changed = true;
+            Matrix4 trans_mat = Matrix4.CreateTranslation(new Vector3(-move_vec.X, move_vec.Z, move_vec.Y));
+            mat_view = mat_view * trans_mat; // OpenTK `*`-operator is reversed
+
+            // return new view matrix
+            return (matrix: mat_view, changed: view_changed);
         }
 
-        public void StartOrbit(Vector2 cursor_pos, NavigationMode mode = NavigationMode.ORBIT)
+        public void Start(int mode, Vector2 cursor_pos)
         {
-            this._orbit = mode;
-            this._orbit_start = new Vector3(cursor_pos.X, cursor_pos.Y, Depth(cursor_pos));
-            this._pivot_world = this.PivotWorld(cursor_pos);
+            switch(mode)
+            {
+                default:
+                case 0:
+                case 1:
+                    this._orbit = mode == 0 ? NavigationMode.ROTATE : NavigationMode.ORBIT;
+                    this._orbit_start = new Vector3(cursor_pos.X, cursor_pos.Y, Depth(cursor_pos));
+                    this._pivot_world = this.PivotWorld(cursor_pos);
+                    break;
+
+                case 2:
+                    this._pan = true;
+                    this._pan_start = new Vector3(cursor_pos.X, cursor_pos.Y, Depth(cursor_pos));
+                    break;
+            }
         }
 
-        public void EndOrbit(Vector2 cursor_pos)
+        public void End(int mode, Vector2 cursor_pos)
         {
-            this._orbit = NavigationMode.OFF;
+            switch (mode)
+            {
+                default:
+                case 0:
+                case 1:
+                    this._orbit = NavigationMode.OFF;
+                    break;
+
+                case 2:
+                    this._pan = false;
+                    break;
+            }
         }
 
-        public (Matrix4 matrix, bool changed) MoveOnLineOfSight(Vector2 cursor_pos, float delta)
+        public (Matrix4 matrix, bool changed) MoveWheel(Vector2 cursor_pos, float delta)
         {
             // get view, projection and window matrix
             //(Matrix4 mat_proj, Matrix4 inv_proj) = projection;

@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using OpenTK; // Vector2, Vector3, Vector4, Matrix4
 using OpenTK_library.Controls;
+using OpenTK_library.Mathematics;
+
+using static OpenTK_library.Mathematics.Operations;
 
 namespace OpenTK_rubiks.Model
 {
@@ -121,7 +124,6 @@ namespace OpenTK_rubiks.Model
     /// Representation of the positions and arrangement of the components (sub cubes), of the Rubik's cube.
     /// </summary>
     public class RubiksControls
-        : BaseControls
     {
         /// <summary>time getter delegate (time in seconds)</summary>
         GetTime _get_time;

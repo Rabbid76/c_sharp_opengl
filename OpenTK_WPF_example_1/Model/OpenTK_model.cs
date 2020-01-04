@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using OpenTK; // Vector2, Vector3, Vector4, Matrix4
 using OpenTK.Graphics.OpenGL4; // GL
 
@@ -65,7 +61,7 @@ namespace OpenTK_WPF_example_1.Model
 
         private Matrix4 _view = Matrix4.Identity;
         private Matrix4 _projection = Matrix4.Identity;
-        private ModelSpinningControls _spin;
+        private IControls _controls;
         double _period = 0;
 
         public OpenTK_Model()
@@ -91,17 +87,17 @@ namespace OpenTK_WPF_example_1.Model
 
         public void MouseDown(Vector2 wnd_pos, bool left)
         {
-            this._spin.MosueDown(wnd_pos, left);
+            this._controls.Start(left ? 0 : 1, wnd_pos);
         }
 
         public void MouseUp(Vector2 wnd_pos, bool left)
         {
-            this._spin.MosueUp(wnd_pos, left);
+            this._controls.End(left ? 0 : 1, wnd_pos);
         }
 
         public void MouseMove(Vector2 wnd_pos)
         {
-            this._spin.MosueMove(wnd_pos);
+            this._controls.MoveCursorTo(wnd_pos);
         }
 
         public void Setup(int cx, int cy)
@@ -240,12 +236,13 @@ namespace OpenTK_WPF_example_1.Model
             float aspect = (float)this._cx / (float)this._cy;
             this._projection = Matrix4.CreatePerspectiveFieldOfView(angle, aspect, 0.1f, 100.0f);
 
-            this._spin = new ModelSpinningControls(
+            var spin = new ModelSpinningControls(
                 () => { return this._period; },
                 () => { return new float[] { 0, 0, (float)this._cx, (float)this._cy }; },
                 () => { return this._view; }
             );
-            this._spin.SetAttenuation(1.0f, 0.05f, 0.0f);
+            spin.SetAttenuation(1.0f, 0.05f, 0.0f);
+            this._controls = spin;
         }
 
         public void Draw(int cx, int cy, double app_t)
@@ -264,8 +261,7 @@ namespace OpenTK_WPF_example_1.Model
                 this._projection = Matrix4.CreatePerspectiveFieldOfView(angle, aspect, 0.1f, 100.0f);
             }
 
-            this._spin.Update();
-            Matrix4 model_mat = this._spin.autoModelMatrix * this._spin.orbit; // OpenTK `*`-operator is reversed
+            (Matrix4 model_mat, bool update) = this._controls.Update();
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 

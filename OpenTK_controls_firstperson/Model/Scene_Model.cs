@@ -66,7 +66,7 @@ namespace OpenTK_controls_firstperson.Model
 
         private Matrix4 _view = Matrix4.Identity;
         private Matrix4 _projection = Matrix4.Identity;
-        private FirstPersonControls _navigate;
+        private IControls _controls;
         private double _period = 0;
 
         public Scene_Model()
@@ -93,30 +93,24 @@ namespace OpenTK_controls_firstperson.Model
 
         public void MouseDown(Vector2 wnd_pos, bool left, bool right)
         {
-            if (left)
-            {
-                //this._navigate.StartOrbit(wnd_pos, NavigationMode.ORBIT);
-                this._navigate.StartRotate(wnd_pos, BaseControls.NavigationMode.ROTATE);
-            }
+            this._controls.Start(left ? 0 : 1, wnd_pos);
         }
 
         public void MouseUp(Vector2 wnd_pos, bool left, bool right)
         {
-            if (left)
-            {
-                this._navigate.EndRotate(wnd_pos);
-            }
+            this._controls.End(left ? 0 : 1, wnd_pos);
         }
 
         public void MouseMove(Vector2 wnd_pos)
         {
-            (Matrix4 view_mat, bool update) = this._navigate.MoveCursorTo(wnd_pos);
+            (Matrix4 view_mat, bool update) = this._controls.MoveCursorTo(wnd_pos);
             this._view = view_mat;
         }
 
         public void MouseWheel(Vector2 wnd_pos, int wheel_delta)
         {
-            
+            (Matrix4 view_mat, bool update) = this._controls.MoveWheel(wnd_pos, (float)wheel_delta * 0.005f);
+            this._view = view_mat;
         }
 
         public void Setup(int cx, int cy)
@@ -258,7 +252,7 @@ namespace OpenTK_controls_firstperson.Model
             float aspect = (float)this._cx / (float)this._cy;
             this._projection = Matrix4.CreatePerspectiveFieldOfView(angle, aspect, 0.1f, 100.0f);
 
-            _navigate = new FirstPersonControls(
+            _controls = new FirstPersonControls(
                 () => { return new float[] { 0, 0, (float)this._cx, (float)this._cy }; },
                 () => { return this._view; }
             );
@@ -293,7 +287,7 @@ namespace OpenTK_controls_firstperson.Model
                 move_vec.X -= 1.0f;
             move_vec *= (float)delta_t;
 
-            (Matrix4 view_mat, bool update) = this._navigate.Move(move_vec);
+            (Matrix4 view_mat, bool update) = this._controls.Move(move_vec);
             this._view = view_mat;
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);

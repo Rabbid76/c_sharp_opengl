@@ -6,6 +6,7 @@ using OpenTK.Graphics.OpenGL4; // GL, ShaderType
 // TDOD
 // - separate Vertex Buffer Object
 // - multiple configurations (multiple manged objects?)
+// - Builder pattern 
 
 namespace OpenTK_library.OpenGL
 {

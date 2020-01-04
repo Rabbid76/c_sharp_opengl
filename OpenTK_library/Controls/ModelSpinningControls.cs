@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using OpenTK; // Vector2, Vector3, Vector4, Matrix4
+using OpenTK_library.Mathematics;
+
+using static OpenTK_library.Mathematics.Operations;
 
 namespace OpenTK_library.Controls
 {
     public class ModelSpinningControls
-        : BaseControls
+        : IControls
     {
         /// <summary>time getter delegate (time in seconds)</summary>
         GetTime _get_time;
@@ -92,7 +95,40 @@ namespace OpenTK_library.Controls
             return this;
         }
 
-        public ModelSpinningControls Update()
+        public void Start(int mode, Vector2 cursor_pos)
+        {
+            MosueDown(cursor_pos, mode == 0);
+        }
+
+        public void End(int mode, Vector2 cursor_pos)
+        {
+            MosueUp(cursor_pos, mode == 0);
+        }
+
+        public (Matrix4 matrix, bool changed) MoveCursorTo(Vector2 cursor_pos)
+        {
+            MosueMove(cursor_pos);
+            return (matrix: Matrix4.Identity, changed: false);
+        }
+
+        public (Matrix4 matrix, bool changed) MoveWheel(Vector2 cursor_pos, float delta)
+        {
+            return (matrix: Matrix4.Identity, changed: false);
+        }
+
+        public (Matrix4 matrix, bool changed) Move(Vector3 move_vec)
+        {
+            return (matrix: Matrix4.Identity, changed: false);
+        }
+
+        public (Matrix4 matrix, bool changed) Update()
+        {
+            UpdateModel();
+            Matrix4 model_mat = this.autoModelMatrix * this.orbit; // OpenTK `*`-operator is reversed
+            return (matrix: model_mat, changed: true);
+        }
+
+        public ModelSpinningControls UpdateModel()
         {
             double current_T = this.time;
             this._current_model_mat = Matrix4.Identity;
@@ -114,8 +150,8 @@ namespace OpenTK_library.Controls
                 }
                 else
                 {
-                    float auto_angle_x = Fract((float)(current_T - this._rotate_start_T) / 13.0f) * 2.0f * (float)Math.PI;
-                    float auto_angle_y = Fract((float)(current_T - this._rotate_start_T) / 17.0f) * 2.0f * (float)Math.PI;
+                    float auto_angle_x = (float)Fract((current_T - this._rotate_start_T) / 13.0) * 2.0f * (float)Math.PI;
+                    float auto_angle_y = (float)Fract((current_T - this._rotate_start_T) / 17.0) * 2.0f * (float)Math.PI;
                     this._current_model_mat =
                         CreateRotate(auto_angle_y, new Vector3(0, 1, 0)) *
                         CreateRotate(auto_angle_x, new Vector3(1, 0, 0)) *

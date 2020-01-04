@@ -67,7 +67,7 @@ namespace OpenTK_example_2
         
         private Matrix4 _view = Matrix4.Identity;
         private Matrix4 _projection = Matrix4.Identity;
-        private ModelSpinningControls _spin;
+        private IControls _controls;
         double _period = 0;
         
         public AppWindow(int width, int height, string title)
@@ -222,12 +222,13 @@ namespace OpenTK_example_2
 
             this._view = Matrix4.LookAt(0.0f, 0.0f, 1.5f, 0, 0, 0, 0, 1, 0);
 
-            this._spin = new ModelSpinningControls(
+            var spin = new ModelSpinningControls(
                 () => { return this._period; },
                 () => { return new float[] { 0, 0, (float)this.Width, (float)this.Height }; },
                 () => { return this._view; }
             );
-            this._spin.SetAttenuation(1.0f, 0.05f, 0.0f);
+            spin.SetAttenuation(1.0f, 0.05f, 0.0f);
+            this._controls = spin;
 
             base.OnLoad(e);
         }
@@ -255,9 +256,8 @@ namespace OpenTK_example_2
 
             this._period += this.RenderPeriod;
 
-            this._spin.Update();
-            Matrix4 model_mat = this._spin.autoModelMatrix * this._spin.orbit; // OpenTK `*`-operator is reversed
-
+            (Matrix4 model_mat, bool update) = this._controls.Update();
+            
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             this._test_prog.Use();
@@ -276,7 +276,7 @@ namespace OpenTK_example_2
             base.OnMouseDown(e);
 
             Vector2 wnd_pos = new Vector2((float)e.Mouse.X, (float)(this.Height - e.Mouse.Y));
-            this._spin.MosueDown(wnd_pos, e.Mouse.LeftButton == ButtonState.Pressed);
+            this._controls.Start(e.Mouse.LeftButton == ButtonState.Pressed ? 0 : 1, wnd_pos);
         }
 
         protected override void OnMouseUp(MouseButtonEventArgs e)
@@ -284,7 +284,7 @@ namespace OpenTK_example_2
             base.OnMouseUp(e);
 
             Vector2 wnd_pos = new Vector2((float)e.Mouse.X, (float)(this.Height - e.Mouse.Y));
-            this._spin.MosueUp(wnd_pos, e.Mouse.LeftButton == ButtonState.Released);
+            this._controls.End(e.Mouse.LeftButton == ButtonState.Released ? 0 : 1, wnd_pos);
         }
 
         protected override void OnMouseMove(MouseMoveEventArgs e)
@@ -292,7 +292,7 @@ namespace OpenTK_example_2
             base.OnMouseMove(e);
 
             Vector2 wnd_pos = new Vector2((float)e.Mouse.X, (float)(this.Height - e.Mouse.Y));
-            this._spin.MosueMove(wnd_pos);
+            this._controls.MoveCursorTo(wnd_pos);
         }
     }
 }

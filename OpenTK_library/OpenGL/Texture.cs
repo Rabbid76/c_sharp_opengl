@@ -95,7 +95,7 @@ namespace OpenTK_library.OpenGL
                 GL.CreateTextures(TextureTarget.Texture2D, 1, out this._tbo);
                 GL.TextureStorage2D(this._tbo, 1, SizedInternalFormat.Rgba8, cx, cy);
                 GL.TextureSubImage2D<byte>(this._tbo, 0, 0, 0, cx, cy, PixelFormat.Rgba, PixelType.UnsignedByte, pixel);
-                GL.GenerateTextureMipmap(this._tbo);
+                GL.GenerateTextureMipmap(this._tbo); // TODO $$$ mipmaps for immutable texture?
             }
             else
             {
