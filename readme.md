@@ -24,7 +24,7 @@ WPF 3D mesh
 
 WPF Orbit, pan, zoom
 
-![](doc/image/OpenTK_orbit.png)
+![](doc/image/OpenTK_controls_orbit.png)
 
 WPF First person
 
@@ -49,3 +49,7 @@ Rubik's cube
 Compute shader raytracing
 
 ![](doc/image/OpenTK_compute_raytracing.png)
+
+[Open-Asset-Importer-Lib](http://www.assimp.org/) [Wavefront OBJ](https://de.wikipedia.org/wiki/Wavefront_OBJ) model
+
+![](doc/image/OpenTK_assimp_example_1.png)

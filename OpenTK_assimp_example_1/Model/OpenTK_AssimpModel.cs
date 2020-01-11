@@ -12,7 +12,7 @@ using OpenTK_library.Type;
 using OpenTK_library.Mesh;
 using OpenTK_library.Controls;
 using OpenTK_library.OpenGL;
-
+using OpenTK_library_assimp.Builder;
 
 namespace OpenTK_assimp_example_1.Model
 {
@@ -54,7 +54,7 @@ namespace OpenTK_assimp_example_1.Model
         private OpenTK_ViewModel _viewmodel;
         private int _controls_id = 0;
         private Dictionary<string, string> _model_names = new Dictionary<string, string>();
-        private Dictionary<int, Model> _models = new Dictionary<int, Model>();
+        private Dictionary<int, OpenTK_library.Scene.Model> _models = new Dictionary<int, OpenTK_library.Scene.Model>();
         private int _model_id = 0;
         private bool _disposed = false;
         private int _cx = 0;
@@ -64,7 +64,7 @@ namespace OpenTK_assimp_example_1.Model
         private Extensions _extensions = new Extensions();
         private DebugCallback _debug_callback = new DebugCallback();
 
-        private Model _model;
+        private OpenTK_library.Scene.Model _model;
         private OpenTK_library.OpenGL.Program _test_prog;
         private StorageBuffer<TMVP> _mvp_ssbo;
         private StorageBuffer<TLightSource> _light_ssbo;
@@ -78,15 +78,22 @@ namespace OpenTK_assimp_example_1.Model
 
         public OpenTK_AssimpModel()
         {
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            string[] names = assembly.GetManifestResourceNames();
+            List<string> names = new List<string>();
+
+            //Assembly assembly = Assembly.GetExecutingAssembly();
+            //names = new List<string>(assembly.GetManifestResourceNames());
+
+            string working_directory = Directory.GetCurrentDirectory();
+            if (Directory.Exists(working_directory))
+                names = new List<string>(Directory.GetFiles(working_directory, "*.obj", SearchOption.AllDirectories));
+
             foreach (var name in new List<string>(names))
             {
                 if (name.EndsWith(".obj"))
                 {
                     var user_name = name.Substring(0, name.Length - 4);
-                    var pos = user_name.LastIndexOf('.');
-                    user_name = user_name.Substring(pos, user_name.Length - pos);
+                    var pos = user_name.LastIndexOfAny(new char[]{'.', '\\'});
+                    user_name = user_name.Substring(pos + 1, user_name.Length - pos - 1);
                     _model_names[user_name] = name;
                 }
             }
@@ -142,6 +149,8 @@ namespace OpenTK_assimp_example_1.Model
 
         public void MouseDown(Vector2 wnd_pos, bool left)
         {
+            // TODO $$$ controls adapter
+
             int mode = left ? 0 : 1;
             if (this._controls_id == 1)
                 mode = left ? 1 : 2;
@@ -295,32 +304,83 @@ namespace OpenTK_assimp_example_1.Model
             this._projection = Matrix4.CreatePerspectiveFieldOfView(angle, aspect, 0.1f, _far);
         }
 
-        public void LoadCurrentModel()
+        private void LoadCurrentModel()
         {
-            int model_id = Int32.Parse(_viewmodel.CurrentModel.ModelNumber);
-            if (_model != null && model_id == _model_id)
-                return;
-            _model_id = model_id;
-
-            if (_models.ContainsKey(_model_id))
+            try
             {
-                _model = _models[_model_id];
-                return;
+                int model_id = Int32.Parse(_viewmodel.CurrentModel.ModelNumber);
+                if (_model != null && model_id == _model_id)
+                    return;
+                _model_id = model_id;
+
+                if (_models.ContainsKey(_model_id))
+                {
+                    _model = _models[_model_id];
+                }
+                else
+                {
+                    string resource_name = _model_names[_viewmodel.CurrentModel.ModelText];
+                    //Assembly assembly = Assembly.GetExecutingAssembly();
+                    //Stream resource_stream = assembly.GetManifestResourceStream(resource_name);
+                    //_model = Model.Create(resource_stream);
+                    _model = AssimpModel.Create(resource_name);
+                    _models[_model_id] = _model;
+                }
+
+                // view matrix
+
+                var cpt = _model.SceneBox.Center;
+                var size = _model.SceneBox.Diagonal;
+                _far = size * 2.0f;
+                _model_center = Matrix4.CreateTranslation(-cpt);
+                this._view = Matrix4.LookAt(0, 0, size * 0.8f, 0, 0, 0, 0, 1, 0);
             }
+            catch (Exception)
+            { }
+        }
 
-            string resource_name = _model_names[_viewmodel.CurrentModel.ModelText];
-            Assembly assembly = Assembly.GetExecutingAssembly();
-            Stream resource_stream = assembly.GetManifestResourceStream(resource_name);
-            _model = Model.Create(resource_stream);
-            _models[_model_id] = _model;
+        private void SelectCurrentControls()
+        {
+            try
+            {
+                int controls_id = Int32.Parse(_viewmodel.CurrentControl.ControlsNumber);
+                if (_controls == null || controls_id != _controls_id)
+                {
+                    _controls_id = controls_id;
+                    switch (_controls_id)
+                    {
+                        default:
+                        case 0:
+                            var spin = new ModelSpinningControls(
+                                () => { return this._period; },
+                                () => { return new float[] { 0, 0, (float)this._cx, (float)this._cy }; },
+                                () => { return this._view; }
+                            );
+                            spin.SetAttenuation(1.0f, 0.05f, 0.0f);
+                            this._controls = spin;
+                            break;
 
-            // view matrix
+                        case 1:
+                            _controls = new NavigationControls(
+                                () => { return new float[] { 0, 0, (float)this._cx, (float)this._cy }; },
+                                () => { return this._view; },
+                                () => { return this._projection; },
+                                this.GetDepth,
+                                (cursor_pos) => { return new Vector3(0, 0, 0); }
+                            );
+                            break;
 
-            var cpt = _model.SceneBox.Center;
-            var size = _model.SceneBox.Diagonal;
-            _far = size * 2.0f;
-            _model_center = Matrix4.CreateTranslation(-cpt);
-            this._view = Matrix4.LookAt(0, - size, 0, 0, 0, 0, 0, 0, 1);
+                        case 2:
+                            _controls = new FirstPersonControls(
+                                () => { return new float[] { 0, 0, (float)this._cx, (float)this._cy }; },
+                                () => { return this._view; }
+                            );
+                            break;
+                    }
+                }
+            }
+            catch (Exception)
+            { }
         }
 
         public void Draw(int cx, int cy, double app_t)
@@ -329,41 +389,7 @@ namespace OpenTK_assimp_example_1.Model
             this._period = app_t;
 
             // select controls
-            int controls_id = Int32.Parse(_viewmodel.CurrentControl.ControlsNumber);
-            if (_controls == null || controls_id != _controls_id)
-            {
-                _controls_id = controls_id;
-                switch(_controls_id)
-                {
-                    default:
-                    case 0:
-                        var spin = new ModelSpinningControls(
-                            () => { return this._period; },
-                            () => { return new float[] { 0, 0, (float)this._cx, (float)this._cy }; },
-                            () => { return this._view; }
-                        );
-                        spin.SetAttenuation(1.0f, 0.05f, 0.0f);
-                        this._controls = spin;
-                        break;
-
-                    case 1:
-                        _controls = new NavigationControls(
-                            () => { return new float[] { 0, 0, (float)this._cx, (float)this._cy }; },
-                            () => { return this._view; },
-                            () => { return this._projection; },
-                            this.GetDepth,
-                            (cursor_pos) => { return new Vector3(0, 0, 0); }
-                        );
-                        break;
-
-                    case 2:
-                        _controls = new FirstPersonControls(
-                            () => { return new float[] { 0, 0, (float)this._cx, (float)this._cy }; },
-                            () => { return this._view; }
-                        );
-                        break;
-                }
-            }
+            SelectCurrentControls();
 
             if (_controls_id == 2)
             {
@@ -409,10 +435,11 @@ namespace OpenTK_assimp_example_1.Model
             TMVP mvp = new TMVP(model_mat, this._view, this._projection);
             this._mvp_ssbo.Update(ref mvp);
 
-            DrawModel(_model.Root, model_mat);
+            if (_model != null)
+                DrawModel(_model.Root, model_mat);
         }
 
-        private void DrawModel(ModelNode node, Matrix4 model_matrix)
+        private void DrawModel(OpenTK_library.Scene.ModelNode node, Matrix4 model_matrix)
         {
             Matrix4 node_model_matrix = model_matrix * node.ModelMatrix; // OpenTK `*`-operator is reversed
 
@@ -420,7 +447,7 @@ namespace OpenTK_assimp_example_1.Model
             if (node.Meshs.Count > 0)
             {
                 TMVP mvp = new TMVP(node_model_matrix, this._view, this._projection);
-                //this._mvp_ssbo.Update(ref mvp);
+                this._mvp_ssbo.Update(ref mvp);
             }
 
             // draw meshes

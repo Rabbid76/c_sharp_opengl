@@ -78,7 +78,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Model\AssimpModel.cs" />
     <Compile Include="Model\OpenTK_AssimpModel.cs" />
     <Compile Include="ViewModel\OpenTK_ViewModel.cs" />
     <Compile Include="View\OpenTK_View.xaml.cs">
@@ -111,14 +110,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <EmbeddedResource Include="Resource\Wavefront\ateneav.obj" />
-    <EmbeddedResource Include="Resource\Wavefront\buddha.obj" />
-    <EmbeddedResource Include="Resource\Wavefront\bunny.obj" />
-    <EmbeddedResource Include="Resource\Wavefront\dragon.obj" />
-    <EmbeddedResource Include="Resource\Wavefront\elephav.obj" />
-    <EmbeddedResource Include="Resource\Wavefront\pig_triangulated.obj" />
-    <EmbeddedResource Include="Resource\Wavefront\sphere.obj" />
-    <EmbeddedResource Include="Resource\Wavefront\venusv.obj" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -128,6 +119,10 @@
     <ProjectReference Include="..\OpenTK_library\OpenTK_library.csproj">
       <Project>{e4fc68e0-0e54-4e28-bb40-a5b4f39de56a}</Project>
       <Name>OpenTK_library</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenTK_library_assimp\OpenTK_library_assimp.csproj">
+      <Project>{ed8024b2-47d0-4555-9b7f-e3e3717e28fd}</Project>
+      <Name>OpenTK_library_assimp</Name>
     </ProjectReference>
     <ProjectReference Include="..\WpfViewModelModule\WpfViewModelModule.csproj">
       <Project>{93619d2b-bcb4-4751-84ab-2399a9be058f}</Project>

@@ -7,10 +7,11 @@ using OpenTK; // Vector2, Vector3, Vector4, Matrix4
 using Assimp;
 using Assimp.Configs;
 
-using OpenTK_library.OpenGL;
 using OpenTK_library.Mathematics;
+using OpenTK_library.Scene;
+using OpenTK_library.OpenGL;
 
-namespace OpenTK_assimp_example_1.Model
+namespace OpenTK_library_assimp.Builder
 {
     /// <summary>
     /// [Open Asset Import Library](https://github.com/assimp)
@@ -21,153 +22,13 @@ namespace OpenTK_assimp_example_1.Model
     // TODO $$$ : Composite Builder
     // TODO $$$ : add model material buffer lists
 
-    public class Mesh
-        : OpenTK_library.OpenGL.Object
+    public class AssimpModel
+        : OpenTK_library.Scene.Model
     {
-        protected AABB _box;
-
-        protected (uint, uint) _vertexattrib = (0, 0);
-        protected (uint, uint) _normalattrib = (0, 0);
-        protected (uint, uint) _binormalattrib = (0, 0);
-        protected (uint, uint) _tangentattrib = (0, 0);
-        protected List<(uint, uint)> _textureattrib;
-        protected List<(uint, uint)> _colorattrib;
-        protected uint _tuple_size = 0;
-        protected uint _face_size = 0;
-        protected VertexArrayObject<float, uint> _vao;
-
-        protected override void DisposeObjects()
+        public static AssimpModelBuilder Create(string filename)
         {
-            _vao.Dispose();
+            return new AssimpModelBuilder(filename);
         }
-
-        public AABB Box
-        {
-            get => _box;
-            set => _box = value;
-        }
-
-        public (uint, uint) VertexAttribute
-        {
-            get => _vertexattrib;
-            set => _vertexattrib = value;
-        }
-
-        public (uint, uint) NormalAttribute
-        {
-            get => _normalattrib;
-            set => _normalattrib = value;
-        }
-
-        public (uint, uint) BinormalAttribute
-        {
-            get => _binormalattrib;
-            set => _binormalattrib = value;
-        }
-
-        public (uint, uint) TangentAttribute
-        {
-            get => _tangentattrib;
-            set => _tangentattrib = value;
-        }
-
-        public List<(uint, uint)> TextureAttribute { get => _textureattrib; }
-
-        public List<(uint, uint)> ColorAttribute { get => _colorattrib; }
-
-        public Mesh AddTextureAttrib((uint, uint) attribute)
-        {
-            _textureattrib.Add(attribute);
-            return this;
-        }
-
-        public Mesh AddColorAttrib((uint, uint) attribute)
-        {
-            _colorattrib.Add(attribute);
-            return this;
-        }
-
-        public uint TupleSize
-        {
-            get => _tuple_size;
-            set => _tuple_size = value;
-        }
-
-        public uint FaceSize
-        {
-            get => _face_size;
-            set => _face_size = value;
-        }
-
-        public VertexArrayObject<float, uint> VertexArray
-        {
-            get => _vao;
-            set => _vao = value;
-        }
-    }
-
-    public class ModelNode
-        : OpenTK_library.OpenGL.Object
-    {
-        protected Matrix4 _model;
-        protected List<Mesh> _meshs = new List<Mesh>();
-        protected List<ModelNode> _children = new List<ModelNode>();
-
-        protected override void DisposeObjects()
-        {
-            foreach (var mesh in _meshs)
-                mesh.Dispose();
-            _meshs.Clear();
-            foreach (var child in _children)
-                child.Dispose();
-            _children.Clear();
-        }
-
-        public Matrix4 ModelMatrix
-        {
-            get => _model;
-            set => _model = value;
-        }
-
-        public List<Mesh> Meshs { get => _meshs; }
-        public List<ModelNode> Children { get => _children; }
-
-        public ModelNode Add(Mesh mesh)
-        {
-            _meshs.Add(mesh);
-            return this;
-        }
-
-        public ModelNode AddChild(ModelNode child)
-        {
-            _children.Add(child);
-            return this;
-        }
-    }
-
-    public class Model
-        : OpenTK_library.OpenGL.Object
-    {
-        public static readonly int vertex_index = 0;
-        public static readonly int normal_index = 1;
-        public static readonly int texture0_index = 2;
-        public static readonly int color0_index = 3;
-        public static readonly int binormal_index = 4;
-        public static readonly int tangent_index = 5;
-        public static readonly int textureN_index = 10;
-        public static readonly int colorN_index = 20;
-
-        protected AABB _scene_box = new AABB();
-        protected ModelNode _root_node;
-
-        protected override void DisposeObjects()
-        {
-            _root_node.Dispose();
-        }
-
-        public AABB SceneBox { get => _scene_box; }
-
-        public ModelNode Root { get => _root_node; }
 
         public static AssimpModelBuilder Create(Stream filestream)
         {
@@ -176,20 +37,32 @@ namespace OpenTK_assimp_example_1.Model
 
         public class AssimpModelBuilder
         {
-            private Model _model = new Model();
+            private AssimpModel _model = new AssimpModel();
 
-            public static implicit operator Model(AssimpModelBuilder builder)
+            public static implicit operator OpenTK_library.Scene.Model(AssimpModelBuilder builder)
             {
                 return builder._model;
             }
 
             private Scene _assimpmodel;
-            
+
+            PostProcessSteps flags = PostProcessPreset.TargetRealTimeMaximumQuality | PostProcessSteps.GenerateUVCoords;
+
+            public AssimpModelBuilder(string filename)
+            {
+                AssimpContext importer = new AssimpContext();
+                importer.SetConfig(new NormalSmoothingAngleConfig(66.0f));
+                _assimpmodel = importer.ImportFile(filename, flags);
+
+                Matrix4x4 identity = Matrix4x4.Identity;
+                CreateBuffers(_assimpmodel.RootNode, null, ref identity);
+            }
+
             public AssimpModelBuilder(Stream filestream)
             {
                 AssimpContext importer = new AssimpContext();
                 importer.SetConfig(new NormalSmoothingAngleConfig(66.0f));
-                _assimpmodel = importer.ImportFileFromStream(filestream, PostProcessSteps.GenerateNormals);
+                _assimpmodel = importer.ImportFileFromStream(filestream, flags);
 
                 Matrix4x4 identity = Matrix4x4.Identity;
                 CreateBuffers(_assimpmodel.RootNode, null, ref identity);
@@ -238,7 +111,7 @@ namespace OpenTK_assimp_example_1.Model
                         uint tuple_index = 0;
                         List<TVertexFormat> formalist = new List<TVertexFormat>();
 
-                        Mesh mesh = new Mesh();
+                        OpenTK_library.Scene.Mesh mesh = new OpenTK_library.Scene.Mesh();
                         mesh.Box = mesh_box;
                         node.Add(mesh);
 

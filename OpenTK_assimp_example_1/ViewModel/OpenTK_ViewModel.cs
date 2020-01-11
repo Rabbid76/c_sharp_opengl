@@ -154,10 +154,26 @@ namespace OpenTK_assimp_example_1.ViewModel
         public OpenTK_ViewModel()
         {
             _gl_model.ViewModel = this;
-            Models = _gl_model.ModelsData();
-            Controls = _gl_model.ControlsData();
-            CurrentModel = Models[0];
-            CurrentControl = Controls[0];
+
+            try
+            {
+                Controls = _gl_model.ControlsData();
+                CurrentControl = Controls[1];
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("error determining controls: " + ex.Message);
+            }
+
+            try
+            {
+                Models = _gl_model.ModelsData();
+                CurrentModel = Models[0];
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("error reading models: " + ex.Message);
+            }
         }
 
         public WindowsFormsHost GLHostControl
@@ -179,6 +195,7 @@ namespace OpenTK_assimp_example_1.ViewModel
                     _glc.MouseDown += GLC_OnMouseDown;
                     _glc.MouseUp += GLC_OnMouseUp;
                     _glc.MouseMove += GLC_OnMouseMove;
+                    _glc.MouseWheel += GLC_OnMouseWheel;
                 }
                 if (_formsHost == null)
                 {
