@@ -13,11 +13,12 @@ using OpenTK_library.Type;
 using OpenTK_library.Mesh;
 using OpenTK_library.Controls;
 using OpenTK_library.OpenGL;
+using OpenTK_libray_viewmodel.Model;
 
 namespace OpenTK_controls_orbit.Model
 {
     public class Orbit_Model
-        : IDisposable
+        : IModel
     {
         internal unsafe struct TLightSource
         {
@@ -91,29 +92,9 @@ namespace OpenTK_controls_orbit.Model
             GC.SuppressFinalize(this);
         }
 
-        public void MouseDown(Vector2 wnd_pos, bool left, bool right)
-        {
-            if (left || right)
-                this._controls.Start(left ? 1 : 2, wnd_pos);
-        }
+        public IControls GetControls() => _controls;
 
-        public void MouseUp(Vector2 wnd_pos, bool left, bool right)
-        {
-            if (left || right)
-                this._controls.End(left ? 1 : 2, wnd_pos);
-        }
-
-        public void MouseMove(Vector2 wnd_pos)
-        {
-            (Matrix4 view_mat, bool update) = this._controls.MoveCursorTo(wnd_pos);
-            this._view = view_mat;
-        }
-
-        public void MouseWheel(Vector2 wnd_pos, int wheel_delta)
-        {
-            (Matrix4 view_mat, bool update) = this._controls.MoveWheel(wnd_pos, (float)wheel_delta*0.005f);
-            this._view = view_mat;
-        }
+        public float GetScale() => 1.0f;
 
         public void Setup(int cx, int cy)
         {
@@ -259,7 +240,8 @@ namespace OpenTK_controls_orbit.Model
                 () => { return this._view; },
                 () => { return this._projection; },
                 this.GetDepth,
-                (cursor_pos) => { return new Vector3(0, 0, 0); }
+                (cursor_pos) => { return new Vector3(0, 0, 0); },
+                (Matrix4 view) => { this._view = view; }
             );
         }
 

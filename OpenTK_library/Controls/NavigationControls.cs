@@ -16,12 +16,15 @@ namespace OpenTK_library.Controls
         GetMatrix _get_proj_mat;
         GetDepthVal _get_depth_val;
         GetPivot _get_pivot;
+        UpdateMatrix _set_view_mat;
 
         bool _pan = false;
         Vector3 _pan_start = new Vector3(0, 0, 1);
         NavigationMode _orbit = NavigationMode.OFF;
         Vector3 _orbit_start = new Vector3(0, 0, 1);
         Vector3 _pivot_world = new Vector3(0, 0, 0);
+        bool _view_changed = false;
+        Matrix4 _current_view_mat = Matrix4.Identity;
 
         protected (Matrix4 matrix, Matrix4 inverse) projection
         {
@@ -119,33 +122,36 @@ namespace OpenTK_library.Controls
             return rot_pivot;
         }
 
-        public NavigationControls(GetViewRect view_rect, GetMatrix view, GetMatrix proj, GetDepthVal depth, GetPivot pivot)
+        public NavigationControls(GetViewRect view_rect, GetMatrix view, GetMatrix proj, GetDepthVal depth, GetPivot pivot, UpdateMatrix update)
         {
             this._get_view_rect = view_rect;
             this._get_view_mat = view;
             this._get_proj_mat = proj;
             this._get_depth_val = depth;
             this._get_pivot = pivot;
+            this._set_view_mat = update;
+            _current_view_mat = this._get_view_mat();
         }
 
         public (Matrix4 matrix, bool changed) Update()
         {
-            return (matrix: Matrix4.Identity, changed: false);
+            return (matrix: _current_view_mat, changed: _view_changed);
         }
 
-        public (Matrix4 matrix, bool changed) Move(Vector3 move_vec)
+        public void Move(Vector3 move_vec)
         {
             bool view_changed = false;
 
             // get view matrix
             (Matrix4 mat_view, Matrix4 inv_view) = view;
 
-            view_changed = true;
             Matrix4 trans_mat = Matrix4.CreateTranslation(new Vector3(-move_vec.X, move_vec.Z, move_vec.Y));
             mat_view = mat_view * trans_mat; // OpenTK `*`-operator is reversed
 
-            // return new view matrix
-            return (matrix: mat_view, changed: view_changed);
+            _view_changed = true;
+            _current_view_mat = mat_view;
+            if (_view_changed)
+                _set_view_mat(_current_view_mat);
         }
 
         public void Start(int mode, Vector2 cursor_pos)
@@ -154,15 +160,15 @@ namespace OpenTK_library.Controls
             {
                 default:
                 case 0:
-                case 1:
-                    this._orbit = mode == 0 ? NavigationMode.ROTATE : NavigationMode.ORBIT;
-                    this._orbit_start = new Vector3(cursor_pos.X, cursor_pos.Y, Depth(cursor_pos));
-                    this._pivot_world = this.PivotWorld(cursor_pos);
-                    break;
-
-                case 2:
                     this._pan = true;
                     this._pan_start = new Vector3(cursor_pos.X, cursor_pos.Y, Depth(cursor_pos));
+                    break;
+
+                case 1:
+                case 2:
+                    this._orbit = mode == 1 ? NavigationMode.ROTATE : NavigationMode.ORBIT;
+                    this._orbit_start = new Vector3(cursor_pos.X, cursor_pos.Y, Depth(cursor_pos));
+                    this._pivot_world = this.PivotWorld(cursor_pos);
                     break;
             }
         }
@@ -173,17 +179,17 @@ namespace OpenTK_library.Controls
             {
                 default:
                 case 0:
-                case 1:
-                    this._orbit = NavigationMode.OFF;
+                    this._pan = false;
                     break;
 
+                case 1:
                 case 2:
-                    this._pan = false;
+                    this._orbit = NavigationMode.OFF;
                     break;
             }
         }
 
-        public (Matrix4 matrix, bool changed) MoveWheel(Vector2 cursor_pos, float delta)
+        public void MoveWheel(Vector2 cursor_pos, float delta)
         {
             // get view, projection and window matrix
             //(Matrix4 mat_proj, Matrix4 inv_proj) = projection;
@@ -202,11 +208,13 @@ namespace OpenTK_library.Controls
             // translate view position and update view matrix
             inv_view = inv_view * Matrix4.CreateTranslation(ray_cursor * delta); // OpenTK `*`-operator is reversed
 
-            // return new view matrix
-            return (matrix: inv_view.Inverted(), changed: true);
+            _view_changed = true;
+            _current_view_mat = inv_view.Inverted();
+            if (_view_changed)
+                _set_view_mat(_current_view_mat);
         }
 
-        public (Matrix4 matrix, bool changed) MoveCursorTo(Vector2 cursor_pos)
+        public void MoveCursorTo(Vector2 cursor_pos)
         {
             bool view_changed = false;
 
@@ -283,7 +291,7 @@ namespace OpenTK_library.Controls
 
                 // calculate the rotation matrix around the world space up vector through the pivot
                 Matrix4 rot_pivot_up = Matrix4.Identity;
-                if (Vector2.Distance(orbit_vec_x, new Vector2(0, 0)) > 0.5)
+                if (Vector2.Distance(orbit_vec_up, new Vector2(0, 0)) > 0.5)
                 {
                     Vector2 orbit_dir_up = new Vector2(1, 0);
                     Vector3 axis_up = new Vector3(0, 0, 1);
@@ -295,8 +303,10 @@ namespace OpenTK_library.Controls
                 view_changed = true;
             }
 
-            // return new view matrix
-            return (matrix: mat_view, changed: view_changed);
+            _view_changed = view_changed;
+            _current_view_mat = mat_view;
+            if (_view_changed)
+                _set_view_mat(_current_view_mat);
         }
     }
 }

@@ -15,15 +15,16 @@ namespace OpenTK_library.Controls
         void Start(int mode, Vector2 cursor_pos);
         void End(int mode, Vector2 cursor_pos);
 
-        (Matrix4 matrix, bool changed) MoveCursorTo(Vector2 cursor_pos);
-        (Matrix4 matrix, bool changed) MoveWheel(Vector2 cursor_pos, float delta);
-        (Matrix4 matrix, bool changed) Move(Vector3 move_vec);
+        void MoveCursorTo(Vector2 cursor_pos);
+        void MoveWheel(Vector2 cursor_pos, float delta);
+        void Move(Vector3 move_vec);
 
         (Matrix4 matrix, bool changed) Update();
     }
 
     public enum NavigationMode { OFF, ORBIT, ROTATE };
 
+    public delegate void UpdateMatrix(Matrix4 mat);
     public delegate Matrix4 GetMatrix();
     public delegate float[] GetViewRect();
     public delegate float GetDepthVal(Vector2 cursor_pos);

@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using OpenTK_assimp_example_1.ViewModel;
 
 namespace OpenTK_assimp_example_1.View
 {
@@ -23,6 +24,8 @@ namespace OpenTK_assimp_example_1.View
         public OpenTK_View()
         {
             InitializeComponent();
+            var vm = this.DataContext as OpenTK_ViewModel;
+            vm.Form = this;
         }
     }
 }

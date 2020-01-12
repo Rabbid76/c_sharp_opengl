@@ -10,6 +10,7 @@ using OpenTK_controls_orbit.Model;
 using OpenTK;                  // GLControl
 using OpenTK.Input;            // KeyboardState, Keyboard, Key
 using OpenTK.Graphics;         // GraphicsMode, Context
+using OpenTK_libray_viewmodel.Control;
 
 /// <summary>
 /// See [Integrating WPF and Microsoft Kinect SDK with OpenTK](http://igordcard.blogspot.com/2011/12/integrating-wpf-and-kinect-with-opentk.html)
@@ -22,13 +23,10 @@ namespace OpenTK_controls_orbit.ViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-
-        WindowsFormsHost _formsHost;
-        GLControl _glc;
+        private WindowsFormsHost _formsHost;
+        private GLControl _glc;
+        private GLControlViewModel _glc_vm;
         private Orbit_Model _gl_model = new Orbit_Model();
-        private int _cx = 0;
-        private int _cy = 0;
-        private Stopwatch _stopWatch = new Stopwatch();
 
         public Orbit_ViewModel()
         { }
@@ -44,15 +42,7 @@ namespace OpenTK_controls_orbit.ViewModel
                     // Create the GLControl.
                     GraphicsMode mode = new GraphicsMode(32, 24, 8, 8);
                     _glc = new GLControl(mode, 4, 6, GraphicsContextFlags.Default | GraphicsContextFlags.Debug);
-
-                    // Assign Load and Paint events of GLControl.
-                    _glc.Load += new EventHandler(GLC_OnLoad);
-                    _glc.HandleDestroyed += new EventHandler(GLC_OnDestroy);
-                    _glc.Paint += new System.Windows.Forms.PaintEventHandler(GLC_OnPaint);
-                    _glc.MouseDown += GLC_OnMouseDown;
-                    _glc.MouseUp += GLC_OnMouseUp;
-                    _glc.MouseMove += GLC_OnMouseMove;
-                    _glc.MouseWheel += GLC_OnMouseWheel;
+                    _glc_vm = new GLControlViewModel(_glc, _gl_model);
                 }
                 if (_formsHost == null)
                 {
@@ -67,62 +57,6 @@ namespace OpenTK_controls_orbit.ViewModel
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(propertyname));
-        }
-
-        protected void GLC_OnLoad(object sender, EventArgs e)
-        {
-            _cx = _glc.Width;
-            _cy = _glc.Height;
-            if (this._gl_model != null)
-                this._gl_model.Setup(_cx, _cy);
-            _stopWatch.Start();
-        }
-
-        protected void GLC_OnDestroy(object sender, EventArgs e)
-        {
-            if (this._gl_model != null)
-                this._gl_model.Dispose();
-        }
-
-        protected void GLC_OnPaint(object sender, System.Windows.Forms.PaintEventArgs e)
-        {
-            var span = _stopWatch.Elapsed;
-            double app_t = span.TotalMilliseconds / 1000.0;
-
-            _cx = _glc.Width;
-            _cy = _glc.Height;
-            if (this._gl_model != null)
-                this._gl_model.Draw(_cx, _cy, app_t);
-            this._glc.SwapBuffers();
-            this._glc.Invalidate();
-        }
-
-        protected void GLC_OnMouseDown(object sender, System.Windows.Forms.MouseEventArgs e)
-        {
-            Vector2 wnd_pos = new Vector2((float)e.X, (float)(this._cy - e.Y));
-            if (_gl_model != null)
-                _gl_model.MouseDown(wnd_pos, e.Button == System.Windows.Forms.MouseButtons.Left, e.Button == System.Windows.Forms.MouseButtons.Right);
-        }
-
-        protected void GLC_OnMouseUp(object sender, System.Windows.Forms.MouseEventArgs e)
-        {
-            Vector2 wnd_pos = new Vector2((float)e.X, (float)(this._cy - e.Y));
-            if (_gl_model != null)
-                _gl_model.MouseUp(wnd_pos, e.Button == System.Windows.Forms.MouseButtons.Left, e.Button == System.Windows.Forms.MouseButtons.Right);
-        }
-
-        protected void GLC_OnMouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
-        {
-            Vector2 wnd_pos = new Vector2((float)e.X, (float)(this._cy - e.Y));
-            if (_gl_model != null)
-                _gl_model.MouseMove(wnd_pos);
-        }
-
-        protected void GLC_OnMouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
-        {
-            Vector2 wnd_pos = new Vector2((float)e.X, (float)(this._cy - e.Y));
-            if (_gl_model != null)
-                _gl_model.MouseWheel(wnd_pos, e.Delta);
         }
     }
 }

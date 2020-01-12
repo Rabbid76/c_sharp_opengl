@@ -105,20 +105,19 @@ namespace OpenTK_library.Controls
             MosueUp(cursor_pos, mode == 0);
         }
 
-        public (Matrix4 matrix, bool changed) MoveCursorTo(Vector2 cursor_pos)
+        public void MoveCursorTo(Vector2 cursor_pos)
         {
             MosueMove(cursor_pos);
-            return (matrix: Matrix4.Identity, changed: false);
         }
 
-        public (Matrix4 matrix, bool changed) MoveWheel(Vector2 cursor_pos, float delta)
+        public void MoveWheel(Vector2 cursor_pos, float delta)
         {
-            return (matrix: Matrix4.Identity, changed: false);
+            // [...]
         }
 
-        public (Matrix4 matrix, bool changed) Move(Vector3 move_vec)
+        public void Move(Vector3 move_vec)
         {
-            return (matrix: Matrix4.Identity, changed: false);
+            // [...]
         }
 
         public (Matrix4 matrix, bool changed) Update()

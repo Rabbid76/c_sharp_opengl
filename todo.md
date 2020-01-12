@@ -33,9 +33,15 @@
 [How to Convert JSON object to Custom C# object?](https://stackoverflow.com/questions/2246694/how-to-convert-json-object-to-custom-c-sharp-object)  
 [How to Parse JSON into a C# Object](https://www.codementor.io/andrewbuchan/how-to-parse-json-into-a-c-object-4ui1o0bx8)  
 
+Model builder
+
 ## Projects
 
+### Shadow
+
 ### Light model
+
+### SSAO / HBAO
 
 ### Control
 

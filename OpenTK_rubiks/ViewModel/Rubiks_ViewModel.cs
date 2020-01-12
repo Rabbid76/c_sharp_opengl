@@ -10,6 +10,8 @@ using OpenTK.Input;            // KeyboardState, Keyboard, Key
 using OpenTK.Graphics;         // GraphicsMode, Context
 using OpenTK_rubiks.View;
 using OpenTK_rubiks.Model;
+using OpenTK_libray_viewmodel.Control;
+
 
 namespace OpenTK_rubiks.ViewModel
 {
@@ -18,8 +20,8 @@ namespace OpenTK_rubiks.ViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        WindowsFormsHost _formsHost;
-        GLControl _glc;
+        private WindowsFormsHost _formsHost;
+        private GLControl _glc;
         private Rubiks _gl_model = new Rubiks();
         private int _cx = 0;
         private int _cy = 0;

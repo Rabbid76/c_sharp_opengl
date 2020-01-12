@@ -42,6 +42,15 @@ namespace OpenTK_library.Mathematics
 
         public float Diagonal { get => Size.Length; }
 
+        public float MaxSize
+        { 
+            get
+            {
+                Vector3 size = Size;
+                return Max(size.X, Max(size.Y, size.Z));
+            }
+        }
+
         public static AABB operator | (AABB b, Vector3 v)
         {
             if (b.Valid)

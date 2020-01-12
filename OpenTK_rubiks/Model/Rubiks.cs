@@ -11,12 +11,13 @@ using OpenTK_library.Type;
 using OpenTK_library.Mesh;
 using OpenTK_library.Controls;
 using OpenTK_library.OpenGL;
+using OpenTK_libray_viewmodel.Model;
 
 
 namespace OpenTK_rubiks.Model
 {
     public class Rubiks
-        : IDisposable
+        : IModel
     {
         enum TMode { roatate, change };
 
@@ -121,6 +122,10 @@ namespace OpenTK_rubiks.Model
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
+        public IControls GetControls() => this._controls;
+
+        public float GetScale() => 1.0f;
 
         public void MouseDown(Vector2 wnd_pos, bool left, bool right)
         {

@@ -11,6 +11,7 @@ using OpenTK_library.Mesh;
 using OpenTK_library.Controls;
 using OpenTK_library.Generator;
 using OpenTK_library.OpenGL;
+using OpenTK_libray_viewmodel.Model;
 
 namespace OpenTK_cone_step_mapping.Model
 {
@@ -19,7 +20,7 @@ namespace OpenTK_cone_step_mapping.Model
     /// </summary>
 
     public class OpenTK_Model
-        : IDisposable
+        : IModel
     {
         internal unsafe struct TLightSource
         {
@@ -108,20 +109,9 @@ namespace OpenTK_cone_step_mapping.Model
             GC.SuppressFinalize(this);
         }
 
-        public void MouseDown(Vector2 wnd_pos, bool left)
-        {
-            this._spin.MosueDown(wnd_pos, left);
-        }
+        public IControls GetControls() => this._spin;
 
-        public void MouseUp(Vector2 wnd_pos, bool left)
-        {
-            this._spin.MosueUp(wnd_pos, left);
-        }
-
-        public void MouseMove(Vector2 wnd_pos)
-        {
-            this._spin.MosueMove(wnd_pos);
-        }
+        public float GetScale() => 1.0f;
 
         public void Setup(int cx, int cy)
         {

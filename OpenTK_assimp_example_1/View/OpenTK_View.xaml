@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:glWpfControl="clr-namespace:OpenTK.Wpf;assembly=GLWpfControl"
         xmlns:local="clr-namespace:OpenTK_assimp_example_1"
         xmlns:ViewModel="clr-namespace:OpenTK_assimp_example_1.ViewModel"
         mc:Ignorable="d"
@@ -18,6 +19,7 @@
     </Window.Background>
     <Grid x:Name="grid">
         <ContentControl x:Name="host" Margin="0,41,0,0" Grid.ColumnSpan="2" Content="{Binding GLHostControl}" />
+        <!--glWpfControl:GLWpfControl x:Name="OpenTkControl" Margin="0,41,0,0" Grid.ColumnSpan="2"/-->
         <ComboBox x:Name = "cbControl" HorizontalAlignment = "Left" Height = "26" Margin="10,10,10,10" VerticalAlignment = "Top" Width = "120" ItemsSource="{Binding Controls}" DisplayMemberPath="ControlsText" SelectedValuePath="ControlsText" SelectedValue="{Binding CurrentControl.ControlsText}" SelectedItem="{Binding CurrentControl}"/>
         <ComboBox x:Name = "cbModel" HorizontalAlignment = "Left" Height = "26" Margin="140,10,10,10" VerticalAlignment = "Top" Width = "200" ItemsSource="{Binding Models}" DisplayMemberPath="ModelText" SelectedValuePath="ModelText" SelectedValue="{Binding CurrentModel.ModelText}" SelectedItem="{Binding CurrentModel}"/>
     </Grid>

@@ -13,11 +13,12 @@ using OpenTK_library.Type;
 using OpenTK_library.Mesh;
 using OpenTK_library.Controls;
 using OpenTK_library.OpenGL;
+using OpenTK_libray_viewmodel.Model;
 
 namespace OpenTK_controls_firstperson.Model
 {
     public class Scene_Model
-        : IDisposable
+        : IModel
     {
         internal unsafe struct TLightSource
         {
@@ -91,27 +92,9 @@ namespace OpenTK_controls_firstperson.Model
             GC.SuppressFinalize(this);
         }
 
-        public void MouseDown(Vector2 wnd_pos, bool left, bool right)
-        {
-            this._controls.Start(left ? 0 : 1, wnd_pos);
-        }
+        public IControls GetControls() => _controls;
 
-        public void MouseUp(Vector2 wnd_pos, bool left, bool right)
-        {
-            this._controls.End(left ? 0 : 1, wnd_pos);
-        }
-
-        public void MouseMove(Vector2 wnd_pos)
-        {
-            (Matrix4 view_mat, bool update) = this._controls.MoveCursorTo(wnd_pos);
-            this._view = view_mat;
-        }
-
-        public void MouseWheel(Vector2 wnd_pos, int wheel_delta)
-        {
-            (Matrix4 view_mat, bool update) = this._controls.MoveWheel(wnd_pos, (float)wheel_delta * 0.005f);
-            this._view = view_mat;
-        }
+        public float GetScale() => 1.0f;
 
         public void Setup(int cx, int cy)
         {
@@ -254,7 +237,8 @@ namespace OpenTK_controls_firstperson.Model
 
             _controls = new FirstPersonControls(
                 () => { return new float[] { 0, 0, (float)this._cx, (float)this._cy }; },
-                () => { return this._view; }
+                () => { return this._view; },
+                (Matrix4 view) => { this._view = view; }
             );
         }
 
@@ -287,9 +271,8 @@ namespace OpenTK_controls_firstperson.Model
                 move_vec.X -= 1.0f;
             move_vec *= (float)delta_t;
 
-            (Matrix4 view_mat, bool update) = this._controls.Move(move_vec);
-            this._view = view_mat;
-
+            this._controls.Move(move_vec);
+            
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             this._test_prog.Use();

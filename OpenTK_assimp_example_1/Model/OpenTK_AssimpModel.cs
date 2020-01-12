@@ -13,11 +13,12 @@ using OpenTK_library.Mesh;
 using OpenTK_library.Controls;
 using OpenTK_library.OpenGL;
 using OpenTK_library_assimp.Builder;
+using OpenTK_libray_viewmodel.Model;
 
 namespace OpenTK_assimp_example_1.Model
 {
     public class OpenTK_AssimpModel
-        : IDisposable
+        : IModel
     {
         internal unsafe struct TLightSource
         {
@@ -126,6 +127,10 @@ namespace OpenTK_assimp_example_1.Model
             set => _viewmodel = value; 
         }
 
+        public IControls GetControls() => _controls;
+
+        public float GetScale() => _model.SceneBox.MaxSize;
+
         public List<ViewModel.Model> ModelsData()
         {
             var model = new List<ViewModel.Model>();
@@ -145,37 +150,6 @@ namespace OpenTK_assimp_example_1.Model
             controls.Add(new ViewModel.Controls("pan rotate zoom", "1"));
             controls.Add(new ViewModel.Controls("first person", "2"));
             return controls;
-        }
-
-        public void MouseDown(Vector2 wnd_pos, bool left)
-        {
-            // TODO $$$ controls adapter
-
-            int mode = left ? 0 : 1;
-            if (this._controls_id == 1)
-                mode = left ? 1 : 2;
-            this._controls.Start(mode, wnd_pos);
-        }
-
-        public void MouseUp(Vector2 wnd_pos, bool left)
-        {
-            int mode = left ? 0 : 1;
-            if (this._controls_id == 1)
-                mode = left ? 1 : 2;
-            this._controls.End(mode, wnd_pos);
-        }
-
-        public void MouseMove(Vector2 wnd_pos)
-        {
-            (Matrix4 view_mat, bool update) = this._controls.MoveCursorTo(wnd_pos);
-            if (_controls_id == 1 || _controls_id == 2)
-                this._view = view_mat;
-        }
-
-        public void MouseWheel(Vector2 wnd_pos, int wheel_delta)
-        {
-            (Matrix4 view_mat, bool update) = this._controls.MoveWheel(wnd_pos, (float)wheel_delta * 0.005f);
-            this._view = view_mat;
         }
 
         public void Setup(int cx, int cy)
@@ -297,7 +271,7 @@ namespace OpenTK_assimp_example_1.Model
 
             // matrices
 
-            this._view = Matrix4.LookAt(0.0f, 0.0f, 1.5f, 0, 0, 0, 0, 1, 0);
+            this._view = Matrix4.LookAt(0.0f, -1.5f, 0, 0, 0, 0, 0, 0, 1);
 
             float angle = 90.0f * (float)Math.PI / 180.0f;
             float aspect = (float)this._cx / (float)this._cy;
@@ -331,9 +305,15 @@ namespace OpenTK_assimp_example_1.Model
 
                 var cpt = _model.SceneBox.Center;
                 var size = _model.SceneBox.Diagonal;
-                _far = size * 2.0f;
-                _model_center = Matrix4.CreateTranslation(-cpt);
-                this._view = Matrix4.LookAt(0, 0, size * 0.8f, 0, 0, 0, 0, 1, 0);
+                // set new far plane
+                this._far = size * 2.0f;
+                // force set viewport and projection
+                this._cx = 0;
+                this._cy = 0;
+                // set new view matrix
+                this._view = Matrix4.LookAt(0, -size * 0.8f, 0, 0, 0, 0, 0, 0, 1);
+                // set model matrix
+                this._model_center = Matrix4.CreateTranslation(-cpt) * Matrix4.CreateRotationX((float)Math.PI / 2.0f);
             }
             catch (Exception)
             { }
@@ -366,14 +346,16 @@ namespace OpenTK_assimp_example_1.Model
                                 () => { return this._view; },
                                 () => { return this._projection; },
                                 this.GetDepth,
-                                (cursor_pos) => { return new Vector3(0, 0, 0); }
+                                (cursor_pos) => { return new Vector3(0, 0, 0); },
+                                (Matrix4 view) => { this._view = view; }
                             );
                             break;
 
                         case 2:
                             _controls = new FirstPersonControls(
                                 () => { return new float[] { 0, 0, (float)this._cx, (float)this._cy }; },
-                                () => { return this._view; }
+                                () => { return this._view; },
+                                (Matrix4 view) => { this._view = view; }
                             );
                             break;
                     }
@@ -405,8 +387,8 @@ namespace OpenTK_assimp_example_1.Model
                     move_vec.X -= 1.0f;
                 move_vec *= (float)delta_t;
 
-                (Matrix4 view_mat, bool updateview) = this._controls.Move(move_vec);
-                this._view = view_mat;
+                float distance = _model.SceneBox.MaxSize;
+                this._controls.Move(move_vec * distance);
             }
 
             // load model
@@ -425,7 +407,10 @@ namespace OpenTK_assimp_example_1.Model
                 this._projection = Matrix4.CreatePerspectiveFieldOfView(angle, aspect, 0.1f, _far);
             }
 
-            (Matrix4 model_mat, bool update) = this._controls.Update();
+            Matrix4 model_mat = Matrix4.Identity;
+            bool update = false;
+            if (_controls_id == 0)
+                (model_mat, update) = this._controls.Update();
 
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
@@ -470,7 +455,11 @@ namespace OpenTK_assimp_example_1.Model
             int y = this._cy - (int)cursor_pos.Y;
             float[] depth_data = _depth_pack_buffer.ReadDepth(x, y);
             float depth = depth_data.Length > 0 ? depth_data[0] : 1.0f;
-            if (depth == 1.0f)
+
+            // TODO $$$
+            bool valid_depth = depth != 1.0f && depth != 0.0f;
+            
+            if (valid_depth == false)
             {
                 Vector3 pt_drag = new Vector3();
                 Vector4 clip_pos_h = new Vector4(pt_drag, 1.0f);

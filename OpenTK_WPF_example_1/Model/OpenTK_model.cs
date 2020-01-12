@@ -9,11 +9,13 @@ using OpenTK_library.Type;
 using OpenTK_library.Mesh;
 using OpenTK_library.Controls;
 using OpenTK_library.OpenGL;
+using OpenTK_libray_viewmodel.Model;
+
 
 namespace OpenTK_WPF_example_1.Model
 {
     public class OpenTK_Model
-        : IDisposable
+        : IModel
     {
         internal unsafe struct TLightSource
         {
@@ -85,20 +87,9 @@ namespace OpenTK_WPF_example_1.Model
             GC.SuppressFinalize(this);
         }
 
-        public void MouseDown(Vector2 wnd_pos, bool left)
-        {
-            this._controls.Start(left ? 0 : 1, wnd_pos);
-        }
+        public IControls GetControls() => this._controls;
 
-        public void MouseUp(Vector2 wnd_pos, bool left)
-        {
-            this._controls.End(left ? 0 : 1, wnd_pos);
-        }
-
-        public void MouseMove(Vector2 wnd_pos)
-        {
-            this._controls.MoveCursorTo(wnd_pos);
-        }
+        public float GetScale() => 1.0f;
 
         public void Setup(int cx, int cy)
         {
