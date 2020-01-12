@@ -149,10 +149,10 @@ namespace OpenTK_assimp_example_1.ViewModel
 
         private OpenTK_View _form;
         private WindowsFormsHost _formsHost;
-        private GLControl _glc;
-        private GLControlViewModel _glc_vm;
-        private GLWpfControl _glc2;
-        private GLWpfControlViewModel _glc2_vm;
+        //private GLControl _glc;
+        //private GLControlViewModel _glc_vm;
+        private GLWpfControlEx _glc;
+        private GLWpfControlViewModelEx _glc_vm;
         private OpenTK_AssimpModel _gl_model = new OpenTK_AssimpModel();
         
         public OpenTK_ViewModel()
@@ -188,12 +188,12 @@ namespace OpenTK_assimp_example_1.ViewModel
             set 
             { 
                 _form = value;
-
-                //_glc2 = _form.OpenTkControl;
-                //_glc2_vm = new GLWpfControlViewModel(_glc2, _gl_model);
+                _glc = _form.OpenTkControl;
+                _glc_vm = new GLWpfControlViewModelEx(_glc, _gl_model);
             }
         }
 
+        /*
         public WindowsFormsHost GLHostControl
         {
             // [Created Bindable WindowsFormsHost, but child update is not being reflected to control](https://stackoverflow.com/questions/11510031/created-bindable-windowsformshost-but-child-update-is-not-being-reflected-to-co)
@@ -215,6 +215,7 @@ namespace OpenTK_assimp_example_1.ViewModel
                 return _formsHost;
             }
         }
+        */
 
         protected internal void OnPropertyChanged(string propertyname)
         {

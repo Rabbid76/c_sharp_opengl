@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Control\GLControlViewModel.cs" />
     <Compile Include="Control\GLWpfControlViewModel.cs" />
+    <Compile Include="Control\GLWpfControlViewModelEx.cs" />
     <Compile Include="Model\ModelType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
