@@ -150,11 +150,10 @@ namespace OpenTK_cone_step_mapping.Model
             _tbos.Add(new Texture());
             _tbos[1].Create2D(_image_cx, _image_cy, Texture.Format.RGBA_F32);
             _tbos.Add(new Texture());
-            
             _tbos[2].Create2D(_image_cx, _image_cy, Texture.Format.RGBA_F32);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
-
+            GL.TextureParameter(_tbos[2].Object, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
+            GL.TextureParameter(_tbos[2].Object, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
+            
             // Create generators
 
             this._generators = new List<TextureGenerator>();

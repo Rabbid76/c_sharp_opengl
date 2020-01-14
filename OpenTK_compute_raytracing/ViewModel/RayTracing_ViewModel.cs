@@ -2,20 +2,15 @@
 using System.ComponentModel;
 using System.Windows.Forms.Integration;
 using System.Diagnostics;
-using OpenTK_controls_firstperson.View;
-using OpenTK_controls_firstperson.Model;
+using OpenTK_compute_raytracing.View;
+using OpenTK_compute_raytracing.Model;
 using OpenTK;                  // GLControl
-using OpenTK.Input;            // KeyboardState, Keyboard, Key
 using OpenTK.Graphics;         // GraphicsMode, Context
 using OpenTK_libray_viewmodel.Control;
 
-/// <summary>
-/// See [Integrating WPF and Microsoft Kinect SDK with OpenTK](http://igordcard.blogspot.com/2011/12/integrating-wpf-and-kinect-with-opentk.html)
-/// </summary>
-
-namespace OpenTK_controls_firstperson.ViewModel
+namespace OpenTK_compute_raytracing.ViewModel
 {
-    class OpenTK_ViewModel
+    class RayTracing_ViewModel
         : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -23,9 +18,9 @@ namespace OpenTK_controls_firstperson.ViewModel
         private WindowsFormsHost _formsHost;
         private GLControl _glc;
         private GLControlViewModel _glc_vm;
-        private Scene_Model _gl_model = new Scene_Model();
+        private RayTracing_Model _gl_model = new RayTracing_Model();
 
-        public OpenTK_ViewModel()
+        public RayTracing_ViewModel()
         { }
 
         public WindowsFormsHost GLHostControl
@@ -37,7 +32,7 @@ namespace OpenTK_controls_firstperson.ViewModel
                 if (_glc == null)
                 {
                     // Create the GLControl.
-                    GraphicsMode mode = new GraphicsMode(32, 24, 8, 8);
+                    GraphicsMode mode = new GraphicsMode(32, 24, 8, 0);
                     _glc = new GLControl(mode, 4, 6, GraphicsContextFlags.Default | GraphicsContextFlags.Debug);
                     _glc_vm = new GLControlViewModel(_glc, _gl_model);
                 }
@@ -57,4 +52,3 @@ namespace OpenTK_controls_firstperson.ViewModel
         }
     }
 }
-

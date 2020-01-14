@@ -71,15 +71,20 @@ namespace OpenTK_libray_viewmodel.Control
         private static extern void CopyMemory(IntPtr destination, IntPtr source, uint length);
 
         private readonly WriteableBitmap _bitmap;
-        private readonly int _colorBuffer;
-        private readonly int _depthBuffer;
+        private readonly int _drawColorRB = 0;
+        private readonly int _drawDepthRB = 0;
+        private readonly int _drawColorTex = 0;
+        private readonly int _drawDepthTex = 0;
+        private readonly int _drawFB;
+        private readonly int _RB;
+        private readonly int _FB;
 
         private readonly Image _imageControl;
         private readonly bool _isHardwareRenderer;
         private readonly int[] _pixelBuffers;
         private bool _hasRenderedAFrame = false;
 
-        public int FrameBuffer { get; }
+        public int FrameBuffer { get => _drawFB; }
 
         public int Width => _bitmap.PixelWidth;
         public int Height => _bitmap.PixelHeight;
@@ -93,27 +98,73 @@ namespace OpenTK_libray_viewmodel.Control
             // the bitmap we're blitting to in software mode.
             _bitmap = new WriteableBitmap(width, height, 96, 96, PixelFormats.Bgra32, null);
 
-            // set up the framebuffer
-            FrameBuffer = GL.GenFramebuffer();
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, FrameBuffer);
+            // TODO $$$ backup texture binding, framebuffer, render buffer and pixel pack buffer
 
-            _depthBuffer = GL.GenRenderbuffer();
-            GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, _depthBuffer);
-            GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, RenderbufferStorage.DepthComponent24, width, height);
-            GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthAttachment,
-                RenderbufferTarget.Renderbuffer, _depthBuffer);
+            int samples = 8;
 
-            _colorBuffer = GL.GenRenderbuffer();
-            GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, _colorBuffer);
-            GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, RenderbufferStorage.Rgba8, width, height);
-            GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0,
-                RenderbufferTarget.Renderbuffer, _colorBuffer);
+            // set up the draw render buffers and framebuffer
+            if (samples > 1)
+            {
+                /*
+                GL.ActiveTexture(TextureUnit.Texture0);
+                _drawDepthTex = GL.GenTexture();
+                GL.BindTexture(TextureTarget.Texture2DMultisample, _drawDepthTex);
+                GL.TexImage2DMultisample(TextureTargetMultisample.Texture2DMultisample, samples, PixelInternalFormat.DepthStencil, width, height, false);
+                GL.TexParameter(TextureTarget.Texture2DMultisample, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+                GL.TexParameter(TextureTarget.Texture2DMultisample, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+                _drawColorTex = GL.GenTexture();
+                GL.BindTexture(TextureTarget.Texture2DMultisample, _drawColorTex);
+                GL.TexImage2DMultisample(TextureTargetMultisample.Texture2DMultisample, samples, PixelInternalFormat.Rgba8, width, height, false);
+                GL.TexParameter(TextureTarget.Texture2DMultisample, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+                GL.TexParameter(TextureTarget.Texture2DMultisample, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+                _drawFB = GL.GenFramebuffer();
+                GL.BindFramebuffer(FramebufferTarget.Framebuffer, _drawFB);
+                GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2DMultisample, _drawColorTex, 0);
+                GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthStencilAttachment, TextureTarget.Texture2DMultisample, _drawDepthTex, 0);
+                */
+                _drawDepthRB = GL.GenRenderbuffer();
+                GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, _drawDepthRB);
+                GL.RenderbufferStorageMultisample(RenderbufferTarget.Renderbuffer, samples, RenderbufferStorage.Depth24Stencil8, width, height);
+                _drawColorRB = GL.GenRenderbuffer();
+                GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, _drawColorRB);
+                GL.RenderbufferStorageMultisample(RenderbufferTarget.Renderbuffer, samples, RenderbufferStorage.Rgba8, width, height);
+                _drawFB = GL.GenFramebuffer();
+                GL.BindFramebuffer(FramebufferTarget.Framebuffer, _drawFB);
+                GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthStencilAttachment, RenderbufferTarget.Renderbuffer, _drawDepthRB);
+                GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, RenderbufferTarget.Renderbuffer, _drawColorRB);
+            }
+            else
+            {
+                _drawDepthRB = GL.GenRenderbuffer();
+                GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, _drawDepthRB);
+                GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, RenderbufferStorage.Depth24Stencil8, width, height);
+                _drawColorRB = GL.GenRenderbuffer();
+                GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, _drawColorRB);
+                GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, RenderbufferStorage.Rgba8, width, height);
+                _drawFB = GL.GenFramebuffer();
+                GL.BindFramebuffer(FramebufferTarget.Framebuffer, _drawFB);
+                GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.DepthStencilAttachment, RenderbufferTarget.Renderbuffer, _drawDepthRB);
+                GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, RenderbufferTarget.Renderbuffer, _drawColorRB);
+            }
+
+            // set up the draw framebuffer
 
             var error = GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
             if (error != FramebufferErrorCode.FramebufferComplete)
-            {
                 throw new GraphicsErrorException("Error creating frame buffer: " + error);
-            }
+
+            // generate the frame buffer
+
+            _RB = GL.GenRenderbuffer();
+            GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, _RB);
+            GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, RenderbufferStorage.Rgba8, width, height);
+            _FB = GL.GenFramebuffer();
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, _FB);
+            GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, RenderbufferTarget.Renderbuffer, _RB);
+
+            error = GL.CheckFramebufferStatus(FramebufferTarget.Framebuffer);
+            if (error != FramebufferErrorCode.FramebufferComplete)
+                throw new GraphicsErrorException("Error creating frame buffer: " + error);
 
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 
@@ -135,13 +186,18 @@ namespace OpenTK_libray_viewmodel.Control
 
         public void DeleteBuffers()
         {
-            GL.DeleteFramebuffer(FrameBuffer);
-            GL.DeleteRenderbuffer(_depthBuffer);
-            GL.DeleteRenderbuffer(_colorBuffer);
-            for (var i = 0; i < _pixelBuffers.Length; i++)
-            {
-                GL.DeleteBuffer(_pixelBuffers[i]);
-            }
+            if (_drawDepthRB != 0)
+                GL.DeleteRenderbuffer(_drawDepthRB);
+            if (_drawColorRB != 0)
+                GL.DeleteRenderbuffer(_drawColorRB);
+            if (_drawDepthTex != 0)
+                GL.DeleteTexture(_drawDepthTex);
+            if (_drawColorTex != 0)
+                GL.DeleteTexture(_drawColorTex);
+            GL.DeleteFramebuffer(_drawFB);
+            GL.DeleteRenderbuffer(_RB);
+            GL.DeleteRenderbuffer(_FB);
+            GL.DeleteBuffers(_pixelBuffers.Length, _pixelBuffers);
         }
 
         // shifts all of the PBOs along by 1.
@@ -169,23 +225,30 @@ namespace OpenTK_libray_viewmodel.Control
             _hasRenderedAFrame = true;
         }
 
-
-
         private void UpdateImageSoftware()
         {
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, FrameBuffer);
+            int width = Width;
+            int height = Height;
+
+            GL.BindFramebuffer(FramebufferTarget.ReadFramebuffer, _drawFB);
+            GL.BindFramebuffer(FramebufferTarget.DrawFramebuffer, _FB);
+            GL.BlitFramebuffer(0, 0, width, height, 0, 0, width, height, ClearBufferMask.ColorBufferBit, BlitFramebufferFilter.Linear);
+
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, _FB);
             // start the (async) pixel transfer.
             GL.BindBuffer(BufferTarget.PixelPackBuffer, _pixelBuffers[0]);
             GL.ReadBuffer(ReadBufferMode.ColorAttachment0);
             GL.ReadPixels(0, 0, Width, Height, PixelFormat.Bgra, PixelType.UnsignedByte, IntPtr.Zero);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+
+            GL.BindBuffer(BufferTarget.PixelPackBuffer, _pixelBuffers[0]);
+
             // rotate the pixel buffers.
             if (_hasRenderedAFrame)
             {
                 RotatePixelBuffers();
             }
 
-            GL.BindBuffer(BufferTarget.PixelPackBuffer, _pixelBuffers[0]);
             // copy the data over from a mapped buffer.
             _bitmap.Lock();
             var data = GL.MapBuffer(BufferTarget.PixelPackBuffer, BufferAccess.ReadOnly);

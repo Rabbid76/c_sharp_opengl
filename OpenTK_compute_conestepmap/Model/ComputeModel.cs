@@ -9,11 +9,12 @@ using OpenTK_library.Mesh;
 using OpenTK_library.Controls;
 using OpenTK_library.Generator;
 using OpenTK_library.OpenGL;
+using OpenTK_libray_viewmodel.Model;
 
 namespace OpenTK_compute_conestepmap.Model
 {
     public class ComputeModel
-        : IDisposable
+        : IModel
     {
         internal unsafe struct TLightSource
         {
@@ -60,6 +61,11 @@ namespace OpenTK_compute_conestepmap.Model
         private int _image_cy = 512; //1024;
         private int _frame = 0;
         double _period = 0;
+        private IControls _controls = new DummyControls();
+
+        public IControls GetControls() => _controls;
+
+        public float GetScale() => 1.0f;
 
         public ComputeModel()
         { }

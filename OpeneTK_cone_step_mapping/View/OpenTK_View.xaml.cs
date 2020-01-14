@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using OpenTK_cone_step_mapping.ViewModel;
 
 namespace OpenTK_cone_step_mapping.View
 {
@@ -24,6 +25,8 @@ namespace OpenTK_cone_step_mapping.View
         public OpenTK_View()
         {
             InitializeComponent();
+            var vm = this.DataContext as OpenTK_ViewModel;
+            vm.Form = this;
         }
     }
 }

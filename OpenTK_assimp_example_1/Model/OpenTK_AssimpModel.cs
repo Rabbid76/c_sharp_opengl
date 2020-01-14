@@ -282,7 +282,7 @@ namespace OpenTK_assimp_example_1.Model
         {
             try
             {
-                int model_id = Int32.Parse(_viewmodel.CurrentModel.ModelNumber);
+                int model_id = Int32.Parse(_viewmodel.CurrentModel.Number);
                 if (_model != null && model_id == _model_id)
                     return;
                 _model_id = model_id;
@@ -293,7 +293,7 @@ namespace OpenTK_assimp_example_1.Model
                 }
                 else
                 {
-                    string resource_name = _model_names[_viewmodel.CurrentModel.ModelText];
+                    string resource_name = _model_names[_viewmodel.CurrentModel.Text];
                     //Assembly assembly = Assembly.GetExecutingAssembly();
                     //Stream resource_stream = assembly.GetManifestResourceStream(resource_name);
                     //_model = Model.Create(resource_stream);
@@ -323,7 +323,7 @@ namespace OpenTK_assimp_example_1.Model
         {
             try
             {
-                int controls_id = Int32.Parse(_viewmodel.CurrentControl.ControlsNumber);
+                int controls_id = Int32.Parse(_viewmodel.CurrentControl.Number);
                 if (_controls == null || controls_id != _controls_id)
                 {
                     _controls_id = controls_id;

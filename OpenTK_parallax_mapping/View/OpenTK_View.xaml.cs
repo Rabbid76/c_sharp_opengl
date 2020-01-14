@@ -26,6 +26,8 @@ namespace OpenTK_parallax_mapping.View
         public OpenTK_View()
         {
             InitializeComponent();
+            var vm = this.DataContext as OpenTK_ViewModel;
+            vm.Form = this;
         }
     }
 }

@@ -73,7 +73,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ViewModel\RayTracing_ModelView.cs" />
+    <Compile Include="ViewModel\RayTracing_ViewModel.cs" />
     <Compile Include="Model\RayTracing_Model.cs" />
     <Compile Include="View\RayTracing_View.xaml.cs">
       <DependentUpon>RayTracing_View.xaml</DependentUpon>
@@ -113,6 +113,10 @@
     <ProjectReference Include="..\OpenTK_library\OpenTK_library.csproj">
       <Project>{e4fc68e0-0e54-4e28-bb40-a5b4f39de56a}</Project>
       <Name>OpenTK_library</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OpenTK_libray_viewmodel\OpenTK_libray_viewmodel.csproj">
+      <Project>{e5ab3103-2a16-4fb1-b027-4f6f32395c44}</Project>
+      <Name>OpenTK_libray_viewmodel</Name>
     </ProjectReference>
     <ProjectReference Include="..\WpfViewModelModule\WpfViewModelModule.csproj">
       <Project>{93619d2b-bcb4-4751-84ab-2399a9be058f}</Project>

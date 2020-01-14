@@ -20,7 +20,6 @@ namespace OpenTK_WPF_example_1.ViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-
         private WindowsFormsHost _formsHost;
         private GLControl _glc;
         private GLControlViewModel _glc_vm;

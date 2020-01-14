@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="OpenTK compute shader raytracing" Height="400" Width="400">
     <Window.DataContext>
-        <ViewModel:RayTracing_ModelView/>
+        <ViewModel:RayTracing_ViewModel/>
     </Window.DataContext>
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,0" StartPoint="0.5,1">

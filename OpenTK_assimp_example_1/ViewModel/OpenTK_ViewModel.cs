@@ -10,94 +10,23 @@ using OpenTK.Input;            // KeyboardState, Keyboard, Key
 using OpenTK.Graphics;         // GraphicsMode, Context
 using OpenTK_libray_viewmodel.Control;
 using OpenTK.Wpf;
+using WpfViewModelModule;
 
 namespace OpenTK_assimp_example_1.ViewModel
 {
     // TODO $$$ base class Model/Controls
     public class Model
-        : INotifyPropertyChanged
+        : ComboBoxViewModel
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected internal void OnPropertyChanged(string propertyname)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyname));
-        }
-
-        private string _text;
-        private string _number;
-
-        public Model()
-        { }
-        public Model(string text, string number)
-        {
-            this._text = text;
-            this._number = number;
-        }
-
-        public string ModelText
-        {
-            get { return this._text; }
-            set
-            {
-                this._text = value;
-                OnPropertyChanged(nameof(ModelText));
-            }
-        }
-
-        public string ModelNumber
-        {
-            get { return _number; }
-            set
-            {
-                _number = value;
-                OnPropertyChanged(nameof(ModelNumber));
-            }
-        }
+        public Model() : base(nameof(Model)) { }
+        public Model(string text, string number) : base(nameof(Model), text, number) { }
     }
 
     public class Controls
-        : INotifyPropertyChanged
+        : ComboBoxViewModel
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected internal void OnPropertyChanged(string propertyname)
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyname));
-        }
-
-        private string _text;
-        private string _number;
-
-        public Controls()
-        { }
-        public Controls(string text, string number)
-        {
-            this._text = text;
-            this._number = number;
-        }
-
-        public string ControlsText
-        {
-            get { return this._text; }
-            set
-            {
-                this._text = value;
-                OnPropertyChanged(nameof(ControlsText));
-            }
-        }
-
-        public string ControlsNumber
-        {
-            get { return _number; }
-            set
-            {
-                _number = value;
-                OnPropertyChanged(nameof(ControlsNumber));
-            }
-        }
+        public Controls() : base(nameof(Controls)) { }
+        public Controls(string text, string number) : base(nameof(Controls), text, number) { }
     }
 
     public class OpenTK_ViewModel
@@ -148,9 +77,6 @@ namespace OpenTK_assimp_example_1.ViewModel
         }
 
         private OpenTK_View _form;
-        private WindowsFormsHost _formsHost;
-        //private GLControl _glc;
-        //private GLControlViewModel _glc_vm;
         private GLWpfControlEx _glc;
         private GLWpfControlViewModelEx _glc_vm;
         private OpenTK_AssimpModel _gl_model = new OpenTK_AssimpModel();
@@ -192,30 +118,6 @@ namespace OpenTK_assimp_example_1.ViewModel
                 _glc_vm = new GLWpfControlViewModelEx(_glc, _gl_model);
             }
         }
-
-        /*
-        public WindowsFormsHost GLHostControl
-        {
-            // [Created Bindable WindowsFormsHost, but child update is not being reflected to control](https://stackoverflow.com/questions/11510031/created-bindable-windowsformshost-but-child-update-is-not-being-reflected-to-co)
-            // <ContentControl x:Name="host" Margin="10" Grid.ColumnSpan="2" Content="{Binding GLHostControl}" />
-            get
-            {
-                if (_glc == null)
-                {
-                    // Create the GLControl.
-                    GraphicsMode mode = new GraphicsMode(32, 24, 8, 8);
-                    _glc = new GLControl(mode, 4, 6, GraphicsContextFlags.Default | GraphicsContextFlags.Debug);
-                    _glc_vm = new GLControlViewModel(_glc, _gl_model);
-                }
-                if (_formsHost == null)
-                {
-                    _formsHost = new WindowsFormsHost();
-                    _formsHost.Child = _glc;
-                }
-                return _formsHost;
-            }
-        }
-        */
 
         protected internal void OnPropertyChanged(string propertyname)
         {

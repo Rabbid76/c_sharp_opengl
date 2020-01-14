@@ -45,6 +45,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controls\ControlsTypes.cs" />
+    <Compile Include="Controls\DummyControls.cs" />
     <Compile Include="Controls\FirstPersonControls.cs" />
     <Compile Include="Controls\ModelSpinningControls.cs" />
     <Compile Include="Generator\TextureGenerator.cs" />

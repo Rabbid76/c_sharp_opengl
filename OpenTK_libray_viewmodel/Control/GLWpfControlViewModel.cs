@@ -17,8 +17,8 @@ namespace OpenTK_libray_viewmodel.Control
 {
     public class GLWpfControlViewModel
     {
-        private GraphicsContext _context;
-        private IWindowInfo _windowInfo;
+        //private GraphicsContext _context;
+        //private IWindowInfo _windowInfo;
         private GLWpfControl _glc;
         private IModel _model;
         private double _cx = 0;
@@ -47,17 +47,19 @@ namespace OpenTK_libray_viewmodel.Control
             _glc.MouseMove += new MouseEventHandler(GLC_OnMouseMove);
             _glc.MouseWheel += new MouseWheelEventHandler(GLC_OnMouseWheel);
 
+            /*
             GraphicsMode mode = new GraphicsMode(32, 24, 8, 8);
             var gl_ctrl = new GLControl(mode, 4, 6, GraphicsContextFlags.Default | GraphicsContextFlags.Debug);
             gl_ctrl.CreateControl();
             this._windowInfo = gl_ctrl.WindowInfo;
             this._context = new GraphicsContext(mode, this._windowInfo);
+            */
 
             var settings = new GLWpfControlSettings();
             settings.MajorVersion = 4;
             settings.MinorVersion = 6;
             settings.GraphicsContextFlags = GraphicsContextFlags.Default | GraphicsContextFlags.Debug;
-            settings.ContextToUse = _context;
+            //settings.ContextToUse = _context;
             
             _glc.Start(settings);
         }

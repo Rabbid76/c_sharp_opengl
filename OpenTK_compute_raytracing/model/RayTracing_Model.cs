@@ -8,11 +8,12 @@ using OpenTK_library.Type;
 using OpenTK_library.Mesh;
 using OpenTK_library.Controls;
 using OpenTK_library.OpenGL;
+using OpenTK_libray_viewmodel.Model;
 
 namespace OpenTK_compute_raytracing.Model
 {
     public class RayTracing_Model
-        : IDisposable
+        : IModel
     {
         internal unsafe struct TLightSource
         {
@@ -59,6 +60,11 @@ namespace OpenTK_compute_raytracing.Model
         private int _image_cy = 512; //1024;
         private int _frame = 0;
         double _period = 0;
+        private IControls _controls = new DummyControls();
+
+        public IControls GetControls() => _controls;
+
+        public float GetScale() => 1.0f;
 
         public RayTracing_Model()
         { }
@@ -79,21 +85,6 @@ namespace OpenTK_compute_raytracing.Model
         {
             Dispose(true);
             GC.SuppressFinalize(this);
-        }
-
-        public void MouseDown(Vector2 wnd_pos, bool left)
-        {
-            // ...
-        }
-
-        public void MouseUp(Vector2 wnd_pos, bool left)
-        {
-            // ...
-        }
-
-        public void MouseMove(Vector2 wnd_pos)
-        {
-            // ...
         }
 
         public void Setup(int cx, int cy)

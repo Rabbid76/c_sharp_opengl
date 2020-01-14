@@ -19,9 +19,8 @@
         </LinearGradientBrush>
     </Window.Background>
     <Grid x:Name="grid">
-        <!--ContentControl x:Name="host" Margin="0,41,0,0" Grid.ColumnSpan="2" Content="{Binding GLHostControl}"/-->
         <glWpfControlEx:GLWpfControlEx x:Name="OpenTkControl" Margin="0,41,0,0" Grid.ColumnSpan="2"/>
-        <ComboBox x:Name = "cbControl" HorizontalAlignment = "Left" Height = "26" Margin="10,10,10,10" VerticalAlignment = "Top" Width = "120" ItemsSource="{Binding Controls}" DisplayMemberPath="ControlsText" SelectedValuePath="ControlsText" SelectedValue="{Binding CurrentControl.ControlsText}" SelectedItem="{Binding CurrentControl}"/>
-        <ComboBox x:Name = "cbModel" HorizontalAlignment = "Left" Height = "26" Margin="140,10,10,10" VerticalAlignment = "Top" Width = "200" ItemsSource="{Binding Models}" DisplayMemberPath="ModelText" SelectedValuePath="ModelText" SelectedValue="{Binding CurrentModel.ModelText}" SelectedItem="{Binding CurrentModel}"/>
+        <ComboBox x:Name = "cbControl" HorizontalAlignment = "Left" Height = "26" Margin="10,10,10,10" VerticalAlignment = "Top" Width = "120" ItemsSource="{Binding Controls}" DisplayMemberPath="Text" SelectedValuePath="Text" SelectedValue="{Binding CurrentControl.Text}" SelectedItem="{Binding CurrentControl}"/>
+        <ComboBox x:Name = "cbModel" HorizontalAlignment = "Left" Height = "26" Margin="140,10,10,10" VerticalAlignment = "Top" Width = "200" ItemsSource="{Binding Models}" DisplayMemberPath="Text" SelectedValuePath="Text" SelectedValue="{Binding CurrentModel.Text}" SelectedItem="{Binding CurrentModel}"/>
     </Grid>
 </Window>

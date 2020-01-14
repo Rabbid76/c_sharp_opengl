@@ -16,38 +16,24 @@ namespace OpenTK_generalized_displacement_mapping.ViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private WindowsFormsHost _formsHost;
-        private GLControl _glc;
-        private GLControlViewModel _glc_vm;
+        private OpenTK_View _form;
+        private GLWpfControlEx _glc;
+        private GLWpfControlViewModelEx _glc_vm;
         private OpenTK_Model _gl_model = new OpenTK_Model();
-        private int _cx = 0;
-        private int _cy = 0;
-        private Stopwatch _stopWatch = new Stopwatch();
 
         public OpenTK_ViewModel()
         {
             _gl_model.ViewModel = this;
         }
 
-        public WindowsFormsHost GLHostControl
+        public OpenTK_View Form
         {
-            // [Created Bindable WindowsFormsHost, but child update is not being reflected to control](https://stackoverflow.com/questions/11510031/created-bindable-windowsformshost-but-child-update-is-not-being-reflected-to-co)
-            // <ContentControl x:Name="host" Margin="10" Grid.ColumnSpan="2" Content="{Binding GLHostControl}" />
-            get
+            get { return _form; }
+            set
             {
-                if (_glc == null)
-                {
-                    // Create the GLControl.
-                    GraphicsMode mode = new GraphicsMode(32, 24, 8, 8);
-                    _glc = new GLControl(mode, 4, 6, GraphicsContextFlags.Default | GraphicsContextFlags.Debug);
-                    _glc_vm = new GLControlViewModel(_glc, _gl_model);
-                }
-                if (_formsHost == null)
-                {
-                    _formsHost = new WindowsFormsHost();
-                    _formsHost.Child = _glc;
-                }
-                return _formsHost;
+                _form = value;
+                _glc = _form.OpenTkControl;
+                _glc_vm = new GLWpfControlViewModelEx(_glc, _gl_model);
             }
         }
 

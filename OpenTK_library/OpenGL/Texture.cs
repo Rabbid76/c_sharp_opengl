@@ -120,7 +120,7 @@ namespace OpenTK_library.OpenGL
                     
                     // TODO $$$ depth and stencil format for depth and stencil
                     case Format.Depth: Create2D(cx, cy, PixelInternalFormat.DepthComponent, PixelFormat.DepthComponent, PixelType.Float); break;
-                    case Format.DepthStencil: Create2D(cx, cy, PixelInternalFormat.DepthStencil, PixelFormat.DepthStencil, PixelType.UnsignedByte); break;
+                    case Format.DepthStencil: Create2D(cx, cy, PixelInternalFormat.DepthStencil, PixelFormat.DepthStencil, PixelType.UnsignedInt248); break;
                 }
             }
             else
@@ -144,8 +144,8 @@ namespace OpenTK_library.OpenGL
 
             GL.CreateTextures(TextureTarget.Texture2D, 1, out this._tbo);
             GL.TextureStorage2D(this._tbo, 1, internalFormat, cx, cy);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
-            GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+            GL.TextureParameter(this._tbo, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+            GL.TextureParameter(this._tbo, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
         }
 
         private void Create2D(int cx, int cy, PixelInternalFormat internalFormat, PixelFormat format, PixelType type)
