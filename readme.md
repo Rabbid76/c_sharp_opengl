@@ -18,6 +18,10 @@ Compute shader - Barnsley fern
 
 ![](doc/image/OpenTK_example_4.png)
 
+[FreeType](https://www.freetype.org/) TrueType Font Text
+
+![](doc/image/OpenTK_example_5.png)
+
 WPF 3D mesh
 
 ![](doc/image/OpenTK_WPF_example_1.png)

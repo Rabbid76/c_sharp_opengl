@@ -16,6 +16,8 @@ namespace OpenTK_example_5
     ///
     /// [LearnOpenGL - Text Rendering](https://learnopengl.com/In-Practice/Text-Rendering)
     ///
+    /// x64 SharpFont.dll and freetype6.dll from [MonoGame.Dependencies](https://github.com/MonoGame/MonoGame.Dependencies)
+    ///
     /// </summary>
 
     public struct Character
@@ -46,7 +48,7 @@ namespace OpenTK_example_5
             resource_stream.CopyTo(ms);
             Face face = new Face(lib, ms.ToArray(), 0);
 
-            face.SetPixelSizes(pixelheight, pixelheight);
+            face.SetPixelSizes(0, pixelheight);
 
             // set 1 byte pixel alignment 
             GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
@@ -84,17 +86,21 @@ namespace OpenTK_example_5
                     ch.TextureID = texObj;
                     ch.Size = new Vector2(bitmap.Width, bitmap.Rows);
                     ch.Bearing = new Vector2(glyph.BitmapLeft, glyph.BitmapTop);
-                    ch.Advance = (int)glyph.Advance.X;
+                    ch.Advance = (int)glyph.Advance.X.Value;
                     _characters.Add(c, ch);
                 }
-                catch(Exception)
-                { }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
 
                 float[] vquad =
                 {
                 // x      y      u     v    
                   0.0f, -1.0f,   0.0f, 0.0f,
                   0.0f,  0.0f,   0.0f, 1.0f,
+                  1.0f,  0.0f,   1.0f, 1.0f,
+                  0.0f, -1.0f,   0.0f, 0.0f,
                   1.0f,  0.0f,   1.0f, 1.0f,
                   1.0f, -1.0f,   1.0f, 0.0f
                 };
@@ -110,7 +116,7 @@ namespace OpenTK_example_5
                 GL.EnableVertexAttribArray(0);
                 GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 4 * 4, 0);
                 GL.EnableVertexAttribArray(1);
-                GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 4 * 4, 2);
+                GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 4 * 4, 2 * 4);
 
                 GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
                 GL.BindVertexArray(0);
@@ -136,6 +142,8 @@ namespace OpenTK_example_5
             float char_x = 0.0f;
             foreach (var c in text) 
             {
+                if (_characters.ContainsKey(c) == false)
+                    continue;
                 Character ch = _characters[c];
 
                 float w = ch.Size.X * scale;
@@ -156,7 +164,7 @@ namespace OpenTK_example_5
                 GL.BindTexture(TextureTarget.Texture2D, ch.TextureID);
 
                 // Render quad
-                GL.DrawArrays(PrimitiveType.TriangleFan, 0, 4);
+                GL.DrawArrays(PrimitiveType.Triangles, 0, 6);
             }
 
             GL.BindVertexArray(0);

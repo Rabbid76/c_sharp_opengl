@@ -11,12 +11,6 @@ using System.Drawing;
 using System.IO;
 using System.Reflection;
 
-/// <summary>
-/// [SharpFont](https://www.nuget.org/packages/SharpFont/)
-/// [Robmaister/SharpFont](https://github.com/Robmaister/SharpFont)
-/// [space-wizards/SharpFont](https://github.com/space-wizards/SharpFont)
-/// </summary>
-
 namespace OpenTK_example_5
 {
     public class DrawText
@@ -94,7 +88,7 @@ namespace OpenTK_example_5
             {
                 vec2 uv = vUV.xy;
                 float text = texture(u_texture, uv).r;
-                fragColor = vec4(textColor.rgb*text, text)+1.0;
+                fragColor = vec4(textColor.rgb*text, text);
             }";
 
             this._text_prog = OpenTK_library.OpenGL.Program.VertexAndFragmentShaderProgram(vert_shader, frag_shader);
@@ -124,18 +118,22 @@ namespace OpenTK_example_5
             }
 
             Matrix4 projectionM = Matrix4.CreateScale(new Vector3(1f/this.Width, 1f/this.Height, 1.0f));
+            projectionM = Matrix4.CreateOrthographicOffCenter(0.0f, this.Width, this.Height, 0.0f, -1.0f, 1.0f);
 
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             GL.Clear(ClearBufferMask.ColorBufferBit);
+
+            GL.Enable(EnableCap.Blend);
+            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
 
             this._text_prog.Use();
             GL.UniformMatrix4(1, false, ref projectionM);
 
             GL.Uniform3(2, new Vector3(0.5f, 0.8f, 0.2f));
-            _font.RenderText("This is sample text", 25.0f, 50.0f, 1.0f, new Vector2(1f, 0f));
+            _font.RenderText("This is sample text", 25.0f, 50.0f, 1.2f, new Vector2(1f, 0f));
 
             GL.Uniform3(2, new Vector3(0.3f, 0.7f, 0.9f));
-            _font.RenderText("(C) LearnOpenGL.com", 100.0f, 200.0f, 0.5f, new Vector2(1.0f, -0.25f));
+            _font.RenderText("(C) LearnOpenGL.com", 50.0f, 200.0f, 0.9f, new Vector2(1.0f, -0.25f));
 
             Context.SwapBuffers();
             base.OnUpdateFrame(e);
