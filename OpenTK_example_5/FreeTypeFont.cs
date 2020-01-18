@@ -75,7 +75,6 @@ namespace OpenTK_example_5
                                   PixelFormat.Red, PixelType.UnsignedByte, bitmap.Buffer);
 
                     // set texture parameters
-                    GL.TextureParameter(texObj, TextureParameterName.TextureBaseLevel, 0);
                     GL.TextureParameter(texObj, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
                     GL.TextureParameter(texObj, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
                     GL.TextureParameter(texObj, TextureParameterName.TextureWrapS, (int)TextureWrapMode.ClampToEdge);
@@ -99,7 +98,7 @@ namespace OpenTK_example_5
             GL.BindTexture(TextureTarget.Texture2D, 0);
 
             // set default (4 byte) pixel alignment 
-            GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
+            GL.PixelStore(PixelStoreParameter.UnpackAlignment, 4);
 
             float[] vquad =
             {
