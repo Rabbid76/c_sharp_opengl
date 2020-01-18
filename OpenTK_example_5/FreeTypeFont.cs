@@ -39,7 +39,7 @@ namespace OpenTK_example_5
             // initialize library
             Library lib = new Library();
 
-            //Face face = new Face(lib, "Allura-Regular.otf");
+            //Face face = new Face(lib, "FreeSans.ottf");
 
             Assembly assembly = Assembly.GetExecutingAssembly();
             //string[] names = assembly.GetManifestResourceNames();
@@ -89,37 +89,10 @@ namespace OpenTK_example_5
                     ch.Advance = (int)glyph.Advance.X.Value;
                     _characters.Add(c, ch);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Console.WriteLine(ex);
                 }
-
-                float[] vquad =
-                {
-                // x      y      u     v    
-                  0.0f, -1.0f,   0.0f, 0.0f,
-                  0.0f,  0.0f,   0.0f, 1.0f,
-                  1.0f,  0.0f,   1.0f, 1.0f,
-                  0.0f, -1.0f,   0.0f, 0.0f,
-                  1.0f,  0.0f,   1.0f, 1.0f,
-                  1.0f, -1.0f,   1.0f, 0.0f
-                };
-
-                // Create [Vertex Buffer Object](https://www.khronos.org/opengl/wiki/Vertex_Specification#Vertex_Buffer_Object)
-                _vbo = GL.GenBuffer();
-                GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo);
-                GL.BufferData(BufferTarget.ArrayBuffer, 4 * 6 * 4, vquad, BufferUsageHint.StaticDraw);
-
-                // [Vertex Array Object](https://www.khronos.org/opengl/wiki/Vertex_Specification#Vertex_Array_Object)
-                _vao = GL.GenVertexArray();
-                GL.BindVertexArray(_vao);
-                GL.EnableVertexAttribArray(0);
-                GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 4 * 4, 0);
-                GL.EnableVertexAttribArray(1);
-                GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 4 * 4, 2 * 4);
-
-                GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
-                GL.BindVertexArray(0);
             }
 
             // bind default texture
@@ -127,6 +100,33 @@ namespace OpenTK_example_5
 
             // set default (4 byte) pixel alignment 
             GL.PixelStore(PixelStoreParameter.UnpackAlignment, 1);
+
+            float[] vquad =
+            {
+            // x      y      u     v    
+                0.0f, -1.0f,   0.0f, 0.0f,
+                0.0f,  0.0f,   0.0f, 1.0f,
+                1.0f,  0.0f,   1.0f, 1.0f,
+                0.0f, -1.0f,   0.0f, 0.0f,
+                1.0f,  0.0f,   1.0f, 1.0f,
+                1.0f, -1.0f,   1.0f, 0.0f
+            };
+
+            // Create [Vertex Buffer Object](https://www.khronos.org/opengl/wiki/Vertex_Specification#Vertex_Buffer_Object)
+            _vbo = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ArrayBuffer, _vbo);
+            GL.BufferData(BufferTarget.ArrayBuffer, 4 * 6 * 4, vquad, BufferUsageHint.StaticDraw);
+
+            // [Vertex Array Object](https://www.khronos.org/opengl/wiki/Vertex_Specification#Vertex_Array_Object)
+            _vao = GL.GenVertexArray();
+            GL.BindVertexArray(_vao);
+            GL.EnableVertexAttribArray(0);
+            GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, 4 * 4, 0);
+            GL.EnableVertexAttribArray(1);
+            GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, 4 * 4, 2 * 4);
+
+            GL.BindBuffer(BufferTarget.ArrayBuffer, 0);
+            GL.BindVertexArray(0);
         }
 
         public void RenderText(string text, float x, float y, float scale, Vector2 dir)
