@@ -67,7 +67,8 @@ namespace OpenTK_assimp_example_1.Model
 
         private OpenTK_library.Scene.Model _model;
         private OpenTK_library.OpenGL.Program _test_prog;
-        private StorageBuffer<TMVP> _mvp_ssbo;
+        private StorageBuffer<TVP> _vp_ssbo;
+        private StorageBuffer<TMat44> _model_ssbo;
         private StorageBuffer<TLightSource> _light_ssbo;
         private PixelPackBuffer<float> _depth_pack_buffer;
 
@@ -109,7 +110,8 @@ namespace OpenTK_assimp_example_1.Model
                 _models.Clear();
                 _depth_pack_buffer.Dispose();
                 _light_ssbo.Dispose();
-                _mvp_ssbo.Dispose();
+                _vp_ssbo.Dispose();
+                _model_ssbo.Dispose();
                 _test_prog.Dispose();
                 _disposed = true;
             }
@@ -180,23 +182,27 @@ namespace OpenTK_assimp_example_1.Model
                 vec2 uv;
             } outData;
 
-            layout(std430, binding = 1) buffer MVP
+            layout(std430, binding = 1) buffer TVP
             {
                 mat4 proj;
                 mat4 view;
+            } vp;
+
+            layout(std430, binding = 2) buffer TModel
+            {
                 mat4 model;
-            } mvp;
+            } model;
 
             void main()
             {
-                mat4 mv_mat     = mvp.view * mvp.model;
+                mat4 mv_mat     = vp.view * model.model;
                 mat3 normal_mat = inverse(transpose(mat3(mv_mat))); 
 
                 outData.nv   = normalize(normal_mat * a_nv);
                 outData.uv   = a_uv;
                 vec4 viewPos = mv_mat * a_pos;
                 outData.pos  = viewPos.xyz / viewPos.w;
-                gl_Position  = mvp.proj * viewPos;
+                gl_Position  = vp.proj * viewPos;
             }";
 
             string frag_shader = @"#version 460 core
@@ -209,7 +215,7 @@ namespace OpenTK_assimp_example_1.Model
                 vec2 uv;
             } inData;
 
-            layout(std430, binding = 2) buffer TLight
+            layout(std430, binding = 3) buffer TLight
             {
                 vec4  u_lightDir;
                 float u_ambient;
@@ -246,15 +252,20 @@ namespace OpenTK_assimp_example_1.Model
             this._test_prog.Generate();
 
             // Model view projection shader storage block objects and buffers
-            TMVP mvp = new TMVP(Matrix4.Identity, Matrix4.Identity, Matrix4.Identity);
-            this._mvp_ssbo = new StorageBuffer<TMVP>();
-            this._mvp_ssbo.Create(ref mvp);
-            this._mvp_ssbo.Bind(1);
+            TVP vp = new TVP(Matrix4.Identity, Matrix4.Identity);
+            this._vp_ssbo = new StorageBuffer<TVP>();
+            this._vp_ssbo.Create(ref vp);
+            this._vp_ssbo.Bind(1);
+
+            TMat44 model = new TMat44(Matrix4.Identity);
+            this._model_ssbo = new StorageBuffer<TMat44>();
+            this._model_ssbo.Create(ref model);
+            this._model_ssbo.Bind(2);
 
             TLightSource light_source = new TLightSource(new Vector4(-1.0f, -0.5f, -2.0f, 0.0f), 0.2f, 0.8f, 0.8f, 10.0f);
             this._light_ssbo = new StorageBuffer<TLightSource>();
             this._light_ssbo.Create(ref light_source);
-            this._light_ssbo.Bind(2);
+            this._light_ssbo.Bind(3);
 
             this._depth_pack_buffer = new PixelPackBuffer<float>();
             this._depth_pack_buffer.Create();
@@ -416,23 +427,24 @@ namespace OpenTK_assimp_example_1.Model
 
             this._test_prog.Use();
 
-            model_mat = _model_center * model_mat; // OpenTK `*`-operator is reversed
-            TMVP mvp = new TMVP(model_mat, this._view, this._projection);
-            this._mvp_ssbo.Update(ref mvp);
+            Matrix4 view_mat = model_mat * this._view; // OpenTK `*`-operator is reversed
+            TVP vp = new TVP(view_mat, this._projection);
+            this._vp_ssbo.Update(ref vp);
 
             if (_model != null)
-                DrawModel(_model.Root, model_mat);
+                DrawModel(_model.Root, _model_center);
         }
 
         private void DrawModel(OpenTK_library.Scene.ModelNode node, Matrix4 model_matrix)
         {
-            Matrix4 node_model_matrix = model_matrix * node.ModelMatrix; // OpenTK `*`-operator is reversed
+            Matrix4 node_model_matrix = node.ModelMatrix * model_matrix; // OpenTK `*`-operator is reversed
 
             // update matrices
             if (node.Meshs.Count > 0)
             {
-                TMVP mvp = new TMVP(node_model_matrix, this._view, this._projection);
-                this._mvp_ssbo.Update(ref mvp);
+                if (node.ModelSSBONeedsupdate)
+                    node.UpdateModel(node_model_matrix);
+                node.ModelSSBO.Bind(2);
             }
 
             // draw meshes

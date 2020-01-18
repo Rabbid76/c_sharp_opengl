@@ -5,6 +5,7 @@ using OpenTK; // Vector2, Vector3, Vector4, Matrix4
 
 using OpenTK_library.Mathematics;
 using OpenTK_library.OpenGL;
+using OpenTK_library.Type;
 
 namespace OpenTK_library.Scene
 {
@@ -99,9 +100,13 @@ namespace OpenTK_library.Scene
         protected Matrix4 _model;
         protected List<Mesh> _meshs = new List<Mesh>();
         protected List<ModelNode> _children = new List<ModelNode>();
+        protected StorageBuffer<TMat44> _model_ssbo;
+        protected bool _model_ssbo_needs_update = true;
 
         protected override void DisposeObjects()
         {
+            if (_model_ssbo != null)
+                _model_ssbo.Dispose();
             foreach (var mesh in _meshs)
                 mesh.Dispose();
             _meshs.Clear();
@@ -114,6 +119,41 @@ namespace OpenTK_library.Scene
         {
             get => _model;
             set => _model = value;
+        }
+
+        public StorageBuffer<TMat44> ModelSSBO
+        {
+            get
+            {
+                if (_model_ssbo == null)
+                {
+                    _model_ssbo = new StorageBuffer<TMat44>();
+                    TMat44 model = new TMat44(_model);
+                    _model_ssbo.Create(ref model);
+                }
+                return _model_ssbo;
+            }
+        }
+
+        public bool ModelSSBONeedsupdate
+        {
+            get => _model_ssbo_needs_update;
+            set => _model_ssbo_needs_update = value;
+        }
+
+        public void UpdateModel(Matrix4 mode_matrix)
+        {
+            TMat44 model = new TMat44(mode_matrix);
+            if (_model_ssbo == null)
+            {
+                _model_ssbo = new StorageBuffer<TMat44>();
+                _model_ssbo.Create(ref model);
+            }
+            else
+            {
+                _model_ssbo.Update(ref model);
+            }
+            ModelSSBONeedsupdate = false;
         }
 
         public List<Mesh> Meshs { get => _meshs; }

@@ -227,6 +227,9 @@ namespace OpenTK_libray_viewmodel.Control
 
         private void UpdateImageSoftware()
         {
+            // [Pixel-path performance warning: Pixel transfer is synchronized with 3D rendering](https://stackoverflow.com/questions/49368575/pixel-path-performance-warning-pixel-transfer-is-synchronized-with-3d-rendering)
+            // [Optimizing Texture Transfers](http://on-demand.gputechconf.com/gtc/2012/presentations/S0356-GTC2012-Texture-Transfers.pdf)
+
             int width = Width;
             int height = Height;
 
@@ -241,13 +244,13 @@ namespace OpenTK_libray_viewmodel.Control
             GL.ReadPixels(0, 0, Width, Height, PixelFormat.Bgra, PixelType.UnsignedByte, IntPtr.Zero);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
 
-            GL.BindBuffer(BufferTarget.PixelPackBuffer, _pixelBuffers[0]);
-
             // rotate the pixel buffers.
             if (_hasRenderedAFrame)
             {
                 RotatePixelBuffers();
             }
+
+            GL.BindBuffer(BufferTarget.PixelPackBuffer, _pixelBuffers[0]);
 
             // copy the data over from a mapped buffer.
             _bitmap.Lock();

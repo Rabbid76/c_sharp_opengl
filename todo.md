@@ -64,3 +64,17 @@ Use compute shader to visualize rendering (Peter Shirley)
 
 - "spin" in
 - json configuration
+
+## Opengl stereo interleaved
+
+Glasses? red green
+ 
+https://hub.packtpub.com/rendering-stereoscopic-3d-models-using-opengl/  
+http://paulbourke.net/stereographics/vpac/opengl.html  
+https://stackoverflow.com/questions/8918945/how-to-do-stereoscopic-3d-with-opengl-on-gtx-560-and-later  
+http://www.gali-3d.com/archive/articles/StereoOpenGL/StereoscopicOpenGLTutorial.php  
+
+## Inirect rendering
+
+[Indirect rendering](https://www.khronos.org/opengl/wiki/Vertex_Rendering#Indirect_rendering)  
+
