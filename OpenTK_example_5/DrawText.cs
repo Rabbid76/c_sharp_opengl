@@ -124,7 +124,8 @@ namespace OpenTK_example_5
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
             GL.Enable(EnableCap.Blend);
-            GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+            //GL.BlendFunc(BlendingFactor.SrcAlpha, BlendingFactor.OneMinusSrcAlpha);
+            GL.BlendFunc(0, BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 
             this._text_prog.Use();
             GL.UniformMatrix4(1, false, ref projectionM);
