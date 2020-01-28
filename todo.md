@@ -47,6 +47,16 @@ Model builder
 
 ### SSAO / HBAO
 
+### Mincraft
+
+- [Instancing](https://www.khronos.org/opengl/wiki/Vertex_Rendering#Instancing) 
+- Texture 2d array N * 6*1 tile textures
+- SSBO with cube translations and cube types `ivec`? encode coordinates and types in int or ivec2?
+- 3 dimensional array which maps to index in SSBO
+
+If a cube is removed, then remove the entry from the SSBO. Reorganize it and move the last entry to the removed entry.
+Is a map from SSBO index to 3d array required?
+
 ### Control
 
 Angular mobile application (controller) which controls WPF desktop application

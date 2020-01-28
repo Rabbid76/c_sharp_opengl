@@ -1,0 +1,9 @@
+﻿<Application x:Class="OpenTK_stereoscopic_example_1.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:OpenTK_stereoscopic_example_1"
+             StartupUri="View/OpenTK_View.xaml">
+    <Application.Resources>
+         
+    </Application.Resources>
+</Application>

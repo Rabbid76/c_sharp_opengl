@@ -52,6 +52,8 @@
     <Compile Include="Generator\TextureGenerator.cs" />
     <Compile Include="Mathematics\AABB.cs" />
     <Compile Include="Mathematics\Operations.cs" />
+    <Compile Include="Mathematics\StereoscopicPerspective.cs" />
+    <Compile Include="MeshBuilder\TrefoilKnotBuilder.cs" />
     <Compile Include="Mesh\Cube.cs" />
     <Compile Include="OpenGL\Framebuffer.cs" />
     <Compile Include="OpenGL\Object.cs" />

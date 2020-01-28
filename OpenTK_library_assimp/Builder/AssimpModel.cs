@@ -152,7 +152,7 @@ namespace OpenTK_library_assimp.Builder
                         // specify color channels
                         for (int color_channel = 0; assimpmesh.HasVertexColors(color_channel); ++color_channel)
                         {
-                            mesh.AddTextureAttrib((tuple_index, 3));
+                            mesh.AddColorAttrib((tuple_index, 4));
                             int attr_i = color_channel == 0 ? color0_index : (colorN_index + color_channel - 1);
                             formalist.Add(new TVertexFormat(0, attr_i, 4, (int)tuple_index, false));
                             tuple_index += 4;

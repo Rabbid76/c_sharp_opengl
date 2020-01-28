@@ -8,6 +8,14 @@ namespace OpenTK_library.OpenGL
 {
     public class DebugCallback
     {
+        private bool _errors_only = false; 
+
+        public bool ErrorsOnly 
+        {
+            get => _errors_only;
+            //set => _errors_only = value; // TODO update message filter
+        }
+
         public DebugCallback()
         {}
 
@@ -19,19 +27,25 @@ namespace OpenTK_library.OpenGL
         }
 
         // create end enable debug message callback
-        public void Init()
+        public void Init(bool errors_only = false)
         {
+            _errors_only = errors_only;
             _debugMessageCallbackInstance = new DebugProc(DebugProcCallBack);
             _hijackCallback(); // see [DebugMessageCallback segfaults upon logging (?) #880](https://github.com/opentk/opentk/issues/880)
 
             GL.DebugMessageCallback(_debugMessageCallbackInstance, IntPtr.Zero);
 
-            // filter: all debug messages on
-            GL.DebugMessageControl(DebugSourceControl.DontCare, DebugTypeControl.DontCare, DebugSeverityControl.DontCare, 0, new int[0], true);
-
-            // filter: only error messages
-            //GL.DebugMessageControl(DebugSourceControl.DontCare, DebugTypeControl.DontCare, DebugSeverityControl.DontCare, 0, new int[0], false);
-            //GL.DebugMessageControl(DebugSourceControl.DebugSourceApi, DebugTypeControl.DebugTypeError, DebugSeverityControl.DontCare, 0, new int[0], false);
+            if (_errors_only)
+            {
+                // filter: only error messages
+                GL.DebugMessageControl(DebugSourceControl.DontCare, DebugTypeControl.DontCare, DebugSeverityControl.DontCare, 0, new int[0], false);
+                GL.DebugMessageControl(DebugSourceControl.DebugSourceApi, DebugTypeControl.DebugTypeError, DebugSeverityControl.DontCare, 0, new int[0], true);
+            }
+            else
+            {
+                // filter: all debug messages on
+                GL.DebugMessageControl(DebugSourceControl.DontCare, DebugTypeControl.DontCare, DebugSeverityControl.DontCare, 0, new int[0], true);
+            }
 
             GL.Enable(EnableCap.DebugOutput);
             GL.Enable(EnableCap.DebugOutputSynchronous);

@@ -16,7 +16,7 @@ namespace OpenTK_library.Mesh
         private float _rd = 0.175f;
         private float[] _c = new float[] { 0.9f, 0.5f, 0.1f, 0.0f };
 
-        public TrefoilKnot(int slices, int stacks = 32, float ra = 0.6f, float rb = 0.2f, float rc = 0.4f, float rd = 0.175f, float[] c = null)
+        public TrefoilKnot(int slices = 256, int stacks = 32, float ra = 0.6f, float rb = 0.2f, float rc = 0.4f, float rd = 0.175f, float[] c = null)
         {
             this._slices = slices;
             this._stacks = stacks;

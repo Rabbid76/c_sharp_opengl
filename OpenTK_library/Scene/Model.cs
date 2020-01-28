@@ -65,12 +65,16 @@ namespace OpenTK_library.Scene
 
         public Mesh AddTextureAttrib((uint, uint) attribute)
         {
+            if (_textureattrib == null)
+                _textureattrib = new List<(uint, uint)>();
             _textureattrib.Add(attribute);
             return this;
         }
 
         public Mesh AddColorAttrib((uint, uint) attribute)
         {
+            if (_colorattrib == null)
+                _colorattrib = new List<(uint, uint)>();
             _colorattrib.Add(attribute);
             return this;
         }

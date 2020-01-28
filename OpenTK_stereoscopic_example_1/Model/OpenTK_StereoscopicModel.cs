@@ -5,22 +5,23 @@ using System.Reflection;
 using OpenTK; // Vector2, Vector3, Vector4, Matrix4
 using OpenTK.Graphics.OpenGL4; // GL
 
-using OpenTK_assimp_example_1.ViewModel;
+using OpenTK_stereoscopic_example_1.ViewModel;
 
 using OpenTK_library;
 using OpenTK_library.Type;
+using OpenTK_library.Mathematics;
 using OpenTK_library.MeshBuilder;
 using OpenTK_library.Controls;
 using OpenTK_library.OpenGL;
 using OpenTK_library_assimp.Builder;
 using OpenTK_libray_viewmodel.Model;
 
-namespace OpenTK_assimp_example_1.Model
+namespace OpenTK_stereoscopic_example_1.Model
 {
     public class OpenTK_AssimpModel
         : IModel
     {
-        private static readonly string _name_trefoil_knot = "trefoil knot";  
+        private static readonly string _name_trefoil_knot = "trefoil knot";
 
         internal unsafe struct TLightSource
         {
@@ -69,16 +70,34 @@ namespace OpenTK_assimp_example_1.Model
 
         private OpenTK_library.Scene.Model _model;
         private OpenTK_library.OpenGL.Program _draw_prog;
+        private OpenTK_library.OpenGL.Program _stereo_prog;
         private StorageBuffer<TVP> _vp_ssbo;
         private StorageBuffer<TMat44> _model_ssbo;
         private StorageBuffer<TLightSource> _light_ssbo;
         private PixelPackBuffer<float> _depth_pack_buffer;
+        private List<Framebuffer> _fbos;
+        private VertexArrayObject<float, uint> _quad_vao;
 
         private Matrix4 _view = Matrix4.Identity;
         private Matrix4 _projection = Matrix4.Identity;
         private Matrix4 _model_center = Matrix4.Identity;
         private IControls _controls;
         double _period = 0;
+
+        private float _eye_scale = 0.08f / 100.0f;
+        private float _focal_scale = 1.0f / 20.0f;
+
+        private float EyeScale
+        {
+            get => (float)ViewModel.EyeScale * _eye_scale;
+            set => ViewModel.EyeScale = (int)(value / _eye_scale);
+        }
+
+        private float FocalScale
+        {
+            get => (float)ViewModel.FocalScale * _focal_scale;
+            set => ViewModel.FocalScale = (int)(value / _focal_scale);
+        }
 
         public OpenTK_AssimpModel()
         {
@@ -115,11 +134,19 @@ namespace OpenTK_assimp_example_1.Model
                 foreach (var model in _models)
                     model.Value.Dispose();
                 _models.Clear();
+                if (_fbos != null)
+                {
+                    foreach (var fbo in _fbos)
+                        fbo.Dispose();
+                    _fbos.Clear();
+                }
                 _depth_pack_buffer.Dispose();
+                _quad_vao.Dispose();
                 _light_ssbo.Dispose();
                 _vp_ssbo.Dispose();
                 _model_ssbo.Dispose();
                 _draw_prog.Dispose();
+                _stereo_prog.Dispose();
                 _disposed = true;
             }
         }
@@ -173,11 +200,11 @@ namespace OpenTK_assimp_example_1.Model
             _extensions.Retrieve();
 
             // Debug callback
-            _debug_callback.Init();
+            _debug_callback.Init(true);
 
-            // Create shader program
+            // Create draw shader program
 
-            string vert_shader = @"#version 460 core
+            string vert_shader_draw = @"#version 460 core
             layout (location = 0) in vec4 a_pos;
             layout (location = 1) in vec3 a_nv;
             layout (location = 2) in vec2 a_uv;
@@ -187,6 +214,7 @@ namespace OpenTK_assimp_example_1.Model
                 vec3 pos;
                 vec3 nv;
                 vec2 uv;
+                vec3 lightV;
             } outData;
 
             layout(std430, binding = 1) buffer TVP
@@ -200,19 +228,30 @@ namespace OpenTK_assimp_example_1.Model
                 mat4 model;
             } model;
 
+            layout(std430, binding = 3) buffer TLight
+            {
+                vec4  u_lightDir;
+                float u_ambient;
+                float u_diffuse;
+                float u_specular;
+                float u_shininess;
+            } light_data;
+
             void main()
             {
                 mat4 mv_mat     = vp.view * model.model;
                 mat3 normal_mat = inverse(transpose(mat3(mv_mat))); 
 
-                outData.nv   = normalize(normal_mat * a_nv);
-                outData.uv   = a_uv;
-                vec4 viewPos = mv_mat * a_pos;
-                outData.pos  = viewPos.xyz / viewPos.w;
-                gl_Position  = vp.proj * viewPos;
+                //outData.lightV = mat3(vp.view) * -light_data.u_lightDir.xyz;
+                outData.lightV = -light_data.u_lightDir.xyz;
+                outData.nv     = normalize(normal_mat * a_nv);
+                outData.uv     = a_uv;
+                vec4 viewPos   = mv_mat * a_pos;
+                outData.pos    = viewPos.xyz / viewPos.w;
+                gl_Position    = vp.proj * viewPos;
             }";
 
-            string frag_shader = @"#version 460 core
+            string frag_shader_draw = @"#version 460 core
             out vec4 frag_color;
             
             layout (location = 0) in TVertexData
@@ -220,6 +259,7 @@ namespace OpenTK_assimp_example_1.Model
                 vec3 pos;
                 vec3 nv;
                 vec2 uv;
+                vec3 lightV;
             } inData;
 
             layout(std430, binding = 3) buffer TLight
@@ -234,13 +274,14 @@ namespace OpenTK_assimp_example_1.Model
             void main()
             {
                 // vec3 color = vec3(fract(inData.uv * 10.0), 0.0);
-                vec3 color = inData.nv;
+                //vec3 color = inData.nv;
+                vec3 color = vec3(1.0);
 
                 // ambient part
                 vec3 lightCol = light_data.u_ambient * color;
                 vec3 normalV  = normalize( inData.nv );
                 vec3 eyeV     = normalize( -inData.pos );
-                vec3 lightV   = normalize( -light_data.u_lightDir.xyz );
+                vec3 lightV   = normalize( inData.lightV );
 
                 // diffuse part
                 float NdotL   = max( 0.0, dot( normalV, lightV ) );
@@ -255,7 +296,7 @@ namespace OpenTK_assimp_example_1.Model
                 frag_color = vec4( lightCol.rgb, 1.0 );
             }";
 
-            this._draw_prog = OpenTK_library.OpenGL.Program.VertexAndFragmentShaderProgram(vert_shader, frag_shader);
+            this._draw_prog = OpenTK_library.OpenGL.Program.VertexAndFragmentShaderProgram(vert_shader_draw, frag_shader_draw);
             this._draw_prog.Generate();
 
             // Model view projection shader storage block objects and buffers
@@ -269,7 +310,7 @@ namespace OpenTK_assimp_example_1.Model
             this._model_ssbo.Create(ref model);
             this._model_ssbo.Bind(2);
 
-            TLightSource light_source = new TLightSource(new Vector4(-1.0f, -0.5f, -2.0f, 0.0f), 0.2f, 0.8f, 0.8f, 10.0f);
+            TLightSource light_source = new TLightSource(new Vector4(-1.0f, -1.0f, -5.0f, 0.0f), 0.0f, 1.0f, 0.0f, 10.0f);
             this._light_ssbo = new StorageBuffer<TLightSource>();
             this._light_ssbo.Create(ref light_source);
             this._light_ssbo.Bind(3);
@@ -277,15 +318,67 @@ namespace OpenTK_assimp_example_1.Model
             this._depth_pack_buffer = new PixelPackBuffer<float>();
             this._depth_pack_buffer.Create();
 
+            // Create stereoscopic filter shader program
+
+            string vert_shader_stereo = @"#version 460 core
+            layout (location = 0) in vec2 a_pos;
+      
+            layout (location = 0) out TVertexData
+            {
+                vec3 pos;
+                vec2 uv;
+            } outData;
+
+            void main()
+            {
+                outData.uv  = a_pos.xy * 0.5 + 0.5;
+                gl_Position = vec4(a_pos.xy, 0.0, 1.0);
+            }";
+
+            string frag_shader_stereo = @"#version 460 core
+            out vec4 frag_color;
+            
+            layout (location = 0) in TVertexData
+            {
+                vec3 pos;
+                vec2 uv;
+            } inData;
+
+            layout (binding = 1) uniform sampler2D u_left;
+            layout (binding = 2) uniform sampler2D u_right;
+
+            void main()
+            {
+                vec4 left  = texture(u_left, inData.uv);
+                vec4 right = texture(u_right, inData.uv);
+             
+                bool is_left_eye = int(gl_FragCoord.x) % 2 == 0; 
+                vec4 color = vec4(0.0, 0.0, 0.0, 1.0);
+                if (is_left_eye) 
+                    color.r = dot(vec3(0.2126, 0.7152, 0.0722), left.rgb);
+                else
+                    color.g = dot(vec3(0.2126, 0.7152, 0.0722), right.rgb);
+
+                frag_color = color;
+            }";
+
+            this._stereo_prog = OpenTK_library.OpenGL.Program.VertexAndFragmentShaderProgram(vert_shader_stereo, frag_shader_stereo);
+            this._stereo_prog.Generate();
+
+            // quad vertex array
+
+            float[] attributes = { -1, -1, 1, -1, 1, 1, -1, 1 };
+            uint[] indices = { 0, 1, 2, 0, 2, 3 };
+            TVertexFormat[] format = {new TVertexFormat(0, 0, 2, 0, false )};
+            _quad_vao = new VertexArrayObject<float, uint>();
+            _quad_vao.AppendVertexBuffer(0, 2, attributes);
+            _quad_vao.Create(format, indices);
+            _quad_vao.Bind();
+
             // states
 
             GL.Viewport(0, 0, this._cx, this._cy);
-            GL.ClearColor(System.Drawing.Color.Beige);
-            //GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-            GL.Enable(EnableCap.DepthTest);
-            //GL.Enable(EnableCap.CullFace);
-            GL.FrontFace(FrontFaceDirection.Ccw);
-            GL.CullFace(CullFaceMode.Back);
+            GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
             // matrices
 
@@ -294,6 +387,10 @@ namespace OpenTK_assimp_example_1.Model
             float angle = 90.0f * (float)Math.PI / 180.0f;
             float aspect = (float)this._cx / (float)this._cy;
             this._projection = Matrix4.CreatePerspectiveFieldOfView(angle, aspect, 0.1f, _far);
+
+            // properties 
+            EyeScale = 0.08f;
+            FocalScale = 1.0f;
         }
 
         private void LoadCurrentModel()
@@ -432,9 +529,24 @@ namespace OpenTK_assimp_example_1.Model
                 this._cy = cy;
                 GL.Viewport(0, 0, this._cx, this._cy);
 
-                float angle = 90.0f * (float)Math.PI / 180.0f;
-                float aspect = (float)this._cx / (float)this._cy;
-                this._projection = Matrix4.CreatePerspectiveFieldOfView(angle, aspect, 0.1f, _far);
+                // framebuffers
+                // TODO anti aliased framebuffer?
+                // TODO update framebuffer size
+
+                if (_fbos != null)
+                {
+                    foreach (var fbo in _fbos)
+                        fbo.Dispose();
+                    _fbos.Clear();
+                }
+
+                _fbos = new List<Framebuffer>();
+                _fbos.Add(new Framebuffer());
+                _fbos[0].Create(cx, cy, Framebuffer.Kind.texture, Framebuffer.Format.RGBA_F32, true, false);
+                _fbos[0].Clear();
+                _fbos.Add(new Framebuffer());
+                _fbos[1].Create(cx, cy, Framebuffer.Kind.texture, Framebuffer.Format.RGBA_F32, true, false);
+                _fbos[1].Clear();
             }
 
             Matrix4 model_mat = Matrix4.Identity;
@@ -442,16 +554,47 @@ namespace OpenTK_assimp_example_1.Model
             if (_controls_id == 0)
                 (model_mat, update) = this._controls.Update();
 
-            GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            // render scene
+
+            GL.Enable(EnableCap.DepthTest);
+            //GL.Enable(EnableCap.CullFace);
+            GL.FrontFace(FrontFaceDirection.Ccw);
+            GL.CullFace(CullFaceMode.Back);
 
             this._draw_prog.Use();
 
-            Matrix4 view_mat = model_mat * this._view; // OpenTK `*`-operator is reversed
-            TVP vp = new TVP(view_mat, this._projection);
-            this._vp_ssbo.Update(ref vp);
+            // for both eyes
+            for (int i = 0; i < 2; ++i)
+            {
+                var side = i == 0 ? StereoscopicPerspective.TSide.Left : StereoscopicPerspective.TSide.Right;
 
-            if (_model != null)
-                DrawModel(_model.Root, _model_center);
+                Matrix4 view_mat = model_mat * this._view; // OpenTK `*`-operator is reversed
+                float fov_y = 90.0f * (float)Math.PI / 180.0f;
+                float aspect = (float)this._cx / (float)this._cy;
+                float eye_dist = EyeScale;
+                float focyl_dist = Math.Max(0.1f, FocalScale);
+                var perspective = new StereoscopicPerspective(view_mat, fov_y, aspect, 0.1f, _far, eye_dist, focyl_dist);
+                
+                TVP vp = new TVP(perspective.View(side), perspective.Projection(side));
+                this._vp_ssbo.Update(ref vp);
+
+                _fbos[i].Bind();
+                GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+
+                if (_model != null)
+                    DrawModel(_model.Root, _model_center);
+            }
+
+            // stereo filter
+
+            GL.Disable(EnableCap.DepthTest);
+            GL.Disable(EnableCap.CullFace);
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, _viewmodel.DefaultFrameBuffer);
+            //GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            _stereo_prog.Use();
+            _fbos[0].Textures[0].Bind(1);
+            _fbos[1].Textures[0].Bind(2);
+            _quad_vao.Draw();
         }
 
         private void DrawModel(OpenTK_library.Scene.ModelNode node, Matrix4 model_matrix)

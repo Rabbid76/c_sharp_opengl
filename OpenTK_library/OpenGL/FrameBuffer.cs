@@ -7,6 +7,8 @@ namespace OpenTK_library.OpenGL
 {
     public class Framebuffer
     {
+        // TODO update framebuffer size
+
         public enum Target { Read, Draw, ReadDraw};
         public enum Kind { renderbuffer, texture };
         public enum Format { RGBA_8, RGBA_F32 };
@@ -34,7 +36,7 @@ namespace OpenTK_library.OpenGL
 
         ~Framebuffer()
         {
-            GL.DeleteBuffer(this._fbo);
+            GL.DeleteFramebuffer(this._fbo);
         }
 
         protected virtual void Dispose(bool disposing)
@@ -52,7 +54,7 @@ namespace OpenTK_library.OpenGL
                     foreach (var tbo in this._tbos)
                         tbo.Dispose();
                     _tbos.Clear();
-                    GL.DeleteBuffer(this._fbo);
+                    GL.DeleteFramebuffer(this._fbo);
                 }
                 this._fbo = 0;
                 _disposed = true;
@@ -308,6 +310,22 @@ namespace OpenTK_library.OpenGL
                     GL.BindFramebuffer(FramebufferTarget.DrawFramebuffer, 0);
                 else
                     draw_fbo.Bind(Target.Draw);
+                GL.BlitFramebuffer(0, 0, _cx, _cy, x, y, x + w, y + h, ClearBufferMask.ColorBufferBit, filter);
+            }
+        }
+
+        public void Blit(int fbo_d, int x, int y, int w, int h, bool linear)
+        {
+            BlitFramebufferFilter filter = linear ? BlitFramebufferFilter.Linear : BlitFramebufferFilter.Nearest;
+
+            if (_buffer_specification_4)
+            {
+                GL.BlitNamedFramebuffer(this._fbo, fbo_d, 0, 0, _cx, _cy, x, y, x + w, y + h, ClearBufferMask.ColorBufferBit, filter);
+            }
+            else
+            {
+                Bind(Target.Read);
+                GL.BindFramebuffer(FramebufferTarget.DrawFramebuffer, fbo_d);
                 GL.BlitFramebuffer(0, 0, _cx, _cy, x, y, x + w, y + h, ClearBufferMask.ColorBufferBit, filter);
             }
         }
