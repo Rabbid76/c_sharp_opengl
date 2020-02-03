@@ -84,8 +84,8 @@ namespace OpenTK_stereoscopic_example_1.Model
         private IControls _controls;
         double _period = 0;
 
-        private float _eye_scale = 0.08f / 100.0f;
-        private float _focal_scale = 1.0f / 20.0f;
+        private float _eye_scale = 0.10f / 100.0f;
+        private float _focal_scale = 1.0f / 200.0f;
 
         private float EyeScale
         {
@@ -352,12 +352,9 @@ namespace OpenTK_stereoscopic_example_1.Model
                 vec4 left  = texture(u_left, inData.uv);
                 vec4 right = texture(u_right, inData.uv);
              
-                bool is_left_eye = int(gl_FragCoord.x) % 2 == 0; 
-                vec4 color = vec4(0.0, 0.0, 0.0, 1.0);
-                if (is_left_eye) 
-                    color.r = dot(vec3(0.2126, 0.7152, 0.0722), left.rgb);
-                else
-                    color.g = dot(vec3(0.2126, 0.7152, 0.0722), right.rgb);
+                float red  = dot(vec3(0.2126, 0.7152, 0.0722), left.rgb);
+                float blue = dot(vec3(0.2126, 0.7152, 0.0722), right.rgb); 
+                vec4 color = vec4(red, 0.0, blue, 1.0);
 
                 frag_color = color;
             }";
@@ -389,8 +386,8 @@ namespace OpenTK_stereoscopic_example_1.Model
             this._projection = Matrix4.CreatePerspectiveFieldOfView(angle, aspect, 0.1f, _far);
 
             // properties 
-            EyeScale = 0.08f;
-            FocalScale = 1.0f;
+            EyeScale = 0.1f;
+            FocalScale = 0.5f;
         }
 
         private void LoadCurrentModel()
@@ -438,7 +435,7 @@ namespace OpenTK_stereoscopic_example_1.Model
                 this._cx = 0;
                 this._cy = 0;
                 // set new view matrix
-                this._view = Matrix4.LookAt(0, -size * 0.8f, 0, 0, 0, 0, 0, 0, 1);
+                this._view = Matrix4.LookAt(0, -size * 0.6f, 0, 0, 0, 0, 0, 0, 1);
                 // set model matrix
                 this._model_center = Matrix4.CreateTranslation(-cpt) * Matrix4.CreateRotationX((float)Math.PI / 2.0f);
             }
@@ -569,10 +566,11 @@ namespace OpenTK_stereoscopic_example_1.Model
                 var side = i == 0 ? StereoscopicPerspective.TSide.Left : StereoscopicPerspective.TSide.Right;
 
                 Matrix4 view_mat = model_mat * this._view; // OpenTK `*`-operator is reversed
+                float viewdist = view_mat.Row3.Xyz.Length;
                 float fov_y = 90.0f * (float)Math.PI / 180.0f;
                 float aspect = (float)this._cx / (float)this._cy;
                 float eye_dist = EyeScale;
-                float focyl_dist = Math.Max(0.1f, FocalScale);
+                float focyl_dist = Math.Max(0.1f, FocalScale * 2.0f * viewdist);
                 var perspective = new StereoscopicPerspective(view_mat, fov_y, aspect, 0.1f, _far, eye_dist, focyl_dist);
                 
                 TVP vp = new TVP(perspective.View(side), perspective.Projection(side));

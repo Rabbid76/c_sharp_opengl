@@ -106,7 +106,7 @@ namespace OpenTK_stereoscopic_example_1.ViewModel
             try
             {
                 Controls = _gl_model.ControlsData();
-                CurrentControl = Controls[1];
+                CurrentControl = Controls[0];
             }
             catch (Exception ex)
             {

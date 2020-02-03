@@ -8,6 +8,8 @@
 
 - wpf view overlay UI
 
+- fps
+
 ## Assamblies
 
 GLWpfControlMSAA
