@@ -18,6 +18,23 @@ using OpenTK_libray_viewmodel.Model;
 
 namespace OpenTK_stereoscopic_example_1.Model
 {
+    // Anaglyph stereo 3D
+    //
+    // [Anaglyph 3D] (https://de.wikipedia.org/wiki/Anaglyph_3D)  
+    // [Anaglyph Methods Comparison] (http://3dtv.at/Knowhow/AnaglyphComparison_en.aspx)
+    // [Half Color Anaglyph] (https://ixora.io/projects/camera-3D/half-color-anaglyph/)  
+    // [Color Anaglyph / Dubois Anaglyph] (http://stereo.jpn.org/eng/stphmkr/help/stereo_04.htm)
+    // [Creating anaglyphs from left/right image pairs] (https://www.triplespark.net/render/stereo/anaglyph/)  
+    // [Optimised Anaglyph] (http://stereo.jpn.org/eng/stphmkr/help/stereo_13.htm)  
+    // 
+    // Books and papers:
+    // 
+    // [Creating a Color Anaglyph from a Pseudo-Stereo Pair of Images] (https://www.zuj.edu.jo/conferences/ICIT09/PaperList/Papers/Image%20and%20Signal%20Processing/578.pdf)
+    // [Adaptive Generation of Color Anaglyph] (https://link.springer.com/chapter/10.1007/978-3-642-39759-2_3)  
+    // [Engineering Optics] (https://books.google.at/books?id=dk8S7ki4NPcC&pg=PA475&lpg=PA475&dq=colored+anaglyph&source=bl&ots=q6mraZMVSL&sig=ACfU3U137qUigxPQr1-RMBGAf71qCvzFbA&hl=de&sa=X&ved=2ahUKEwiKurTu-rznAhXSWxUIHVuKC5g4ChDoATAHegQIChAB#v=onepage&q=colored%20anaglyph&f=false) 
+
+    // TODO: increase depth effect by darkening far and brightening near 
+
     public class OpenTK_AssimpModel
         : IModel
     {
@@ -56,6 +73,7 @@ namespace OpenTK_stereoscopic_example_1.Model
         }
 
         private OpenTK_ViewModel _viewmodel;
+        private int _anaglyph_model_id = 0;
         private int _controls_id = 0;
         private Dictionary<string, string> _model_names = new Dictionary<string, string>();
         private Dictionary<int, OpenTK_library.Scene.Model> _models = new Dictionary<int, OpenTK_library.Scene.Model>();
@@ -167,6 +185,18 @@ namespace OpenTK_stereoscopic_example_1.Model
 
         public float GetScale() => _model.SceneBox.MaxSize;
 
+        public List<ViewModel.Anaglyphs> AnaglyphsData()
+        {
+            var anaglyphs = new List<ViewModel.Anaglyphs>();
+            anaglyphs.Add(new ViewModel.Anaglyphs("Ture", "0"));
+            anaglyphs.Add(new ViewModel.Anaglyphs("Gray", "1"));
+            anaglyphs.Add(new ViewModel.Anaglyphs("Color", "2"));
+            anaglyphs.Add(new ViewModel.Anaglyphs("Half color", "3"));
+            anaglyphs.Add(new ViewModel.Anaglyphs("Optimized", "4"));
+            anaglyphs.Add(new ViewModel.Anaglyphs("Dubois", "5"));
+            return anaglyphs;
+        }
+
         public List<ViewModel.Model> ModelsData()
         {
             var model = new List<ViewModel.Model>();
@@ -274,8 +304,8 @@ namespace OpenTK_stereoscopic_example_1.Model
             void main()
             {
                 // vec3 color = vec3(fract(inData.uv * 10.0), 0.0);
-                //vec3 color = inData.nv;
-                vec3 color = vec3(1.0);
+                vec3 color = inData.nv;
+                //vec3 color = vec3(1.0);
 
                 // ambient part
                 vec3 lightCol = light_data.u_ambient * color;
@@ -344,19 +374,79 @@ namespace OpenTK_stereoscopic_example_1.Model
                 vec2 uv;
             } inData;
 
-            layout (binding = 1) uniform sampler2D u_left;
-            layout (binding = 2) uniform sampler2D u_right;
+            layout (binding = 1) uniform sampler2D u_left_color;
+            layout (binding = 2) uniform sampler2D u_right_color;
+
+            layout (location = 10) uniform int u_anaglyph_mode;
+
+            // rational depth [0, 1] -> linear depth [0, 1]
+            float LinearizePerspectiveDepth( float depth, float near, float far)
+            {
+                  float  z = depth * 2.0 - 1.0;
+                  float  linear_depth = (2.0 * near * far / (far + near - z * (far-near)) - near) / (far-near);
+                  return linear_depth;
+            }
 
             void main()
             {
-                vec4 left  = texture(u_left, inData.uv);
-                vec4 right = texture(u_right, inData.uv);
-             
-                float red  = dot(vec3(0.2126, 0.7152, 0.0722), left.rgb);
-                float blue = dot(vec3(0.2126, 0.7152, 0.0722), right.rgb); 
-                vec4 color = vec4(red, 0.0, blue, 1.0);
+                // compute texture coordinate
+                vec2 uv = inData.uv;
 
-                frag_color = color;
+                // get colors and depths for the left and right eye
+                vec4  left_color  = texture2D(u_left_color, uv);
+                vec4  right_color = texture2D(u_right_color, uv);
+                //float left_depth  = texture2D(u_left_depth, uv).x;
+                //float right_depth = texture2D(u_right_depth, uv).x;
+
+                // compute depth dependent scale factors
+                //float left_linear_depth  = u_perspective == 0 ? left_depth : LinearizePerspectiveDepth(left_depth, u_depthrange.x, u_depthrange.y);
+                //float right_linear_depth = u_perspective == 0 ? left_depth : LinearizePerspectiveDepth(right_depth, u_depthrange.x, u_depthrange.y);
+
+                // scale the colors for the left an right eye
+                //left_color.rgb  *= mix(u_colorscale.x, u_colorscale.y, left_linear_depth);
+                //right_color.rgb *= mix(u_colorscale.x, u_colorscale.y, right_linear_depth);
+
+                vec3  luminance  = vec3(0.299, 0.587, 0.114);
+                //vec3  luminance  = vec3(0.2126, 0.7152, 0.0722);
+                float left_gray  = dot(left_color.rgb, luminance);
+                float right_gray = dot(right_color.rgb, luminance);
+
+                vec3 final_color;
+
+                if (u_anaglyph_mode == 0)
+                {
+                    // True Anaglyphs
+                    final_color = vec3(left_gray, 0.0, right_gray);
+                }
+                else if (u_anaglyph_mode == 1)
+                {
+                    // Gray Anaglyphs
+                    final_color = vec3(left_gray, right_gray, right_gray);
+                }
+                else if (u_anaglyph_mode == 2)
+                {
+                    // Color Anaglyphs
+                    final_color = vec3(left_color.r, right_color.gb);
+                }
+                else if (u_anaglyph_mode == 3)
+                {
+                    // Half Color Anaglyphs
+                    final_color = vec3(left_gray, right_color.gb);
+                }
+                else if (u_anaglyph_mode == 4)
+                {
+                    // Optimized Anaglyphs (no red color component)
+                    final_color = vec3(dot(left_color.gb, vec2(0.7, 0.3)) * 1.5, right_color.gb);
+                }
+                else // if (u_anaglyph_mode == 5)
+                {
+                    // Dubois Anaglyphs
+                    mat3 left_mat  = mat3( 0.456, -0.040,  0.015,     0.500, -0.038, -0.021,    0.176, -0.016, -0.005);
+                    mat3 right_mat = mat3(-0.043,  0.378, -0.072,    -0.088,  0.734, -0.113,   -0.002, -0.018,  1.226);
+                    final_color    = vec3(left_mat * left_color.rgb + right_mat * right_color.rgb);
+                }
+
+                frag_color = vec4(final_color, 1.0);
             }";
 
             this._stereo_prog = OpenTK_library.OpenGL.Program.VertexAndFragmentShaderProgram(vert_shader_stereo, frag_shader_stereo);
@@ -375,7 +465,8 @@ namespace OpenTK_stereoscopic_example_1.Model
             // states
 
             GL.Viewport(0, 0, this._cx, this._cy);
-            GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            //GL.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            GL.ClearColor(System.Drawing.Color.Beige);
 
             // matrices
 
@@ -589,10 +680,20 @@ namespace OpenTK_stereoscopic_example_1.Model
             GL.Disable(EnableCap.CullFace);
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, _viewmodel.DefaultFrameBuffer);
             //GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+            
             _stereo_prog.Use();
             _fbos[0].Textures[0].Bind(1);
             _fbos[1].Textures[0].Bind(2);
-            _quad_vao.Draw();
+
+            int anaglyph_model_id = Int32.Parse(_viewmodel.CurrentAnaglyph.Number); ;
+            if (_anaglyph_model_id != anaglyph_model_id)
+            {
+                _anaglyph_model_id = anaglyph_model_id;
+                GL.Uniform1(10, _anaglyph_model_id);
+            }
+
+
+        _quad_vao.Draw();
         }
 
         private void DrawModel(OpenTK_library.Scene.ModelNode node, Matrix4 model_matrix)

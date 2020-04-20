@@ -27,8 +27,7 @@ namespace OpenTK_library.Generator
         {
             if (disposing && !_disposed)
             {
-                if (_compute_prog != null)
-                    _compute_prog.Dispose();
+                _compute_prog?.Dispose();
                 this._disposed = true;
             }
         }
@@ -105,10 +104,9 @@ namespace OpenTK_library.Generator
             string final_code = "#version 460\n";
 
             List<Texture> all_textures = new List<Texture>();
-            if (_out_textures != null)
-                all_textures.AddRange(_out_textures);
+            all_textures?.AddRange(_out_textures);
             if (_in_textures != null)
-                all_textures.AddRange(_in_textures);
+                all_textures?.AddRange(_in_textures);
             for (int i=0; i < all_textures.Count; ++i)
             {
                 string format_str = "rgba8";

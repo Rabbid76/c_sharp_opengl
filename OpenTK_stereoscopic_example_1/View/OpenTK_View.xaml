@@ -20,8 +20,9 @@
     </Window.Background>
     <Grid x:Name="grid">
         <glWpfControlEx:GLWpfControlEx x:Name="OpenTkControl" Margin="0,41,0,0" Grid.ColumnSpan="2"/>
-        <ComboBox x:Name = "cbControl" HorizontalAlignment = "Left" Height = "26" Margin="10,10,10,10" VerticalAlignment = "Top" Width = "120" ItemsSource="{Binding Controls}" DisplayMemberPath="Text" SelectedValuePath="Text" SelectedValue="{Binding CurrentControl.Text}" SelectedItem="{Binding CurrentControl}"/>
-        <ComboBox x:Name = "cbModel" HorizontalAlignment = "Left" Height = "26" Margin="140,10,10,10" VerticalAlignment = "Top" Width = "200" ItemsSource="{Binding Models}" DisplayMemberPath="Text" SelectedValuePath="Text" SelectedValue="{Binding CurrentModel.Text}" SelectedItem="{Binding CurrentModel}"/>
+        <ComboBox x:Name = "cbAnaglyph" ToolTip="Anaglyph mode" HorizontalAlignment = "Left" Height = "26" Margin="10,10,10,10" VerticalAlignment = "Top" Width = "100" ItemsSource="{Binding Anaglyphs}" DisplayMemberPath="Text" SelectedValuePath="Text" SelectedValue="{Binding CurrentAnaglyph.Text}" SelectedItem="{Binding CurrentAnaglyph}"/>
+        <ComboBox x:Name = "cbControl" ToolTip="Control mode" HorizontalAlignment = "Left" Height = "26" Margin="120,10,10,10" VerticalAlignment = "Top" Width = "100" ItemsSource="{Binding Controls}" DisplayMemberPath="Text" SelectedValuePath="Text" SelectedValue="{Binding CurrentControl.Text}" SelectedItem="{Binding CurrentControl}"/>
+        <ComboBox x:Name = "cbModel" ToolTip="Model" HorizontalAlignment = "Left" Height = "26" Margin="230,10,10,10" VerticalAlignment = "Top" Width = "150" ItemsSource="{Binding Models}" DisplayMemberPath="Text" SelectedValuePath="Text" SelectedValue="{Binding CurrentModel.Text}" SelectedItem="{Binding CurrentModel}"/>
         <Slider x:Name="eye_distacne" ToolTip="Pupillary distance" HorizontalAlignment="Left" Margin="10,50,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.476,-0.184" Width="182" Maximum="200" Value="{Binding EyeScale, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <Slider x:Name="focal_length" ToolTip="Focal length" HorizontalAlignment="Left" Margin="10,80,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.476,-0.184" Width="182" Maximum="200" Value="{Binding FocalScale, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
     </Grid>

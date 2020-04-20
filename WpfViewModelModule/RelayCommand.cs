@@ -60,10 +60,7 @@ namespace WpfViewModelModule
         public void OnCanExecuteChanged()
         {
             EventHandler handler = this.CanExecuteChangedInternal;
-            if (handler != null)
-            {
-                handler.Invoke(this, EventArgs.Empty);
-            }
+            handler?.Invoke(this, EventArgs.Empty);
         }
 
         public void Destroy()

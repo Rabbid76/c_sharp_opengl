@@ -14,7 +14,13 @@ using WpfViewModelModule;
 
 namespace OpenTK_stereoscopic_example_1.ViewModel
 {
-    // TODO $$$ base class Model/Controls
+    public class Anaglyphs
+        : ComboBoxViewModel
+    {
+        public Anaglyphs() : base(nameof(Anaglyphs)) { }
+        public Anaglyphs(string text, string number) : base(nameof(Anaglyphs), text, number) { }
+    }
+
     public class Model
         : ComboBoxViewModel
     {
@@ -33,6 +39,27 @@ namespace OpenTK_stereoscopic_example_1.ViewModel
         : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private List<Anaglyphs> _anaglyphs = new List<Anaglyphs>();
+        public List<Anaglyphs> Anaglyphs
+        {
+            get { return _anaglyphs; }
+            set
+            {
+                _anaglyphs = value;
+                OnPropertyChanged(nameof(Anaglyphs));
+            }
+        }
+        private Anaglyphs _currentAnaglyph;
+        public Anaglyphs CurrentAnaglyph
+        {
+            get { return _currentAnaglyph; }
+            set
+            {
+                _currentAnaglyph = value;
+                OnPropertyChanged(nameof(CurrentAnaglyph));
+            }
+        }
 
         private List<Model> _models = new List<Model>();
         public List<Model> Models
@@ -102,6 +129,16 @@ namespace OpenTK_stereoscopic_example_1.ViewModel
             _gl_model.ViewModel = this;
 
             // [freakinpenguin/OpenTK - WPF](https://github.com/freakinpenguin/OpenTK-WPF)
+
+            try
+            {
+                Anaglyphs = _gl_model.AnaglyphsData();
+                CurrentAnaglyph = Anaglyphs[Anaglyphs.Count > 2 ? 2 : 0];
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("error determining anaglyphs: " + ex.Message);
+            }
 
             try
             {
