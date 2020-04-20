@@ -1,5 +1,5 @@
 ﻿using System;
-using glfw3;
+using GLFW;
 using OpenGL;
 
 namespace OpenGLdotNET_example1
@@ -10,10 +10,10 @@ namespace OpenGLdotNET_example1
         {
             Glfw.Init();
 
-            Glfw.WindowHint(0x00022002, 4);
-            Glfw.WindowHint(0x00022003, 4);
-            Glfw.WindowHint(0x00022008, 0x00032002);
-            GLFWwindow window = Glfw.CreateWindow(1080, 720, "Yeet", null, null);
+            Glfw.WindowHint(Hint.ContextVersionMajor, 4);
+            Glfw.WindowHint(Hint.ContextVersionMinor, 6);
+            Glfw.WindowHint(Hint.OpenglProfile, Profile.Compatibility);
+            Window window = Glfw.CreateWindow(1080, 720, "Yeet", Monitor.None, Window.None);
 
             // `Gl.Initialize()` has to be don before `Glfw.MakeContextCurrent(window)`
             // [How Do I Initialize OpenGL.NET with GLFW.Net?](https://stackoverflow.com/questions/61318104/how-do-i-initialize-opengl-net-with-glfw-net/61319044?noredirect=1#comment108476826_61319044)
@@ -32,7 +32,7 @@ namespace OpenGLdotNET_example1
             Gl.BufferData(BufferTarget.ArrayBuffer, (uint)(4 * vertices.Length), vertices, BufferUsage.StaticDraw);
             Gl.VertexAttribPointer(0, 2, VertexAttribType.Float, false, 0, null);
 
-            while (Glfw.WindowShouldClose(window) != 1)
+            while (!Glfw.WindowShouldClose(window))
             {
                 Glfw.PollEvents();
 
