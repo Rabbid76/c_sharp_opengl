@@ -55,6 +55,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_stereoscopic_example
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_cone_step_mapping", "OpenTK_cone_step_mapping\OpenTK_cone_step_mapping.csproj", "{D4C8FA7C-FDEF-4DCE-8F4C-F2E55AC6E5FC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_windows_forms_example_1", "OpenTK_windows_forms_example_1\OpenTK_windows_forms_example_1.csproj", "{BEEF3197-336D-4012-B7B7-8EC4D1A995EE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -141,6 +143,10 @@ Global
 		{D4C8FA7C-FDEF-4DCE-8F4C-F2E55AC6E5FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4C8FA7C-FDEF-4DCE-8F4C-F2E55AC6E5FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4C8FA7C-FDEF-4DCE-8F4C-F2E55AC6E5FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEEF3197-336D-4012-B7B7-8EC4D1A995EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEEF3197-336D-4012-B7B7-8EC4D1A995EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEEF3197-336D-4012-B7B7-8EC4D1A995EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEEF3197-336D-4012-B7B7-8EC4D1A995EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
