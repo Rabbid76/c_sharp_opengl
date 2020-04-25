@@ -1,6 +1,7 @@
 ﻿using System;
 using GLFW;
 using OpenGL;
+using System.Runtime.InteropServices;
 
 namespace OpenGLdotNET_example1
 {
@@ -28,8 +29,17 @@ namespace OpenGLdotNET_example1
 
             uint vbo = Gl.GenBuffer();
             Gl.BindBuffer(BufferTarget.ArrayBuffer, vbo);
+            
             var vertices = new float[] { -0.5f, -0.5f, 0.5f, -0.5f, 0.0f, 0.5f };
-            Gl.BufferData(BufferTarget.ArrayBuffer, (uint)(4 * vertices.Length), vertices, BufferUsage.StaticDraw);
+            Gl.BufferData(BufferTarget.ArrayBuffer, (uint)(4 * vertices.Length), null, BufferUsage.StaticDraw);
+   
+            IntPtr unmanagedPointer = Marshal.AllocHGlobal(4 * vertices.Length);
+            Marshal.Copy(vertices, 0, unmanagedPointer, vertices.Length);
+            Gl.BufferSubData(BufferTarget.ArrayBuffer, new IntPtr(0), (uint)(4 * vertices.Length), unmanagedPointer);
+            Marshal.FreeHGlobal(unmanagedPointer);
+            
+            //Gl.BufferSubData(BufferTarget.ArrayBuffer, new IntPtr(0), (uint)(4 * vertices.Length), vertices);
+
             Gl.VertexAttribPointer(0, 2, VertexAttribType.Float, false, 0, null);
 
             while (!Glfw.WindowShouldClose(window))
