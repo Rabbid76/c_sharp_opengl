@@ -162,8 +162,7 @@ namespace OpenTK_library.OpenGL
                     GL.CreateBuffers(1, out this._ibo);
                     GL.NamedBufferStorage<T_INDEX>(this._ibo, this._no_of_indices * this._index_size, indices, BufferStorageFlags.None);
 
-                    GL.BindVertexArray(this._vao);
-                    GL.BindBuffer(BufferTarget.ElementArrayBuffer, this._ibo);
+                    GL.VertexArrayElementBuffer(this._vao, this._ibo);
                 }
             }
             else
