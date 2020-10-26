@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using OpenTK.Mathematics; // Vector2, Vector3, Vector4, Matrix4
+using OpenTK; // Vector2, Vector3, Vector4, Matrix4
 
 using OpenTK_library.Mathematics;
 using OpenTK_library.OpenGL;

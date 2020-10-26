@@ -1,4 +1,5 @@
-﻿using OpenTK.Mathematics; // Vector2, Vector3, Vector4, Matrix4
+﻿using System;
+using OpenTK; // Vector2, Vector3, Vector4, Matrix4
 
 using static System.Math;
 using static OpenTK_library.Mathematics.Operations;

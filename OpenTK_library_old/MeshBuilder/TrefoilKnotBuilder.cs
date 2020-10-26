@@ -1,4 +1,9 @@
-﻿using OpenTK.Mathematics; // Vector2, Vector3, Vector4, Matrix4
+﻿using System;
+using System.IO;
+using System.Collections.Generic;
+
+using OpenTK; // Vector2, Vector3, Vector4, Matrix4
+
 using OpenTK_library.Mathematics;
 using OpenTK_library.Mesh;
 using OpenTK_library.Scene;

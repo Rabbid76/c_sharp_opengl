@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using OpenTK.Mathematics; // Vector2, Vector3, Vector4, Matrix4
+using OpenTK; // Vector2, Vector3, Vector4, Matrix4
 
 namespace OpenTK_library.Type
 {

@@ -1,4 +1,4 @@
-﻿using OpenTK.Mathematics; // Vector2, Vector3, Vector4, Matrix4
+﻿using OpenTK; // Vector2, Vector3, Vector4, Matrix4
 
 using static System.Math;
 
@@ -26,8 +26,8 @@ namespace OpenTK_library.Mathematics
         
         public static Vector3 PerspectiveDivide(Vector4 v) => v.Xyz / v.W;
 
-        public static Vector3 TransformPoint(Vector3 v, Matrix4 m) => PerspectiveDivide(Vector4.TransformRow(new Vector4(v.X, v.Y, v.Z, 1.0f), m));
-        public static Vector3 TransformVector(Vector3 v, Matrix4 m) => Vector4.TransformRow(new Vector4(v.X, v.Y, v.Z, 0.0f), m).Xyz;
+        public static Vector3 TransformPoint(Vector3 v, Matrix4 m) => PerspectiveDivide(Vector4.Transform(new Vector4(v.X, v.Y, v.Z, 1.0f), m));
+        public static Vector3 TransformVector(Vector3 v, Matrix4 m) => Vector4.Transform(new Vector4(v.X, v.Y, v.Z, 0.0f), m).Xyz;
 
         #endregion
 

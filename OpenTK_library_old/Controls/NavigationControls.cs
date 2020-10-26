@@ -1,5 +1,7 @@
 ﻿using System;
-using OpenTK.Mathematics; // Vector2, Vector3, Vector4, Matrix4
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using OpenTK; // Vector2, Vector3, Vector4, Matrix4
 using OpenTK_library.Mathematics;
 
 using static OpenTK_library.Mathematics.Operations;
@@ -96,9 +98,9 @@ namespace OpenTK_library.Controls
             //Vector4 pos_h = new Vector4(wnd_pos.X * 2 / (vp_rect[2] - vp_rect[0]) - 1, wnd_pos.Y * 2 / (vp_rect[3] - vp_rect[1]) - 1, wnd_pos.Z * 2 -1, 1.0f);
 
             Vector4 pos_h = new Vector4(wnd_pos.X, wnd_pos.Y, wnd_pos.Z, 1.0f);
-            pos_h = Vector4.TransformRow(pos_h, inv_wnd);
-            pos_h = Vector4.TransformRow(pos_h, inv_proj);
-            pos_h = Vector4.TransformRow(pos_h, inv_view);
+            pos_h = Vector4.Transform(pos_h, inv_wnd);
+            pos_h = Vector4.Transform(pos_h, inv_proj);
+            pos_h = Vector4.Transform(pos_h, inv_view);
 
             Vector3 world_pos = new Vector3(pos_h.X / pos_h.W, pos_h.Y / pos_h.W, pos_h.Z / pos_h.W);
             return world_pos;
@@ -247,7 +249,7 @@ namespace OpenTK_library.Controls
 
                 // calculate the pivot, rotation axis and angle
                 Vector3 pivot_w = PivotWorld(cursor_pos);
-                Vector3 pivot = new Vector3(Vector4.TransformRow(new Vector4(pivot_w.X, pivot_w.Y, pivot_w.Z, 1), mat_view));
+                Vector3 pivot = new Vector3(Vector4.Transform(new Vector4(pivot_w.X, pivot_w.Y, pivot_w.Z, 1), mat_view));
                 Vector3 orbit_dir = wnd_to - wnd_from;
 
                 // calculate the rotation matrix and the rotation around the pivot 
@@ -268,7 +270,7 @@ namespace OpenTK_library.Controls
 
                 // calculate the pivot, rotation axis and angle
                 Vector3 pivot_w = PivotWorld(cursor_pos);
-                Vector3 pivot = new Vector3(Vector4.TransformRow(new Vector4(pivot_w.X, pivot_w.Y, pivot_w.Z, 1), mat_view));
+                Vector3 pivot = new Vector3(Vector4.Transform(new Vector4(pivot_w.X, pivot_w.Y, pivot_w.Z, 1), mat_view));
                 Vector3 orbit_dir = wnd_to - wnd_from;
 
                 // get the projection of the up vector to the view port 

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using OpenTK.Mathematics;      // Color4       
+using OpenTK.Graphics;         // Color4
 using OpenTK.Graphics.OpenGL4; // GL
 
 namespace OpenTK_library.OpenGL

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using OpenTK.Mathematics; // Vector3
+using OpenTK; // Vector3
 
 namespace OpenTK_library.Mesh
 {
