@@ -13,7 +13,6 @@ using OpenTK.Graphics.OpenGL4; // GL
 using OpenTK_library.OpenGL;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
-using OpenTK.Windowing.GraphicsLibraryFramework;
 
 
 namespace OpenTK_example_1
@@ -23,7 +22,7 @@ namespace OpenTK_example_1
     {
         private bool _disposedValue = false;
 
-        private OpenTK_library.OpenGL.Version _version = new OpenTK_library.OpenGL.Version();
+        private Version _version = new Version();
         private Extensions _extensions = new Extensions();
         private DebugCallback _debug_callback = new DebugCallback();
 
@@ -61,7 +60,7 @@ namespace OpenTK_example_1
                       // StartFocused
                       Title = title,
                       // CurrentMonitor
-                      // APIVersion
+                      APIVersion = new System.Version(4, 6),
                       // AutoLoadBindings
                       // Flags
                       // Profile
