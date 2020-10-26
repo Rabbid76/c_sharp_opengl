@@ -12,9 +12,7 @@ namespace OpenTK_example_1
 
             using (Game game = new Game(400, 300, "OpenTK"))
             {
-                //Run takes a double, which is how many frames per second it should strive to reach.
-                //You can leave that out and it'll just update as fast as the hardware will allow it.
-                game.Run(60.0);
+                game.Run();
             }
         }
     }
