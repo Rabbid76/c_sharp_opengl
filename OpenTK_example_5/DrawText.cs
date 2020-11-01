@@ -1,15 +1,9 @@
-﻿using OpenTK;
-using OpenTK.Input;            // KeyboardState, Keyboard, Key
-using OpenTK.Graphics;         // GameWindow, GraphicsMode, Context
+﻿using OpenTK.Mathematics;      // Vector2, Vector3, Vector4, Matrix4
 using OpenTK.Graphics.OpenGL4; // GL
-
-using OpenTK_library;
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.Desktop;
 using OpenTK_library.OpenGL;
 
-using System;
-using System.Drawing;
-using System.IO;
-using System.Reflection;
 
 namespace OpenTK_example_5
 {
@@ -25,13 +19,31 @@ namespace OpenTK_example_5
         private OpenTK_library.OpenGL.Program _text_prog;
         private FreeTypeFont _font;
 
+        public static DrawText New(int width, int height)
+        {
+            GameWindowSettings setting = new GameWindowSettings();
+            NativeWindowSettings nativeSettings = new NativeWindowSettings();
+            nativeSettings.Size = new OpenTK.Mathematics.Vector2i(width, height);
+            nativeSettings.API = ContextAPI.OpenGL;
+            return new DrawText(setting, nativeSettings);
+        }
+
+        public DrawText(GameWindowSettings setting, NativeWindowSettings nativeSettings)
+            : base(setting, nativeSettings)
+        { }
+
         public DrawText(int width, int height, string title)
-            : base(width, height, GraphicsMode.Default, title,
-                GameWindowFlags.Default,
-                DisplayDevice.Default,
-                4,
-                6,
-                GraphicsContextFlags.Default | GraphicsContextFlags.Debug)
+            : base(
+                  new GameWindowSettings()
+                  {
+                  },
+                  new NativeWindowSettings()
+                  {
+                      Size = new OpenTK.Mathematics.Vector2i(width, height),
+                      Title = title,
+                      APIVersion = new System.Version(4, 6),
+                      API = ContextAPI.OpenGL
+                  })
         { }
 
         protected override void Dispose(bool disposing)
@@ -45,7 +57,7 @@ namespace OpenTK_example_5
         }
 
         //! On load window (once)
-        protected override void OnLoad(EventArgs e)
+        protected override void OnLoad()
         {
             // Version strings
             _version.Retrieve();
@@ -98,28 +110,16 @@ namespace OpenTK_example_5
             // load font
             _font = new FreeTypeFont(32);
 
-            base.OnLoad(e);
-        }
-
-        //! On resize
-        protected override void OnResize(EventArgs e)
-        {
-            GL.Viewport(0, 0, this.Width, this.Height);
-            base.OnResize(e);
+            base.OnLoad();
         }
 
         //! On update window
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            KeyboardState input = Keyboard.GetState();
-            if (input.IsKeyDown(Key.Escape))
-            {
-                Exit();
-            }
+            Matrix4 projectionM = Matrix4.CreateScale(new Vector3(1f/this.Size.X, 1f/this.Size.Y, 1.0f));
+            projectionM = Matrix4.CreateOrthographicOffCenter(0.0f, this.Size.X, this.Size.Y, 0.0f, -1.0f, 1.0f);
 
-            Matrix4 projectionM = Matrix4.CreateScale(new Vector3(1f/this.Width, 1f/this.Height, 1.0f));
-            projectionM = Matrix4.CreateOrthographicOffCenter(0.0f, this.Width, this.Height, 0.0f, -1.0f, 1.0f);
-
+            GL.Viewport(0, 0, this.Size.X, this.Size.Y);
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             GL.Clear(ClearBufferMask.ColorBufferBit);
 

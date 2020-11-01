@@ -8,9 +8,9 @@ namespace OpenTK_example_5
         {
             Console.WriteLine("create OpeTK window");
 
-            using (DrawText window = new DrawText(400, 300, "OpenTK text"))
+            using (DrawText game = new DrawText(400, 300, "OpenTK text"))
             {
-                window.Run(60.0);
+                game.Run();
             }
         }
     }

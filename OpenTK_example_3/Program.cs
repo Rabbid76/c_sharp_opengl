@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace OpenTK_example_3
 {
@@ -10,9 +8,9 @@ namespace OpenTK_example_3
         {
             Console.WriteLine("create OpeTK window");
 
-            using (DrawTexture window = new DrawTexture(400, 300, "OpenTK texture"))
+            using (DrawTexture game = new DrawTexture(400, 300, "OpenTK texture"))
             {
-                window.Run(60.0);
+                game.Run();
             }
         }
     }

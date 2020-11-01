@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Reflection;
 using System.IO;
-
 using SharpFont;
-using OpenTK;
+using OpenTK.Mathematics;
 using OpenTK.Graphics.OpenGL4;
 
 namespace OpenTK_example_5
@@ -19,6 +18,8 @@ namespace OpenTK_example_5
     /// x64 SharpFont.dll and freetype6.dll from [MonoGame.Dependencies](https://github.com/MonoGame/MonoGame.Dependencies)
     ///
     /// </summary>
+
+    // TODO [...] use SharpFontCore rather than SpaceWizards.SharpFont
 
     public struct Character
     {

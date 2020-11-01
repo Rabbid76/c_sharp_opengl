@@ -1,16 +1,10 @@
-﻿using OpenTK;
-using OpenTK.Input;            // KeyboardState, Keyboard, Key
-using OpenTK.Graphics;         // GameWindow, GraphicsMode, Context
-using OpenTK.Graphics.OpenGL4; // GL
-
-using OpenTK_library;
+﻿using OpenTK.Graphics.OpenGL4; // GL
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.Desktop;
 using OpenTK_library.OpenGL;
-
-using System;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
-using System.Collections.Generic;
 
 namespace OpenTK_example_3
 {
@@ -27,13 +21,31 @@ namespace OpenTK_example_3
         private OpenTK_library.OpenGL.Program _test_prog;
         private Texture _test_texture;
 
+        public static DrawTexture New(int width, int height)
+        {
+            GameWindowSettings setting = new GameWindowSettings();
+            NativeWindowSettings nativeSettings = new NativeWindowSettings();
+            nativeSettings.Size = new OpenTK.Mathematics.Vector2i(width, height);
+            nativeSettings.API = ContextAPI.OpenGL;
+            return new DrawTexture(setting, nativeSettings);
+        }
+
+        public DrawTexture(GameWindowSettings setting, NativeWindowSettings nativeSettings)
+            : base(setting, nativeSettings)
+        { }
+
         public DrawTexture(int width, int height, string title)
-            : base(width, height, GraphicsMode.Default, title,
-                GameWindowFlags.Default,
-                DisplayDevice.Default,
-                4,
-                6,
-                GraphicsContextFlags.Default | GraphicsContextFlags.Debug)
+            : base(
+                  new GameWindowSettings()
+                  {
+                  },
+                  new NativeWindowSettings()
+                  {
+                      Size = new OpenTK.Mathematics.Vector2i(width, height),
+                      Title = title,
+                      APIVersion = new System.Version(4, 6),
+                      API = ContextAPI.OpenGL
+                  })
         { }
 
         protected override void Dispose(bool disposing)
@@ -49,7 +61,7 @@ namespace OpenTK_example_3
         }
 
         //! On load window (once)
-        protected override void OnLoad(EventArgs e)
+        protected override void OnLoad()
         {
             // Version strings
             _version.Retrieve();
@@ -85,7 +97,7 @@ namespace OpenTK_example_3
             // Create texture
 
             Assembly assembly = Assembly.GetExecutingAssembly();
-            //string[] names = assembly.GetManifestResourceNames();
+            string[] names = assembly.GetManifestResourceNames();
             Stream resource_stream = assembly.GetManifestResourceStream("OpenTK_example_3.Resource.background.jpg");
             
             _test_texture = new Texture();
@@ -124,26 +136,13 @@ namespace OpenTK_example_3
 
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
-            base.OnLoad(e);
-        }
-
-        //! On resize
-        protected override void OnResize(EventArgs e)
-        {
-            GL.Viewport(0, 0, this.Width, this.Height);
-            base.OnResize(e);
+            base.OnLoad();
         }
 
         //! On update window
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            KeyboardState input = Keyboard.GetState();
-            if (input.IsKeyDown(Key.Escape))
-            {
-                Exit();
-            }
-
-
+            GL.Viewport(0, 0, this.Size.X, this.Size.Y);
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
             _test_texture.Bind(7);

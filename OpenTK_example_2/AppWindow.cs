@@ -1,7 +1,11 @@
 ﻿using OpenTK;
 using OpenTK.Input;            // KeyboardState, Keyboard, Key
 using OpenTK.Graphics;         // GameWindow, GraphicsMode, Context
+using OpenTK.Mathematics; // Vector2, Vector3, Vector4, Matrix4
 using OpenTK.Graphics.OpenGL4; // GL
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.Desktop;
+using OpenTK.Windowing.GraphicsLibraryFramework;
 
 using OpenTK_library;
 using OpenTK_library.Type;
@@ -64,21 +68,38 @@ namespace OpenTK_example_2
         private OpenTK_library.OpenGL.Program _test_prog;
         private StorageBuffer<TMVP> _mvp_ssbo;
         private StorageBuffer<TLightSource> _light_ssbo;
-        
+
+        private Vector2 _mouse_position = new Vector2();
         private Matrix4 _view = Matrix4.Identity;
         private Matrix4 _projection = Matrix4.Identity;
         private IControls _controls;
         double _period = 0;
         
+        public static AppWindow New(int width, int height)
+        {
+            GameWindowSettings setting = new GameWindowSettings();
+            NativeWindowSettings nativeSettings = new NativeWindowSettings();
+            nativeSettings.Size = new OpenTK.Mathematics.Vector2i(width, height);
+            nativeSettings.API = ContextAPI.OpenGL;
+            return new AppWindow(setting, nativeSettings);
+        }
+
+        public AppWindow(GameWindowSettings setting, NativeWindowSettings nativeSettings)
+            : base(setting, nativeSettings)
+        { }
+
         public AppWindow(int width, int height, string title)
-            : base(width, height,
-                new GraphicsMode(32, 24, 8, 8),
-                title,
-                GameWindowFlags.Default,
-                DisplayDevice.Default,
-                4,
-                6,
-                GraphicsContextFlags.Default | GraphicsContextFlags.Debug)
+            : base(
+                  new GameWindowSettings()
+                  {
+                  },
+                  new NativeWindowSettings()
+                  {
+                      Size = new OpenTK.Mathematics.Vector2i(width, height),
+                      Title = title,
+                      APIVersion = new System.Version(4, 6),
+                      API = ContextAPI.OpenGL
+                  })
         { }
 
         protected override void Dispose(bool disposing)
@@ -95,7 +116,7 @@ namespace OpenTK_example_2
         }
 
         //! On load window (once)
-        protected override void OnLoad(EventArgs e)
+        protected override void OnLoad()
         {
             // Version strings
             _version.Retrieve();
@@ -224,40 +245,27 @@ namespace OpenTK_example_2
 
             var spin = new ModelSpinningControls(
                 () => { return this._period; },
-                () => { return new float[] { 0, 0, (float)this.Width, (float)this.Height }; },
+                () => { return new float[] { 0, 0, (float)this.Size.X, (float)this.Size.Y }; },
                 () => { return this._view; }
             );
             spin.SetAttenuation(1.0f, 0.05f, 0.0f);
             this._controls = spin;
 
-            base.OnLoad(e);
-        }
-
-        //! On resize
-        protected override void OnResize(EventArgs e)
-        {
-            float angle = 90.0f * (float)Math.PI / 180.0f;
-            float aspect = (float)this.Width / (float)this.Height;
-            this._projection = Matrix4.CreatePerspectiveFieldOfView(angle, aspect, 0.1f, 100.0f);
-
-            GL.Viewport(0, 0, this.Width, this.Height);
-
-            base.OnResize(e);
+            base.OnLoad();
         }
 
         //! On update window
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            KeyboardState input = Keyboard.GetState();
-            if (input.IsKeyDown(Key.Escape))
-            {
-                Exit();
-            }
-
-            this._period += this.RenderPeriod;
+            this._period += 0.001; // TODO [...]
 
             (Matrix4 model_mat, bool update) = this._controls.Update();
-            
+
+            float angle = 90.0f * (float)Math.PI / 180.0f;
+            float aspect = (float)this.Size.X / (float)this.Size.Y;
+            this._projection = Matrix4.CreatePerspectiveFieldOfView(angle, aspect, 0.1f, 100.0f);
+
+            GL.Viewport(0, 0, this.Size.X, this.Size.Y);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             this._test_prog.Use();
@@ -275,23 +283,24 @@ namespace OpenTK_example_2
         {
             base.OnMouseDown(e);
 
-            Vector2 wnd_pos = new Vector2((float)e.Mouse.X, (float)(this.Height - e.Mouse.Y));
-            this._controls.Start(e.Mouse.LeftButton == ButtonState.Pressed ? 0 : 1, wnd_pos);
+            Vector2 wnd_pos = new Vector2((float)_mouse_position.X, (float)(this.Size.Y - _mouse_position.Y));
+            this._controls.Start(e.Button == MouseButton.Button1 ? 0 : 1, wnd_pos);
         }
 
         protected override void OnMouseUp(MouseButtonEventArgs e)
         {
             base.OnMouseUp(e);
 
-            Vector2 wnd_pos = new Vector2((float)e.Mouse.X, (float)(this.Height - e.Mouse.Y));
-            this._controls.End(e.Mouse.LeftButton == ButtonState.Released ? 0 : 1, wnd_pos);
+            Vector2 wnd_pos = new Vector2((float)_mouse_position.X, (float)(this.Size.Y - _mouse_position.Y));
+            this._controls.End(e.Button == MouseButton.Button1 ? 0 : 1, wnd_pos);
         }
 
         protected override void OnMouseMove(MouseMoveEventArgs e)
         {
             base.OnMouseMove(e);
 
-            Vector2 wnd_pos = new Vector2((float)e.Mouse.X, (float)(this.Height - e.Mouse.Y));
+            _mouse_position = e.Position;
+            Vector2 wnd_pos = new Vector2((float)_mouse_position.X, (float)(this.Size.Y - _mouse_position.Y));
             this._controls.MoveCursorTo(wnd_pos);
         }
     }

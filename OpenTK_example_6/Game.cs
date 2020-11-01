@@ -9,16 +9,12 @@
 //! Hello Triangle
 //! [https://opentk.net/learn/chapter1/2-hello-triangle.html]
 
-using OpenTK;
-using OpenTK.Input;            // KeyboardState, Keyboard, Key
-using OpenTK.Graphics;         // GameWindow, GraphicsMode, Context
+using OpenTK.Mathematics;      // Vector2, Vector3, Vector4, Matrix4
 using OpenTK.Graphics.OpenGL4; // GL
-
-using OpenTK_library;
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.Desktop;
 using OpenTK_library.OpenGL;
-
 using System;
-using System.Collections.Generic;
 
 namespace OpenTK_example_1
 {
@@ -34,13 +30,31 @@ namespace OpenTK_example_1
         private VertexArrayObject<float, uint> _test_vao;
         private OpenTK_library.OpenGL.Program _test_prog;
 
+        public static Game New(int width, int height)
+        {
+            GameWindowSettings setting = new GameWindowSettings();
+            NativeWindowSettings nativeSettings = new NativeWindowSettings();
+            nativeSettings.Size = new OpenTK.Mathematics.Vector2i(width, height);
+            nativeSettings.API = ContextAPI.OpenGL;
+            return new Game(setting, nativeSettings);
+        }
+
+        public Game(GameWindowSettings setting, NativeWindowSettings nativeSettings)
+            : base(setting, nativeSettings)
+        { }
+
         public Game(int width, int height, string title)
-            : base(width, height, GraphicsMode.Default, title,
-                GameWindowFlags.Default,
-                DisplayDevice.Default,
-                4,
-                6,
-                GraphicsContextFlags.Default | GraphicsContextFlags.Debug)
+            : base(
+                  new GameWindowSettings()
+                  {
+                  },
+                  new NativeWindowSettings()
+                  {
+                      Size = new OpenTK.Mathematics.Vector2i(width, height),
+                      Title = title,
+                      APIVersion = new System.Version(4, 6),
+                      API = ContextAPI.OpenGL
+                  })
         { }
 
         protected override void Dispose(bool disposing) 
@@ -55,7 +69,7 @@ namespace OpenTK_example_1
         }
 
         //! On load window (once)
-        protected override void OnLoad(EventArgs e)
+        protected override void OnLoad()
         {
             // Version strings
             _version.Retrieve();
@@ -121,14 +135,7 @@ namespace OpenTK_example_1
 
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
-            base.OnLoad(e);
-        }
-
-        //! On resize
-        protected override void OnResize(EventArgs e)
-        {
-            GL.Viewport(0, 0, this.Width, this.Height);
-            base.OnResize(e);
+            base.OnLoad();
         }
 
         private double angle = 0.0;
@@ -136,28 +143,23 @@ namespace OpenTK_example_1
         //! On update window
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            KeyboardState input = Keyboard.GetState();
-            if (input.IsKeyDown(Key.Escape))
-            {
-                Exit();
-            }
-            
+            GL.Viewport(0, 0, this.Size.X, this.Size.Y);
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
             int transformLocation = GL.GetUniformLocation(this._test_prog.Object, "u_transform");
 
-            double diagonal = Math.Sqrt(this.Width * this.Width + this.Height * this.Height);
-            double dia_angle1 = Math.Atan2(this.Height, this.Width) + angle * Math.PI / 180;
-            double dia_angle2 = Math.Atan2(this.Height, -this.Width) + angle * Math.PI / 180;
+            double diagonal = Math.Sqrt(this.Size.X * this.Size.X + this.Size.Y * this.Size.Y);
+            double dia_angle1 = Math.Atan2(this.Size.Y, this.Size.X) + angle * Math.PI / 180;
+            double dia_angle2 = Math.Atan2(this.Size.Y, -this.Size.X) + angle * Math.PI / 180;
             double rot_w = Math.Max(Math.Abs(diagonal * Math.Cos(dia_angle1)), Math.Abs(diagonal * Math.Cos(dia_angle2)));
             double rot_h = Math.Max(Math.Abs(diagonal * Math.Sin(dia_angle1)), Math.Abs(diagonal * Math.Sin(dia_angle2)));
-            double scale = Math.Min(this.Width / rot_w, this.Height / rot_h);
+            double scale = Math.Min(this.Size.X / rot_w, this.Size.Y / rot_h);
 
             Matrix4 transformMatrix =
                 Matrix4.CreateScale((float)scale) *
-                Matrix4.CreateScale(this.Width, this.Height, 1.0f) *
+                Matrix4.CreateScale(this.Size.X, this.Size.Y, 1.0f) *
                 Matrix4.CreateRotationZ((float)(angle * Math.PI / 180)) *
-                Matrix4.CreateScale(1.0f / this.Width, 1.0f / this.Height, 1.0f);
+                Matrix4.CreateScale(1.0f / this.Size.X, 1.0f / this.Size.Y, 1.0f);
                
             angle += 1;
 

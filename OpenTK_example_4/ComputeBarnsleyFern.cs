@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-
-using OpenTK;
-using OpenTK.Input;            // KeyboardState, Keyboard, Key
-using OpenTK.Graphics;         // GameWindow, GraphicsMode, Context
+using OpenTK.Mathematics;      // Vector2, Vector3, Vector4, Matrix4
 using OpenTK.Graphics.OpenGL4; // GL
-
-using OpenTK_library;
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.Desktop;
 using OpenTK_library.OpenGL;
 
 namespace OpenTK_exmaple_4
@@ -57,13 +54,31 @@ namespace OpenTK_exmaple_4
         private int _frame = 0;
         private Random _rand = new Random();
 
+        public static ComputeBarnsleyFern New(int width, int height)
+        {
+            GameWindowSettings setting = new GameWindowSettings();
+            NativeWindowSettings nativeSettings = new NativeWindowSettings();
+            nativeSettings.Size = new OpenTK.Mathematics.Vector2i(width, height);
+            nativeSettings.API = ContextAPI.OpenGL;
+            return new ComputeBarnsleyFern(setting, nativeSettings);
+        }
+
+        public ComputeBarnsleyFern(GameWindowSettings setting, NativeWindowSettings nativeSettings)
+            : base(setting, nativeSettings)
+        { }
+
         public ComputeBarnsleyFern(int width, int height, string title)
-            : base(width, height, GraphicsMode.Default, title,
-                GameWindowFlags.Default,
-                DisplayDevice.Default,
-                4,
-                6,
-                GraphicsContextFlags.Default | GraphicsContextFlags.Debug)
+            : base(
+                  new GameWindowSettings()
+                  {
+                  },
+                  new NativeWindowSettings()
+                  {
+                      Size = new OpenTK.Mathematics.Vector2i(width, height),
+                      Title = title,
+                      APIVersion = new System.Version(4, 6),
+                      API = ContextAPI.OpenGL
+                  })
         { }
 
         protected override void Dispose(bool disposing)
@@ -79,7 +94,7 @@ namespace OpenTK_exmaple_4
         }
 
         //! On load window (once)
-        protected override void OnLoad(EventArgs e)
+        protected override void OnLoad()
         {
             // Version strings
             _version.Retrieve();
@@ -164,28 +179,16 @@ namespace OpenTK_exmaple_4
 
             GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 
-            base.OnLoad(e);
-        }
-
-        //! On resize
-        protected override void OnResize(EventArgs e)
-        {
-            GL.Viewport(0, 0, this.Width, this.Height);
-            base.OnResize(e);
+            base.OnLoad();
         }
 
         //! On update window
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            KeyboardState input = Keyboard.GetState();
-            if (input.IsKeyDown(Key.Escape))
-            {
-                Exit();
-            }
-
-
             int i_read = (this._frame % 2) == 0 ? 1 : 0;
             int i_write = (this._frame % 2) == 0 ? 1 : 0;
+
+            GL.Viewport(0, 0, this.Size.X, this.Size.Y);
 
             _fbo.Textures[0].BindImage(1, Texture.Access.Write);
             
@@ -215,10 +218,10 @@ namespace OpenTK_exmaple_4
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             // Be aware, this won't work if the target framebuffer is a multisampling framebuffer
-            if (this.Width > this.Height)
-                _fbo.Blit(null, (this.Width-this.Height) / 2, 0, this.Height, this.Height, true);
+            if (this.Size.X > this.Size.Y)
+                _fbo.Blit(null, (this.Size.X - this.Size.Y) / 2, 0, this.Size.Y, this.Size.Y, true);
             else
-                _fbo.Blit(null, 0, (this.Height-this.Width) / 2, this.Width, this.Width, true);
+                _fbo.Blit(null, 0, (this.Size.Y - this.Size.X) / 2, this.Size.X, this.Size.X, true);
 
             Context.SwapBuffers();
             base.OnUpdateFrame(e);
