@@ -1,53 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using OpenTK; // Vector2, Vector3, Vector4, Matrix4
+﻿using OpenTK;
+using OpenTK.Input;            // KeyboardState, Keyboard, Key
+using OpenTK.Graphics;         // GameWindow, GraphicsMode, Context
+using OpenTK.Mathematics;      // Vector2, Vector3, Vector4, Matrix4
 using OpenTK.Graphics.OpenGL4; // GL
-using OpenTK_compute_conestepmap.ViewModel;
+using OpenTK.Windowing.Common;
+using OpenTK.Windowing.Desktop;
+using OpenTK.Windowing.GraphicsLibraryFramework;
+
 using OpenTK_library;
 using OpenTK_library.Type;
-using OpenTK_library.Mesh;
 using OpenTK_library.Controls;
-using OpenTK_library.Generator;
+using OpenTK_library.Mesh;
 using OpenTK_library.OpenGL;
-using OpenTK_libray_viewmodel.Model;
+using OpenTK_library.Generator;
 
-namespace OpenTK_compute_conestepmap.Model
+using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+
+namespace OpenTK_compute_conestepmap
 {
-    public class ComputeModel
-        : IModel
+    public class AppWindow
+        : GameWindow
     {
-        internal unsafe struct TLightSource
-        {
-            public fixed float _light_dir[4];
-            public float _ambient;
-            public float _diffuse;
-            public float _specular;
-            public float _shininess;
-
-            public TLightSource(Vector4 light_dir, float ambient, float diffuse, float specular, float shininess)
-            {
-                this._ambient = ambient;
-                this._diffuse = diffuse;
-                this._specular = specular;
-                this._shininess = shininess;
-                this.lightDir = light_dir;
-            }
-
-            public Vector4 lightDir
-            {
-                get
-                {
-                    return new Vector4(this._light_dir[0], this._light_dir[1], this._light_dir[2], this._light_dir[3]);
-                }
-                set
-                {
-                    float[] data = new float[] { value.X, value.Y, value.Z, value.W };
-                    for (int i = 0; i < 4; ++i)
-                        this._light_dir[i] = data[i];
-                }
-            }
-        }
-
         private bool _disposed = false;
         private int _cx = 0;
         private int _cy = 0;
@@ -67,12 +42,36 @@ namespace OpenTK_compute_conestepmap.Model
 
         public float GetScale() => 1.0f;
 
-        public ComputeModel()
+        public static AppWindow New(int width, int height)
+        {
+            GameWindowSettings setting = new GameWindowSettings();
+            NativeWindowSettings nativeSettings = new NativeWindowSettings();
+            nativeSettings.Size = new OpenTK.Mathematics.Vector2i(width, height);
+            nativeSettings.API = ContextAPI.OpenGL;
+            return new AppWindow(setting, nativeSettings);
+        }
+
+        public AppWindow(GameWindowSettings setting, NativeWindowSettings nativeSettings)
+            : base(setting, nativeSettings)
         { }
 
-        protected virtual void Dispose(bool disposing)
+        public AppWindow(int width, int height, string title)
+            : base(
+                  new GameWindowSettings()
+                  {
+                  },
+                  new NativeWindowSettings()
+                  {
+                      Size = new OpenTK.Mathematics.Vector2i(width, height),
+                      Title = title,
+                      APIVersion = new System.Version(4, 6),
+                      API = ContextAPI.OpenGL
+                  })
+        { }
+
+        protected override void Dispose(bool disposing)
         {
-            if (disposing && !_disposed)
+            if (disposing && !this._disposed)
             {
                 foreach (var fbo in _fbos)
                     fbo.Dispose();
@@ -82,34 +81,12 @@ namespace OpenTK_compute_conestepmap.Model
                 _generators.Clear();
                 _disposed = true;
             }
+            base.Dispose(disposing);
         }
 
-        public void Dispose()
+        //! On load window (once)
+        protected override void OnLoad()
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        public void MouseDown(Vector2 wnd_pos, bool left)
-        {
-            // ...
-        }
-
-        public void MouseUp(Vector2 wnd_pos, bool left)
-        {
-            // ...
-        }
-
-        public void MouseMove(Vector2 wnd_pos)
-        {
-            // ...
-        }
-
-        public void Setup(int cx, int cy)
-        {
-            this._cx = cx;
-            this._cy = cy;
-
             // Version strings
             _version.Retrieve();
 
@@ -154,15 +131,18 @@ namespace OpenTK_compute_conestepmap.Model
             GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         }
 
-        public void Draw(int cx, int cy, double app_t)
+        //! On update window
+        protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            this._period = app_t;
+            if (this._disposed)
+                return;
+            this._period += 0.001; // TODO [...]
 
-            bool resized = this._cx != cx || this._cy != cy;
+            bool resized = this._cx != this.Size.X || this._cy != this.Size.Y;
             if (resized)
             {
-                this._cx = cx;
-                this._cy = cy;
+                this._cx = this.Size.X;
+                this._cy = this.Size.Y;
                 GL.Viewport(0, 0, this._cx, this._cy);
             }
 
@@ -170,7 +150,7 @@ namespace OpenTK_compute_conestepmap.Model
                 this._generators[_frame].Generate();
             this._frame++;
 
-            
+
             GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
@@ -210,9 +190,32 @@ namespace OpenTK_compute_conestepmap.Model
                 pts.Add(new Vector2(side_len, (this._cy - 2 * side_len) / 2 + side_len));
             }
 
-            for (int i = 0; i < 3; ++ i)
+            for (int i = 0; i < 3; ++i)
                 _fbos[i].Blit(null, (int)pts[i].X, (int)pts[i].Y, side_len, side_len, false);
+
+            Context.SwapBuffers();
+            base.OnUpdateFrame(e);
+        }
+
+        protected override void OnMouseDown(MouseButtonEventArgs e)
+        {
+            base.OnMouseDown(e);
+
+            // [...]
+        }
+
+        protected override void OnMouseUp(MouseButtonEventArgs e)
+        {
+            base.OnMouseUp(e);
+
+            // [...]
+        }
+
+        protected override void OnMouseMove(MouseMoveEventArgs e)
+        {
+            base.OnMouseMove(e);
+
+            // [...]
         }
     }
 }
-
