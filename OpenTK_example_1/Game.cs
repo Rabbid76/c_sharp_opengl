@@ -156,7 +156,35 @@ namespace OpenTK_example_1
         //! On update window
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
-            GL.Viewport(0, 0, this.Size.X, this.Size.Y);
+            int original_w = 100;
+            int original_h = 100;
+            int current_w = this.Size.X;
+            int current_h = this.Size.Y;
+            double current_aspect = (double)current_w / current_h;
+            double original_aspect = (double)original_w / original_h;
+
+            GL.Disable(EnableCap.ScissorTest);
+            GL.Viewport(0, 0, current_w, current_h);
+            GL.ClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+            GL.Clear(ClearBufferMask.ColorBufferBit);
+
+            GL.Enable(EnableCap.ScissorTest);
+            if (current_aspect > original_aspect)
+            {
+                int w = (int)(current_w * original_aspect / current_aspect);
+                int x = (current_w - w) / 2;
+                GL.Scissor(x, 0, w, this.Size.Y);
+                GL.Viewport(x, 0, w, this.Size.Y);
+            }
+            else
+            {
+                int h = (int)(current_h * current_aspect / original_aspect);
+                int y = (current_h - h) / 2;
+                GL.Scissor(0, y, this.Size.X, h);
+                GL.Viewport(0, y, this.Size.X, h);
+            }
+
+            GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
             _test_vao.Draw();

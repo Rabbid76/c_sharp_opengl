@@ -23,8 +23,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTK_example_5", "OpenTK_
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTK_example_6", "OpenTK_example_6\OpenTK_example_6.csproj", "{F3ED447F-FBC3-4DAB-92D5-B1352578404D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_example_5_old", "OpenTK_example_5_old\OpenTK_example_5_old.csproj", "{09D710C1-8943-4CE8-B3F8-85CA4FD2C41A}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,10 +57,6 @@ Global
 		{F3ED447F-FBC3-4DAB-92D5-B1352578404D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3ED447F-FBC3-4DAB-92D5-B1352578404D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3ED447F-FBC3-4DAB-92D5-B1352578404D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{09D710C1-8943-4CE8-B3F8-85CA4FD2C41A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{09D710C1-8943-4CE8-B3F8-85CA4FD2C41A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{09D710C1-8943-4CE8-B3F8-85CA4FD2C41A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{09D710C1-8943-4CE8-B3F8-85CA4FD2C41A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
