@@ -77,7 +77,7 @@ namespace OpenTK_exmaple_4
                       Size = new OpenTK.Mathematics.Vector2i(width, height),
                       Title = title,
                       APIVersion = new System.Version(4, 6),
-                      API = ContextAPI.OpenGL
+                      API = ContextAPI.OpenGL,
                   })
         { }
 
@@ -185,6 +185,9 @@ namespace OpenTK_exmaple_4
         //! On update window
         protected override void OnUpdateFrame(FrameEventArgs e)
         {
+            if (this._disposedValue)
+                return;
+
             int i_read = (this._frame % 2) == 0 ? 1 : 0;
             int i_write = (this._frame % 2) == 0 ? 1 : 0;
 

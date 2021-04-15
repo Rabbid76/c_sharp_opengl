@@ -42,7 +42,8 @@ namespace OpenTK_example_5
                       Size = new OpenTK.Mathematics.Vector2i(width, height),
                       Title = title,
                       APIVersion = new System.Version(4, 6),
-                      API = ContextAPI.OpenGL
+                      API = ContextAPI.OpenGL,
+                      NumberOfSamples = 8,
                   })
         { }
 
