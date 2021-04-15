@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:glWpfControl="clr-namespace:OpenTK.Wpf;assembly=GLWpfControl"
         xmlns:local="clr-namespace:OpenTK_controls_firstperson"
         xmlns:ViewModel="clr-namespace:OpenTK_controls_firstperson.ViewModel"
         mc:Ignorable="d"
@@ -17,7 +18,7 @@
         </LinearGradientBrush>
     </Window.Background>
     <Grid x:Name="grid">
-        <ContentControl x:Name="host" Margin="0" Grid.ColumnSpan="2" Content="{Binding GLHostControl}" />
+        <glWpfControl:GLWpfControl x:Name="gl_control" Margin="0" Grid.ColumnSpan="2"/>
     </Grid>
 </Window>
 

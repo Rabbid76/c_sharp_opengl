@@ -14,6 +14,7 @@ using OpenTK_library.Mesh;
 using OpenTK_library.Controls;
 using OpenTK_library.OpenGL;
 using OpenTK_libray_viewmodel.Model;
+using OpenTK.Mathematics;
 
 namespace OpenTK_controls_firstperson.Model
 {
@@ -259,7 +260,8 @@ namespace OpenTK_controls_firstperson.Model
                 this._projection = Matrix4.CreatePerspectiveFieldOfView(angle, aspect, 0.1f, 100.0f);
             }
 
-            var keyboardState = OpenTK.Input.Keyboard.GetState();
+            /*
+            var keyboardState = OpenTK.Input.GetState();
             Vector3 move_vec = new Vector3(0, 0, 0);
             if (keyboardState[OpenTK.Input.Key.Up])
                 move_vec.Y += 1.0f;
@@ -272,6 +274,7 @@ namespace OpenTK_controls_firstperson.Model
             move_vec *= (float)delta_t;
 
             this._controls.Move(move_vec);
+            */
             
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
@@ -294,8 +297,8 @@ namespace OpenTK_controls_firstperson.Model
             {
                 Vector3 pt_drag = new Vector3();
                 Vector4 clip_pos_h = new Vector4(pt_drag, 1.0f);
-                clip_pos_h = Vector4.Transform(clip_pos_h, this._view);
-                clip_pos_h = Vector4.Transform(clip_pos_h, this._projection);
+                clip_pos_h = Vector4.TransformRow(clip_pos_h, this._view);
+                clip_pos_h = Vector4.TransformRow(clip_pos_h, this._projection);
                 Vector3 ndc_pos = new Vector3(clip_pos_h.X / clip_pos_h.W, clip_pos_h.Y / clip_pos_h.W, clip_pos_h.Z / clip_pos_h.W);
                 if (ndc_pos.Z > -1 && ndc_pos.Z < 1)
                     depth = ndc_pos.Z * 0.5f + 0.5f;

@@ -8,10 +8,9 @@ using OpenTK.Platform;
 using OpenTK.Graphics;         // GraphicsMode, Context
 using OpenTK.Wpf;
 using OpenTK_libray_viewmodel.Model;
+using OpenTK.Mathematics;
 
-// [jayhf/OpenTkControl](https://github.com/jayhf/OpenTkControl)
-// [freakinpenguin/OpenTK-WPF](https://github.com/freakinpenguin/OpenTK-WPF)
-// [varon/GLWpfControl](https://github.com/varon/GLWpfControl)
+// [opentk/GLWpfControl](https://github.com/opentk/GLWpfControl)
 
 namespace OpenTK_libray_viewmodel.Control
 {
@@ -36,7 +35,12 @@ namespace OpenTK_libray_viewmodel.Control
             _model = model;
 
             // Assign Load and Paint events of GLControl.
-
+            //var settings = new GLWpfControlSettings
+            //{
+            //    MajorVersion = 3,
+            //    MinorVersion = 6
+            //};
+           
             Window window = Window.GetWindow(_glc.Parent);
             window.Closing += new CancelEventHandler(GLC_OnDestroy);
 
@@ -58,7 +62,7 @@ namespace OpenTK_libray_viewmodel.Control
             var settings = new GLWpfControlSettings();
             settings.MajorVersion = 4;
             settings.MinorVersion = 6;
-            settings.GraphicsContextFlags = GraphicsContextFlags.Default | GraphicsContextFlags.Debug;
+            settings.GraphicsContextFlags = OpenTK.Windowing.Common.ContextFlags.Default | OpenTK.Windowing.Common.ContextFlags.Debug;
             //settings.ContextToUse = _context;
             
             _glc.Start(settings);

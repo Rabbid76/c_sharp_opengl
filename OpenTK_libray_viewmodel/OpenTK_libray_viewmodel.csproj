@@ -2,10 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <OutputType>Library</OutputType>
+    <UseWPF>true</UseWPF>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OpenTK" Version="4.4.0" />
+    <PackageReference Include="OpenTK" Version="4.6.3" />
+    <PackageReference Include="OpenTK.GLWpfControl" Version="4.1.0" />
   </ItemGroup>
 
   <ItemGroup>
