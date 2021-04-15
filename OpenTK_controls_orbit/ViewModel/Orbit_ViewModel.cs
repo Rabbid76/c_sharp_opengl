@@ -1,16 +1,16 @@
 ﻿using System.ComponentModel;
-using OpenTK_controls_firstperson.View;
-using OpenTK_controls_firstperson.Model;
+using OpenTK_controls_orbit.View;
+using OpenTK_controls_orbit.Model;
 using OpenTK_libray_viewmodel.Control;
 using OpenTK.Wpf;
 
 /// <summary>
-/// [opentk/GLWpfControl](https://github.com/opentk/GLWpfControl)
+/// See [Integrating WPF and Microsoft Kinect SDK with OpenTK](http://igordcard.blogspot.com/2011/12/integrating-wpf-and-kinect-with-opentk.html)
 /// </summary>
 
-namespace OpenTK_controls_firstperson.ViewModel
+namespace OpenTK_controls_orbit.ViewModel
 {
-    class OpenTK_ViewModel
+    class Orbit_ViewModel
         : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -18,9 +18,9 @@ namespace OpenTK_controls_firstperson.ViewModel
         private OpenTK_View _form;
         private GLWpfControl _glc;
         private GLWpfControlViewModel _glc_vm;
-        private Scene_Model _gl_model = new Scene_Model();
+        private Orbit_Model _gl_model = new Orbit_Model();
 
-        public OpenTK_ViewModel()
+        public Orbit_ViewModel()
         { }
 
         public OpenTK_View Form
@@ -41,4 +41,3 @@ namespace OpenTK_controls_firstperson.ViewModel
         }
     }
 }
-

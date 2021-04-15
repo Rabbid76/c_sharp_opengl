@@ -1,7 +1,7 @@
 ﻿using System.Windows;
-using OpenTK_parallax_mapping.ViewModel;
+using OpenTK_controls_orbit.ViewModel;
 
-namespace OpenTK_parallax_mapping.View
+namespace OpenTK_controls_orbit.View
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -12,9 +12,8 @@ namespace OpenTK_parallax_mapping.View
         public OpenTK_View()
         {
             InitializeComponent();
-            var vm = this.DataContext as OpenTK_ViewModel;
+            var vm = this.DataContext as Orbit_ViewModel;
             vm.Form = this;
         }
     }
 }
-

@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OpenTK; // Vector2, Vector3, Vector4, Matrix4
 using OpenTK.Graphics.OpenGL4; // GL
+using OpenTK.Mathematics;
 
-using OpenTK_controls_orbit.ViewModel;
-
-using OpenTK_library;
 using OpenTK_library.Type;
 using OpenTK_library.Mesh;
 using OpenTK_library.Controls;
@@ -282,8 +275,8 @@ namespace OpenTK_controls_orbit.Model
             {
                 Vector3 pt_drag = new Vector3();
                 Vector4 clip_pos_h = new Vector4(pt_drag, 1.0f);
-                clip_pos_h = Vector4.Transform(clip_pos_h, this._view);
-                clip_pos_h = Vector4.Transform(clip_pos_h, this._projection);
+                clip_pos_h = Vector4.TransformRow(clip_pos_h, this._view);
+                clip_pos_h = Vector4.TransformRow(clip_pos_h, this._projection);
                 Vector3 ndc_pos = new Vector3(clip_pos_h.X / clip_pos_h.W, clip_pos_h.Y / clip_pos_h.W, clip_pos_h.Z / clip_pos_h.W);
                 if (ndc_pos.Z > -1 && ndc_pos.Z < 1)
                     depth = ndc_pos.Z * 0.5f + 0.5f;

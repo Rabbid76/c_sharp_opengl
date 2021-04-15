@@ -3,14 +3,13 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
-using OpenTK;
-using OpenTK.Platform;
-using OpenTK.Graphics;         // GraphicsMode, Context
 using OpenTK.Wpf;
 using OpenTK_libray_viewmodel.Model;
 using OpenTK.Mathematics;
 
-// [opentk/GLWpfControl](https://github.com/opentk/GLWpfControl)
+/// <summary>
+/// [opentk/GLWpfControl](https://github.com/opentk/GLWpfControl)
+/// </summary>
 
 namespace OpenTK_libray_viewmodel.Control
 {
@@ -34,13 +33,6 @@ namespace OpenTK_libray_viewmodel.Control
             _glc = glc;
             _model = model;
 
-            // Assign Load and Paint events of GLControl.
-            //var settings = new GLWpfControlSettings
-            //{
-            //    MajorVersion = 3,
-            //    MinorVersion = 6
-            //};
-           
             Window window = Window.GetWindow(_glc.Parent);
             window.Closing += new CancelEventHandler(GLC_OnDestroy);
 
@@ -50,21 +42,21 @@ namespace OpenTK_libray_viewmodel.Control
             _glc.MouseUp += new MouseButtonEventHandler(GLC_OnMouseUp);
             _glc.MouseMove += new MouseEventHandler(GLC_OnMouseMove);
             _glc.MouseWheel += new MouseWheelEventHandler(GLC_OnMouseWheel);
-
-            /*
-            GraphicsMode mode = new GraphicsMode(32, 24, 8, 8);
-            var gl_ctrl = new GLControl(mode, 4, 6, GraphicsContextFlags.Default | GraphicsContextFlags.Debug);
-            gl_ctrl.CreateControl();
-            this._windowInfo = gl_ctrl.WindowInfo;
-            this._context = new GraphicsContext(mode, this._windowInfo);
-            */
-
-            var settings = new GLWpfControlSettings();
-            settings.MajorVersion = 4;
-            settings.MinorVersion = 6;
-            settings.GraphicsContextFlags = OpenTK.Windowing.Common.ContextFlags.Default | OpenTK.Windowing.Common.ContextFlags.Debug;
-            //settings.ContextToUse = _context;
             
+            //GraphicsMode mode = new GraphicsMode(32, 24, 8, 8);
+            //var gl_ctrl = new GLControl(mode, 4, 6, GraphicsContextFlags.Default | GraphicsContextFlags.Debug);
+            //gl_ctrl.CreateControl();
+            //this._windowInfo = gl_ctrl.WindowInfo;
+            //this._context = new GraphicsContext(mode, this._windowInfo);
+
+            var settings = new GLWpfControlSettings()
+            {
+                MajorVersion = 4,
+                MinorVersion = 6,
+                GraphicsContextFlags = OpenTK.Windowing.Common.ContextFlags.Default | OpenTK.Windowing.Common.ContextFlags.Debug,
+                // ContextToUse  = _context
+            };
+           
             _glc.Start(settings);
         }
 

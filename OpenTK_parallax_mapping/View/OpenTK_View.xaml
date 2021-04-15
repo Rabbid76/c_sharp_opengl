@@ -4,8 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OpenTK_parallax_mapping"
-        xmlns:glWpfControlEx="clr-namespace:OpenTK_libray_viewmodel.Control;assembly=OpenTK_libray_viewmodel"
         xmlns:ViewModel="clr-namespace:OpenTK_parallax_mapping.ViewModel"
+        xmlns:glWpfControl="clr-namespace:OpenTK.Wpf;assembly=GLWpfControl"
         mc:Ignorable="d"
         Title="OpenTK WPF parallax mappig" Height="400" Width="400">
     <Window.DataContext>
@@ -18,7 +18,7 @@
         </LinearGradientBrush>
     </Window.Background>
     <Grid x:Name="grid">
-        <glWpfControlEx:GLWpfControlEx x:Name="OpenTkControl" Margin="0,0,0,0" Grid.ColumnSpan="2"/>
+        <glWpfControl:GLWpfControl x:Name="gl_control" Margin="0,0,0,0" Grid.ColumnSpan="2"/>
         <Slider HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.476,-0.184" Width="182" Maximum="200" Value="{Binding HeightScale, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
     </Grid>
 </Window>

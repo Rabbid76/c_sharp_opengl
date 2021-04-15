@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 using OpenTK.Mathematics;      // Vector2, Vector3, Vector4, Matrix4
 using OpenTK.Graphics.OpenGL4; // GL
 using OpenTK.Windowing.Common;

@@ -1,12 +1,12 @@
-﻿using System;
-using System.ComponentModel;
-using System.Windows.Forms.Integration;
-using System.Diagnostics;
+﻿using System.ComponentModel;
 using OpenTK_compute_raytracing.View;
 using OpenTK_compute_raytracing.Model;
-using OpenTK;                  // GLControl
-using OpenTK.Graphics;         // GraphicsMode, Context
 using OpenTK_libray_viewmodel.Control;
+using OpenTK.Wpf;
+
+/// <summary>
+/// [opentk/GLWpfControl](https://github.com/opentk/GLWpfControl)
+/// </summary>
 
 namespace OpenTK_compute_raytracing.ViewModel
 {
@@ -15,33 +15,22 @@ namespace OpenTK_compute_raytracing.ViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private WindowsFormsHost _formsHost;
-        private GLControl _glc;
-        private GLControlViewModel _glc_vm;
+        private RayTracingView _form;
+        private GLWpfControl _glc;
+        private GLWpfControlViewModel _glc_vm;
         private RayTracing_Model _gl_model = new RayTracing_Model();
 
         public RayTracing_ViewModel()
         { }
 
-        public WindowsFormsHost GLHostControl
+        public RayTracingView Form
         {
-            // [Created Bindable WindowsFormsHost, but child update is not being reflected to control](https://stackoverflow.com/questions/11510031/created-bindable-windowsformshost-but-child-update-is-not-being-reflected-to-co)
-            // <ContentControl x:Name="host" Margin="10" Grid.ColumnSpan="2" Content="{Binding GLHostControl}" />
-            get
+            get { return _form; }
+            set
             {
-                if (_glc == null)
-                {
-                    // Create the GLControl.
-                    GraphicsMode mode = new GraphicsMode(32, 24, 8, 0);
-                    _glc = new GLControl(mode, 4, 6, GraphicsContextFlags.Default | GraphicsContextFlags.Debug);
-                    _glc_vm = new GLControlViewModel(_glc, _gl_model);
-                }
-                if (_formsHost == null)
-                {
-                    _formsHost = new WindowsFormsHost();
-                    _formsHost.Child = _glc;
-                }
-                return _formsHost;
+                _form = value;
+                _glc = _form.gl_control;
+                _glc_vm = new GLWpfControlViewModel(_glc, _gl_model);
             }
         }
 

@@ -1,21 +1,15 @@
-﻿using OpenTK;
-using OpenTK.Input;            // KeyboardState, Keyboard, Key
-using OpenTK.Graphics;         // GameWindow, GraphicsMode, Context
-using OpenTK.Mathematics; // Vector2, Vector3, Vector4, Matrix4
+﻿using OpenTK.Mathematics;      // Vector2, Vector3, Vector4, Matrix4
 using OpenTK.Graphics.OpenGL4; // GL
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 
-using OpenTK_library;
 using OpenTK_library.Type;
 using OpenTK_library.Controls;
 using OpenTK_library.Mesh;
 using OpenTK_library.OpenGL;
 
 using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
 
 namespace OpenTK_example_2
 {

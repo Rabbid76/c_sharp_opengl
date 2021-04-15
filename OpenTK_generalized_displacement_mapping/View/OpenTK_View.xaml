@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OpenTK_generalized_displacement_mapping"
-        xmlns:glWpfControlEx="clr-namespace:OpenTK_libray_viewmodel.Control;assembly=OpenTK_libray_viewmodel"
+        xmlns:glWpfControl="clr-namespace:OpenTK.Wpf;assembly=GLWpfControl"
         xmlns:ViewModel="clr-namespace:OpenTK_generalized_displacement_mapping.ViewModel" x:Name="window_view" x:Class="OpenTK_generalized_displacement_mapping.View.OpenTK_View"
         mc:Ignorable="d"
         Title="OpenTK WPF generalized dispalcement mappig" Height="400" Width="400">
@@ -18,7 +18,7 @@
         <ViewModel:OpenTK_ViewModel/>
     </Window.DataContext>
     <Grid x:Name="grid">
-        <glWpfControlEx:GLWpfControlEx x:Name="OpenTkControl" Margin="0,0,0,0" Grid.ColumnSpan="2"/>
+        <glWpfControl:GLWpfControl x:Name="gl_control" Margin="0,0,0,0" Grid.ColumnSpan="2"/>
         <Slider HorizontalAlignment="Left" Margin="10,10,10,10" VerticalAlignment="Top" RenderTransformOrigin="0.476,-0.184" Width="90" Maximum="100" Value="{Binding HeightScale, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <Slider HorizontalAlignment="Left" Margin="100,10,10,10" VerticalAlignment="Top" RenderTransformOrigin="0.476,-0.184" Width="90" Maximum="100" Value="{Binding QualityScale, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
         <Slider HorizontalAlignment="Left" Margin="200,10,10,10" VerticalAlignment="Top" RenderTransformOrigin="0.476,-0.184" Width="90" Maximum="100" Value="{Binding ClipScale, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>

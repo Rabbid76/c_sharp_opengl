@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:OpenTK_compute_raytracing"
         xmlns:ViewModel="clr-namespace:OpenTK_compute_raytracing.ViewModel"
+        xmlns:glWpfControl="clr-namespace:OpenTK.Wpf;assembly=GLWpfControl"
         mc:Ignorable="d"
         Title="OpenTK compute shader raytracing" Height="400" Width="400">
     <Window.DataContext>
@@ -17,6 +18,6 @@
         </LinearGradientBrush>
     </Window.Background>
     <Grid x:Name="grid">
-        <ContentControl x:Name="host" Margin="10" Grid.ColumnSpan="2" Content="{Binding GLHostControl}" />
+        <glWpfControl:GLWpfControl x:Name="gl_control" Margin="10" Grid.ColumnSpan="2"/>
     </Grid>
 </Window>

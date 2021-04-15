@@ -1,7 +1,5 @@
 ﻿using OpenTK.Mathematics; // Vector2, Vector3, Vector4, Matrix4
 
-using static OpenTK_library.Mathematics.Operations;
-
 namespace OpenTK_library.Controls
 {
     public interface IControls 

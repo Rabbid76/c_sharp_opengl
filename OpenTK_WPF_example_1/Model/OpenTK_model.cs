@@ -1,10 +1,7 @@
 ﻿using System;
-using OpenTK; // Vector2, Vector3, Vector4, Matrix4
 using OpenTK.Graphics.OpenGL4; // GL
+using OpenTK.Mathematics;
 
-using OpenTK_WPF_example_1.ViewModel;
-
-using OpenTK_library;
 using OpenTK_library.Type;
 using OpenTK_library.Mesh;
 using OpenTK_library.Controls;

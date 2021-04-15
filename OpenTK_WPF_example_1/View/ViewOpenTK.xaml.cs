@@ -1,19 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
 using OpenTK_WPF_example_1.ViewModel;
-using OpenTK; // GLControl
 
 namespace OpenTK_WPF_example_1.View
 {
@@ -26,6 +12,8 @@ namespace OpenTK_WPF_example_1.View
         public OpenTK_View()
         {
             InitializeComponent();
+            var vm = this.DataContext as OpenTK_ViewModel;
+            vm.Form = this;
         }
     }
 }

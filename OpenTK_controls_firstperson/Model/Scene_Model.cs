@@ -1,14 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OpenTK; // Vector2, Vector3, Vector4, Matrix4
 using OpenTK.Graphics.OpenGL4; // GL
 
-using OpenTK_controls_firstperson.ViewModel;
-
-using OpenTK_library;
 using OpenTK_library.Type;
 using OpenTK_library.Mesh;
 using OpenTK_library.Controls;
@@ -260,22 +252,19 @@ namespace OpenTK_controls_firstperson.Model
                 this._projection = Matrix4.CreatePerspectiveFieldOfView(angle, aspect, 0.1f, 100.0f);
             }
 
-            /*
-            var keyboardState = OpenTK.Input.GetState();
             Vector3 move_vec = new Vector3(0, 0, 0);
-            if (keyboardState[OpenTK.Input.Key.Up])
+            if (System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.Up))
                 move_vec.Y += 1.0f;
-            if (keyboardState[OpenTK.Input.Key.Down])
+            if (System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.Down))
                 move_vec.Y -= 1.0f;
-            if (keyboardState[OpenTK.Input.Key.Right])
+            if (System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.Right))
                 move_vec.X += 1.0f;
-            if (keyboardState[OpenTK.Input.Key.Left])
+            if (System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.Left))
                 move_vec.X -= 1.0f;
             move_vec *= (float)delta_t;
 
             this._controls.Move(move_vec);
-            */
-            
+         
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             this._test_prog.Use();
