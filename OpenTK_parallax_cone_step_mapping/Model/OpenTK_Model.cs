@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using OpenTK.Graphics.OpenGL4; // GL
 using OpenTK.Mathematics;
-using OpenTK_cone_step_mapping.ViewModel;
+using OpenTK_prallax_cone_step_mapping.ViewModel;
 using OpenTK_library.Type;
 using OpenTK_library.Mesh;
 using OpenTK_library.Controls;
@@ -10,7 +10,7 @@ using OpenTK_library.Generator;
 using OpenTK_library.OpenGL;
 using OpenTK_libray_viewmodel.Model;
 
-namespace OpenTK_cone_step_mapping.Model
+namespace OpenTK_prallax_cone_step_mapping.Model
 {
     /// <summary>
     /// [Bump Mapping with javascript and glsl](https://stackoverflow.com/questions/51988629/bump-mapping-with-javascript-and-glsl/51990812#51990812)

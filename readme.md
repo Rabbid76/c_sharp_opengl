@@ -34,17 +34,17 @@
 
 [![](doc/image/OpenTK_controls_firstperson.png)](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_controls_firstperson)
 
-[WPF Parallax mapping](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_parallax_mapping)
+[WPF Parallax relief mapping](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_parallax_relief_mapping)
 
-[![](doc/image/OpenTK_parallax_mapping.png)](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_parallax_mapping)
+[![](doc/image/OpenTK_parallax_relief_mapping.png)](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_parallax_relief_mapping)
 
-[WPF Cone step mapping](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpeneTK_cone_step_mapping)
+[WPF Cone step mapping](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_parallax_cone_step_mapping)
 
-[![](doc/image/OpenTK_cone_step_mapping.png)](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpeneTK_cone_step_mapping)
+[![](doc/image/OpenTK_parallax_cone_step_mapping.png)](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_parallax_cone_step_mapping)
 
-[WPF Generalized_displacement_mapping](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_generalized_displacement_mapping)
+[WPF Generalized_displacement_mapping](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_parallax_generalized_displacement_mapping)
 
-[![](doc/image/OpenTK_generalized_displacement_mapping.png)](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_generalized_displacement_mapping)
+[![](doc/image/OpenTK_parallax_generalized_displacement_mapping.png)](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_parallax_generalized_displacement_mapping)
 
 [Rubik's cube](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_rubiks)
 

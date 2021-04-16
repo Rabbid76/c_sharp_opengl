@@ -1,12 +1,13 @@
 ﻿using System.Windows;
-using OpenTK_generalized_displacement_mapping.ViewModel;
+using OpenTK_parallax_relief_mapping.ViewModel;
 
-namespace OpenTK_generalized_displacement_mapping.View
+namespace OpenTK_parallax_relief_mapping.View
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class OpenTK_View : Window
+    public partial class OpenTK_View
+        : Window
     {
         public OpenTK_View()
         {
@@ -16,3 +17,4 @@ namespace OpenTK_generalized_displacement_mapping.View
         }
     }
 }
+

@@ -1,10 +1,10 @@
-﻿<Window x:Name="window_view" x:Class="OpenTK_parallax_mapping.View.OpenTK_View"
+﻿<Window x:Name="window_view" x:Class="OpenTK_parallax_relief_mapping.View.OpenTK_View"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:OpenTK_parallax_mapping"
-        xmlns:ViewModel="clr-namespace:OpenTK_parallax_mapping.ViewModel"
+        xmlns:local="clr-namespace:OpenTK_parallax_relief_mapping"
+        xmlns:ViewModel="clr-namespace:OpenTK_parallax_relief_mapping.ViewModel"
         xmlns:glWpfControl="clr-namespace:OpenTK.Wpf;assembly=GLWpfControl"
         mc:Ignorable="d"
         Title="OpenTK WPF parallax mappig" Height="400" Width="400">

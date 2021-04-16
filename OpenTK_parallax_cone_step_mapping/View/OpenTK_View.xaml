@@ -3,20 +3,21 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:OpenTK_generalized_displacement_mapping"
+        xmlns:local="clr-namespace:OpenTK_prallax_cone_step_mapping"
+        xmlns:glWpfControlEx="clr-namespace:OpenTK_libray_viewmodel.Control;assembly=OpenTK_libray_viewmodel"
+        xmlns:ViewModel="clr-namespace:OpenTK_prallax_cone_step_mapping.ViewModel" x:Name="window_view" x:Class="OpenTK_prallax_cone_step_mapping.View.OpenTK_View"
         xmlns:glWpfControl="clr-namespace:OpenTK.Wpf;assembly=GLWpfControl"
-        xmlns:ViewModel="clr-namespace:OpenTK_generalized_displacement_mapping.ViewModel" x:Name="window_view" x:Class="OpenTK_generalized_displacement_mapping.View.OpenTK_View"
         mc:Ignorable="d"
-        Title="OpenTK WPF generalized dispalcement mappig" Height="400" Width="400">
+        Title="OpenTK WPF cone step mappig" Height="400" Width="400">
+    <Window.DataContext>
+        <ViewModel:OpenTK_ViewModel/>
+    </Window.DataContext>
     <Window.Background>
         <LinearGradientBrush EndPoint="0.5,0" StartPoint="0.5,1">
             <GradientStop Color="Gray"/>
             <GradientStop Color="White" Offset="1"/>
         </LinearGradientBrush>
     </Window.Background>
-    <Window.DataContext>
-        <ViewModel:OpenTK_ViewModel/>
-    </Window.DataContext>
     <Grid x:Name="grid">
         <glWpfControl:GLWpfControl x:Name="gl_control" Margin="0,0,0,0" Grid.ColumnSpan="2"/>
         <Slider HorizontalAlignment="Left" Margin="10,10,10,10" VerticalAlignment="Top" RenderTransformOrigin="0.476,-0.184" Width="90" Maximum="100" Value="{Binding HeightScale, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
