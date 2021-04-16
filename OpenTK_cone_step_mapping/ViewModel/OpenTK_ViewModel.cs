@@ -1,13 +1,12 @@
-﻿using System;
-using System.ComponentModel;
-using System.Windows.Forms.Integration;
-using System.Diagnostics;
+﻿using System.ComponentModel;
 using OpenTK_cone_step_mapping.View;
 using OpenTK_cone_step_mapping.Model;
-using OpenTK;                  // GLControl
-using OpenTK.Graphics;         // GraphicsMode, Context
 using OpenTK_libray_viewmodel.Control;
+using OpenTK.Wpf;
 
+/// <summary>
+/// [opentk/GLWpfControl](https://github.com/opentk/GLWpfControl)
+/// </summary>
 
 namespace OpenTK_cone_step_mapping.ViewModel
 {
@@ -17,8 +16,8 @@ namespace OpenTK_cone_step_mapping.ViewModel
         public event PropertyChangedEventHandler PropertyChanged;
 
         private OpenTK_View _form;
-        private GLWpfControlEx _glc;
-        private GLWpfControlViewModelEx _glc_vm;
+        private GLWpfControl _glc;
+        private GLWpfControlViewModel _glc_vm;
         private OpenTK_Model _gl_model = new OpenTK_Model();
 
         public OpenTK_ViewModel()
@@ -32,8 +31,8 @@ namespace OpenTK_cone_step_mapping.ViewModel
             set
             {
                 _form = value;
-                _glc = _form.OpenTkControl;
-                _glc_vm = new GLWpfControlViewModelEx(_glc, _gl_model);
+                _glc = _form.gl_control;
+                _glc_vm = new GLWpfControlViewModel(_glc, _gl_model);
             }
         }
 

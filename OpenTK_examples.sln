@@ -31,7 +31,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTK_libray_viewmodel", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTK_controls_firstperson", "OpenTK_controls_firstperson\OpenTK_controls_firstperson.csproj", "{4FA19D1B-5F21-4DE3-9BBE-7EA19974DAE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_WPF_example_1", "OpenTK_WPF_example_1\OpenTK_WPF_example_1.csproj", "{5C3FC284-49E7-42E3-9124-40BBAD4B9291}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTK_WPF_example_1", "OpenTK_WPF_example_1\OpenTK_WPF_example_1.csproj", "{5C3FC284-49E7-42E3-9124-40BBAD4B9291}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTK_compute_raytracing", "OpenTK_compute_raytracing\OpenTK_compute_raytracing.csproj", "{E11CB1A9-93F5-482D-A1C2-F0EBA334869A}"
 EndProject
@@ -42,6 +42,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTK_parallax_mapping", "OpenTK_parallax_mapping\OpenTK_parallax_mapping.csproj", "{1FE8F366-C648-4FF2-99B0-6D290FA506E3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTK_rubiks", "OpenTK_rubiks\OpenTK_rubiks.csproj", "{18BD46DF-B357-41B5-A603-7AB5F8757DF4}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTK_cone_step_mapping", "OpenTK_cone_step_mapping\OpenTK_cone_step_mapping.csproj", "{03DBEE5B-09C5-4B4D-9CB9-B1A86AC4876A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -117,6 +119,10 @@ Global
 		{18BD46DF-B357-41B5-A603-7AB5F8757DF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18BD46DF-B357-41B5-A603-7AB5F8757DF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18BD46DF-B357-41B5-A603-7AB5F8757DF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03DBEE5B-09C5-4B4D-9CB9-B1A86AC4876A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03DBEE5B-09C5-4B4D-9CB9-B1A86AC4876A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03DBEE5B-09C5-4B4D-9CB9-B1A86AC4876A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03DBEE5B-09C5-4B4D-9CB9-B1A86AC4876A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
