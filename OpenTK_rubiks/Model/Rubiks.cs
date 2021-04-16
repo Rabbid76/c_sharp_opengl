@@ -12,8 +12,6 @@ namespace OpenTK_rubiks.Model
     public class Rubiks
         : IModel
     {
-        enum TMode { roatate, change };
-
         public struct THitInfo
         {
             public int _side;        //!< main cube side
@@ -78,16 +76,11 @@ namespace OpenTK_rubiks.Model
 
         private Matrix4 _view = Matrix4.Identity;
         private Matrix4 _projection = Matrix4.Identity;
-        private ModelSpinningControls _controls; // TODO $$$ IControls
+        private RubiksMouseControlsProxy _controls;
         private RubiksControls _rubiks_cube;
         private double _period = 0;
-        Vector2 _wnd_cursor_pos = Vector2.Zero;
         TMVP _mvp_data;
 
-        /// <summary>manipulation mode (rotate or change)</summary>
-        private TMode _mode  = TMode.roatate;
-        /// <summary>cube was hit</summary>
-        private bool _hit = false;
         /// <summary>initial hit information</summary>
         private THitInfo _start_hit = new THitInfo( -1, -1, -1, -1 );
         /// <summary>point of hit - intersection of line of sight and cube</summary>
@@ -119,43 +112,6 @@ namespace OpenTK_rubiks.Model
         public IControls GetControls() => this._controls;
 
         public float GetScale() => 1.0f;
-
-        public void MouseDown(Vector2 wnd_pos, bool left, bool right)
-        {
-            if (left)
-            {
-                if (_mode == TMode.roatate)
-                    this._controls.Start(0, wnd_pos);
-                else
-                    _hit = true;
-            }
-            
-        }
-
-        public void MouseUp(Vector2 wnd_pos, bool left, bool right)
-        {
-            if (left)
-            {
-                if (_mode == TMode.roatate)
-                    this._controls.End(0, wnd_pos);
-            }
-            else
-            {
-                this._controls.ToogleRotate();
-                _mode = this._controls.AutoRotate ? TMode.roatate : TMode.change;
-            }
-        }
-
-        public void MouseMove(Vector2 wnd_pos)
-        {
-            _wnd_cursor_pos = wnd_pos;
-            this._controls.UpdatePosition(wnd_pos);
-        }
-
-        public void MouseWheel(Vector2 wnd_pos, int wheel_delta)
-        {
-            // [...]
-        }
 
         public void Setup(int cx, int cy)
         {
@@ -372,7 +328,7 @@ namespace OpenTK_rubiks.Model
                 () => { return this._view; }
             );
             spin.SetAttenuation(1.0f, 0.05f, 0.0f);
-            _controls = spin;
+            _controls = new RubiksMouseControlsProxy(spin);
 
             float offset = 2.0f * 1.1f;
             float scale = 1.0f / 3.0f;
@@ -431,12 +387,12 @@ namespace OpenTK_rubiks.Model
             this._rubiks_cube.Data.cube_hit = -1;
             this._rubiks_cube.Data.side_hit = 0;
 
-            if (_rubiks_cube.AnimationPending || _mode != TMode.change || _hit == false)
+            if (_rubiks_cube.AnimationPending || _controls.Mode != TMode.change || _controls.Hit == false)
                 _start_hit = new THitInfo(-1, -1, -1, -1);
 
-            if (_rubiks_cube.AnimationPending || _mode != TMode.change)
+            if (_rubiks_cube.AnimationPending || _controls.Mode != TMode.change)
             {
-                _hit = false;
+                _controls.Hit = false;
                 _rubiks_cube.ResetHit();
                 return;
             }
@@ -457,8 +413,8 @@ namespace OpenTK_rubiks.Model
 
             float w = (float)this._cx;
             float h = (float)this._cy;
-            float ndc_x = 2.0f * _wnd_cursor_pos.X / w - 1.0f;
-            float ndc_y = 2.0f * _wnd_cursor_pos.Y / h - 1.0f;
+            float ndc_x = 2.0f * _controls.WndCursorPos.X / w - 1.0f;
+            float ndc_y = 2.0f * _controls.WndCursorPos.Y / h - 1.0f;
 
             Matrix4 modelview = model * this._view;  // OpenTK `*`-operator is reversed
             Matrix4 inverse_modelview = modelview.Inverted();
@@ -481,7 +437,7 @@ namespace OpenTK_rubiks.Model
                 Vector3 r0_ray = model_r0.Xyz;
                 Vector3 d_ray = Vector3.Normalize(model_r1.Xyz - r0_ray);
 
-                if (_hit && _start_hit._mapped_cube >= 0)
+                if (_controls.Hit && _start_hit._mapped_cube >= 0)
                 {
                     _rubiks_cube.Data.cube_hit = _start_hit._mapped_cube;
                     _rubiks_cube.Data.side_hit = _start_hit._cube_side + 1;
@@ -515,7 +471,7 @@ namespace OpenTK_rubiks.Model
                     ChangeOperation op = new ChangeOperation(rot_axis, _start_hit._sub_cube);
 
                     // change the cube
-                    _hit = false;
+                    _controls.Hit = false;
                     _start_hit = new THitInfo(-1, -1, -1, -1);
                     _rubiks_cube.Change(op);
                     return;
@@ -542,7 +498,7 @@ namespace OpenTK_rubiks.Model
                 _rubiks_cube.Data.cube_hit = new_hit._mapped_cube;
                 _rubiks_cube.Data.side_hit = new_hit._cube_side + 1;
 
-                if (_hit)
+                if (_controls.Hit)
                 {
                     _start_hit = new_hit;
                     _hit_pt = isect_pt;
