@@ -1,13 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
-using OpenTK; // Vector2, Vector3, Vector4, Matrix4
 using OpenTK.Graphics.OpenGL4; // GL
-
+using OpenTK.Mathematics;
 using OpenTK_stereoscopic_example_1.ViewModel;
-
-using OpenTK_library;
 using OpenTK_library.Type;
 using OpenTK_library.Mathematics;
 using OpenTK_library.MeshBuilder;
@@ -590,15 +586,14 @@ namespace OpenTK_stereoscopic_example_1.Model
 
             if (_controls_id == 2)
             {
-                var keyboardState = OpenTK.Input.Keyboard.GetState();
                 Vector3 move_vec = new Vector3(0, 0, 0);
-                if (keyboardState[OpenTK.Input.Key.W])
+                if (System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.Up))
                     move_vec.Y += 1.0f;
-                if (keyboardState[OpenTK.Input.Key.S])
+                if (System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.Down))
                     move_vec.Y -= 1.0f;
-                if (keyboardState[OpenTK.Input.Key.D])
+                if (System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.Right))
                     move_vec.X += 1.0f;
-                if (keyboardState[OpenTK.Input.Key.A])
+                if (System.Windows.Input.Keyboard.IsKeyDown(System.Windows.Input.Key.Left))
                     move_vec.X -= 1.0f;
                 move_vec *= (float)delta_t;
 
@@ -678,7 +673,7 @@ namespace OpenTK_stereoscopic_example_1.Model
 
             GL.Disable(EnableCap.DepthTest);
             GL.Disable(EnableCap.CullFace);
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, _viewmodel.DefaultFrameBuffer);
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
             //GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             
             _stereo_prog.Use();
@@ -736,8 +731,8 @@ namespace OpenTK_stereoscopic_example_1.Model
             {
                 Vector3 pt_drag = new Vector3();
                 Vector4 clip_pos_h = new Vector4(pt_drag, 1.0f);
-                clip_pos_h = Vector4.Transform(clip_pos_h, this._view);
-                clip_pos_h = Vector4.Transform(clip_pos_h, this._projection);
+                clip_pos_h = Vector4.TransformRow(clip_pos_h, this._view);
+                clip_pos_h = Vector4.TransformRow(clip_pos_h, this._projection);
                 Vector3 ndc_pos = new Vector3(clip_pos_h.X / clip_pos_h.W, clip_pos_h.Y / clip_pos_h.W, clip_pos_h.Z / clip_pos_h.W);
                 if (ndc_pos.Z > -1 && ndc_pos.Z < 1)
                     depth = ndc_pos.Z * 0.5f + 0.5f;

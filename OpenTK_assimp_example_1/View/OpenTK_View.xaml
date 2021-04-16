@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:glWpfControl="clr-namespace:OpenTK.Wpf;assembly=GLWpfControl"
-        xmlns:glWpfControlEx="clr-namespace:OpenTK_libray_viewmodel.Control;assembly=OpenTK_libray_viewmodel"
         xmlns:local="clr-namespace:OpenTK_assimp_example_1"
         xmlns:ViewModel="clr-namespace:OpenTK_assimp_example_1.ViewModel"
         mc:Ignorable="d"
@@ -19,7 +18,7 @@
         </LinearGradientBrush>
     </Window.Background>
     <Grid x:Name="grid">
-        <glWpfControlEx:GLWpfControlEx x:Name="OpenTkControl" Margin="0,41,0,0" Grid.ColumnSpan="2"/>
+        <glWpfControl:GLWpfControl x:Name="gl_control" Margin="0,41,0,0" Grid.ColumnSpan="2"/>
         <ComboBox x:Name = "cbControl" HorizontalAlignment = "Left" Height = "26" Margin="10,10,10,10" VerticalAlignment = "Top" Width = "120" ItemsSource="{Binding Controls}" DisplayMemberPath="Text" SelectedValuePath="Text" SelectedValue="{Binding CurrentControl.Text}" SelectedItem="{Binding CurrentControl}"/>
         <ComboBox x:Name = "cbModel" HorizontalAlignment = "Left" Height = "26" Margin="140,10,10,10" VerticalAlignment = "Top" Width = "200" ItemsSource="{Binding Models}" DisplayMemberPath="Text" SelectedValuePath="Text" SelectedValue="{Binding CurrentModel.Text}" SelectedItem="{Binding CurrentModel}"/>
     </Grid>

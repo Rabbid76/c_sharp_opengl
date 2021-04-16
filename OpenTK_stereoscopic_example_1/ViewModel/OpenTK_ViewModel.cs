@@ -1,16 +1,15 @@
-﻿using System;
-using System.ComponentModel;
-using System.Windows.Forms.Integration;
-using System.Diagnostics;
-using System.Collections.Generic;
+﻿using System.ComponentModel;
 using OpenTK_stereoscopic_example_1.View;
 using OpenTK_stereoscopic_example_1.Model;
-using OpenTK;                  // GLControl
-using OpenTK.Input;            // KeyboardState, Keyboard, Key
-using OpenTK.Graphics;         // GraphicsMode, Context
 using OpenTK_libray_viewmodel.Control;
 using OpenTK.Wpf;
 using WpfViewModelModule;
+using System.Collections.Generic;
+using System;
+
+/// <summary>
+/// [opentk/GLWpfControl](https://github.com/opentk/GLWpfControl)
+/// </summary>
 
 namespace OpenTK_stereoscopic_example_1.ViewModel
 {
@@ -38,6 +37,7 @@ namespace OpenTK_stereoscopic_example_1.ViewModel
     public class OpenTK_ViewModel
         : INotifyPropertyChanged
     {
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         private List<Anaglyphs> _anaglyphs = new List<Anaglyphs>();
@@ -117,11 +117,9 @@ namespace OpenTK_stereoscopic_example_1.ViewModel
             set { this._focal_scale = value; this.OnPropertyChanged("FocalScale"); }
         }
 
-        public int DefaultFrameBuffer => _glc.Framebuffer;
-
         private OpenTK_View _form;
-        private GLWpfControlEx _glc;
-        private GLWpfControlViewModelEx _glc_vm;
+        private GLWpfControl _glc;
+        private GLWpfControlViewModel _glc_vm;
         private OpenTK_AssimpModel _gl_model = new OpenTK_AssimpModel();
         
         public OpenTK_ViewModel()
@@ -167,8 +165,8 @@ namespace OpenTK_stereoscopic_example_1.ViewModel
             set 
             { 
                 _form = value;
-                _glc = _form.OpenTkControl;
-                _glc_vm = new GLWpfControlViewModelEx(_glc, _gl_model);
+                _glc = _form.gl_control;
+                _glc_vm = new GLWpfControlViewModel(_glc, _gl_model);
             }
         }
 

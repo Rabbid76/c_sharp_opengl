@@ -4,7 +4,6 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:glWpfControl="clr-namespace:OpenTK.Wpf;assembly=GLWpfControl"
-        xmlns:glWpfControlEx="clr-namespace:OpenTK_libray_viewmodel.Control;assembly=OpenTK_libray_viewmodel"
         xmlns:local="clr-namespace:OpenTK_stereoscopic_example_1"
         xmlns:ViewModel="clr-namespace:OpenTK_stereoscopic_example_1.ViewModel"
         mc:Ignorable="d"
@@ -19,7 +18,7 @@
         </LinearGradientBrush>
     </Window.Background>
     <Grid x:Name="grid">
-        <glWpfControlEx:GLWpfControlEx x:Name="OpenTkControl" Margin="0,41,0,0" Grid.ColumnSpan="2"/>
+        <glWpfControl:GLWpfControl x:Name="gl_control" Margin="0,41,0,0" Grid.ColumnSpan="2"/>
         <ComboBox x:Name = "cbAnaglyph" ToolTip="Anaglyph mode" HorizontalAlignment = "Left" Height = "26" Margin="10,10,10,10" VerticalAlignment = "Top" Width = "100" ItemsSource="{Binding Anaglyphs}" DisplayMemberPath="Text" SelectedValuePath="Text" SelectedValue="{Binding CurrentAnaglyph.Text}" SelectedItem="{Binding CurrentAnaglyph}"/>
         <ComboBox x:Name = "cbControl" ToolTip="Control mode" HorizontalAlignment = "Left" Height = "26" Margin="120,10,10,10" VerticalAlignment = "Top" Width = "100" ItemsSource="{Binding Controls}" DisplayMemberPath="Text" SelectedValuePath="Text" SelectedValue="{Binding CurrentControl.Text}" SelectedItem="{Binding CurrentControl}"/>
         <ComboBox x:Name = "cbModel" ToolTip="Model" HorizontalAlignment = "Left" Height = "26" Margin="230,10,10,10" VerticalAlignment = "Top" Width = "150" ItemsSource="{Binding Models}" DisplayMemberPath="Text" SelectedValuePath="Text" SelectedValue="{Binding CurrentModel.Text}" SelectedItem="{Binding CurrentModel}"/>

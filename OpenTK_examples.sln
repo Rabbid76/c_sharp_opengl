@@ -45,6 +45,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTK_rubiks", "OpenTK_rub
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTK_cone_step_mapping", "OpenTK_cone_step_mapping\OpenTK_cone_step_mapping.csproj", "{03DBEE5B-09C5-4B4D-9CB9-B1A86AC4876A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_library_assimp", "OpenTK_library_assimp\OpenTK_library_assimp.csproj", "{ED8024B2-47D0-4555-9B7F-E3E3717E28FD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTK_assimp_example_1", "OpenTK_assimp_example_1\OpenTK_assimp_example_1.csproj", "{78845CA8-5A55-4836-A617-B8186CFF76F5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTK_stereoscopic_example_1", "OpenTK_stereoscopic_example_1\OpenTK_stereoscopic_example_1.csproj", "{AF7237D9-6457-485A-9C50-1C9243B5FBAE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -123,6 +129,18 @@ Global
 		{03DBEE5B-09C5-4B4D-9CB9-B1A86AC4876A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03DBEE5B-09C5-4B4D-9CB9-B1A86AC4876A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03DBEE5B-09C5-4B4D-9CB9-B1A86AC4876A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED8024B2-47D0-4555-9B7F-E3E3717E28FD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED8024B2-47D0-4555-9B7F-E3E3717E28FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED8024B2-47D0-4555-9B7F-E3E3717E28FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED8024B2-47D0-4555-9B7F-E3E3717E28FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78845CA8-5A55-4836-A617-B8186CFF76F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78845CA8-5A55-4836-A617-B8186CFF76F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78845CA8-5A55-4836-A617-B8186CFF76F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78845CA8-5A55-4836-A617-B8186CFF76F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF7237D9-6457-485A-9C50-1C9243B5FBAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF7237D9-6457-485A-9C50-1C9243B5FBAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF7237D9-6457-485A-9C50-1C9243B5FBAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF7237D9-6457-485A-9C50-1C9243B5FBAE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

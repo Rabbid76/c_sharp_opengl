@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "OpenTK_assimp_example_1": {
+      "commandName": "Project",
+      "workingDirectory": "..\\resource\\model\\wavefront"
+    }
+  }
+}

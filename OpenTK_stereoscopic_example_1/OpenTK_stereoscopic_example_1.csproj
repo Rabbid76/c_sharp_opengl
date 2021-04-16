@@ -17,6 +17,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\OpenTK_library\OpenTK_library.csproj" />
+      <ProjectReference Include="..\OpenTK_library_assimp\OpenTK_library_assimp.csproj" />
       <ProjectReference Include="..\OpenTK_libray_viewmodel\OpenTK_libray_viewmodel.csproj" />
       <ProjectReference Include="..\WpfViewModelModule\WpfViewModelModule.csproj" />
     </ItemGroup>

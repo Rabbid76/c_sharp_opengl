@@ -1,12 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Collections.Generic;
-
-using OpenTK; // Vector2, Vector3, Vector4, Matrix4
-
+using OpenTK.Mathematics;
 using Assimp;
 using Assimp.Configs;
-
 using OpenTK_library.Mathematics;
 using OpenTK_library.Scene;
 using OpenTK_library.OpenGL;
