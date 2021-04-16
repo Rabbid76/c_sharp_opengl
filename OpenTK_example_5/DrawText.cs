@@ -4,7 +4,6 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK_library.OpenGL;
 
-
 namespace OpenTK_example_5
 {
     public class DrawText

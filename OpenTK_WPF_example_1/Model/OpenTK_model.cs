@@ -1,13 +1,11 @@
 ﻿using System;
 using OpenTK.Graphics.OpenGL4; // GL
 using OpenTK.Mathematics;
-
 using OpenTK_library.Type;
 using OpenTK_library.Mesh;
 using OpenTK_library.Controls;
 using OpenTK_library.OpenGL;
 using OpenTK_libray_viewmodel.Model;
-
 
 namespace OpenTK_WPF_example_1.Model
 {

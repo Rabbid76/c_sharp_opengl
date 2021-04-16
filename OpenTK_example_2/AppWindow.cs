@@ -3,12 +3,10 @@ using OpenTK.Graphics.OpenGL4; // GL
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
-
 using OpenTK_library.Type;
 using OpenTK_library.Controls;
 using OpenTK_library.Mesh;
 using OpenTK_library.OpenGL;
-
 using System;
 
 namespace OpenTK_example_2

@@ -5,7 +5,7 @@ using OpenTK_libray_viewmodel.Control;
 using OpenTK.Wpf;
 
 /// <summary>
-/// See [Integrating WPF and Microsoft Kinect SDK with OpenTK](http://igordcard.blogspot.com/2011/12/integrating-wpf-and-kinect-with-opentk.html)
+/// [opentk/GLWpfControl](https://github.com/opentk/GLWpfControl)
 /// </summary>
 
 namespace OpenTK_controls_orbit.ViewModel

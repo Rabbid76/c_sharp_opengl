@@ -12,6 +12,18 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Remove="Resource\toy_box_disp.png" />
+      <None Remove="Resource\toy_box_normal.png" />
+      <None Remove="Resource\woodtiles.jpg" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Include="Resource\toy_box_disp.png" />
+      <EmbeddedResource Include="Resource\toy_box_normal.png" />
+      <EmbeddedResource Include="Resource\woodtiles.jpg" />
+    </ItemGroup>
+
+    <ItemGroup>
       <PackageReference Include="OpenTK" Version="4.6.3" />
     </ItemGroup>
 

@@ -1,12 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OpenTK; // Vector2, Vector3, Vector4, Matrix4
+using OpenTK.Mathematics;
 using OpenTK_library.Controls;
-using OpenTK_library.Mathematics;
-
 using static OpenTK_library.Mathematics.Operations;
 
 namespace OpenTK_rubiks.Model

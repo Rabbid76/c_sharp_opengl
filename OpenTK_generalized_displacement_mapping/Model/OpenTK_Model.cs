@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using OpenTK; // Vector2, Vector3, Vector4, Matrix4
 using OpenTK.Graphics.OpenGL4; // GL
-
+using OpenTK.Mathematics;
 using OpenTK_generalized_displacement_mapping.ViewModel;
-
-using OpenTK_library;
 using OpenTK_library.Type;
 using OpenTK_library.Mesh;
 using OpenTK_library.Controls;
