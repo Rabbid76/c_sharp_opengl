@@ -4,14 +4,14 @@ using System.Reflection;
 using System.Drawing;
 using OpenTK.Graphics.OpenGL4; // GL
 using OpenTK.Mathematics;
-using OpenTK_parallax_mapping.ViewModel;
+using OpenTK_parallax_relief_mapping.ViewModel;
 using OpenTK_library.Type;
 using OpenTK_library.Mesh;
 using OpenTK_library.Controls;
 using OpenTK_library.OpenGL;
 using OpenTK_libray_viewmodel.Model;
 
-namespace OpenTK_parallax_mapping.Model
+namespace OpenTK_parallax_relief_mapping.Model
 {
     /// <summary>
     /// [Bump Mapping with javascript and glsl](https://stackoverflow.com/questions/51988629/bump-mapping-with-javascript-and-glsl/51990812#51990812)
@@ -140,9 +140,9 @@ namespace OpenTK_parallax_mapping.Model
 
             Assembly assembly = Assembly.GetExecutingAssembly();
             //string[] names = assembly.GetManifestResourceNames();
-            Stream textue_stream = assembly.GetManifestResourceStream("OpenTK_parallax_mapping.Resource.woodtiles.jpg");
-            Stream normalmap_stream = assembly.GetManifestResourceStream("OpenTK_parallax_mapping.Resource.toy_box_normal.png");
-            Stream displacementmap_stream = assembly.GetManifestResourceStream("OpenTK_parallax_mapping.Resource.toy_box_disp.png");
+            Stream textue_stream = assembly.GetManifestResourceStream("OpenTK_parallax_relief_mapping.Resource.woodtiles.jpg");
+            Stream normalmap_stream = assembly.GetManifestResourceStream("OpenTK_parallax_relief_mapping.Resource.toy_box_normal.png");
+            Stream displacementmap_stream = assembly.GetManifestResourceStream("OpenTK_parallax_relief_mapping.Resource.toy_box_disp.png");
 
             _texture = new Texture();
             _texture.Create2D(new Bitmap(textue_stream));

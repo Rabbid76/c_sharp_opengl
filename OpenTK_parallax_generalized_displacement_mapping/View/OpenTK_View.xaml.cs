@@ -1,13 +1,12 @@
 ﻿using System.Windows;
-using OpenTK_cone_step_mapping.ViewModel;
+using OpenTK_parallax_generalized_displacement_mapping.ViewModel;
 
-namespace OpenTK_cone_step_mapping.View
+namespace OpenTK_parallax_generalized_displacement_mapping.View
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class OpenTK_View
-        : Window
+    public partial class OpenTK_View : Window
     {
         public OpenTK_View()
         {

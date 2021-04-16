@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
-using OpenTK_generalized_displacement_mapping.View;
-using OpenTK_generalized_displacement_mapping.Model;
+using OpenTK_parallax_relief_mapping.View;
+using OpenTK_parallax_relief_mapping.Model;
 using OpenTK_libray_viewmodel.Control;
 using OpenTK.Wpf;
 
@@ -8,7 +8,7 @@ using OpenTK.Wpf;
 /// [opentk/GLWpfControl](https://github.com/opentk/GLWpfControl)
 /// </summary>
 
-namespace OpenTK_generalized_displacement_mapping.ViewModel
+namespace OpenTK_parallax_relief_mapping.ViewModel
 {
     public class OpenTK_ViewModel
         : INotifyPropertyChanged
@@ -48,20 +48,5 @@ namespace OpenTK_generalized_displacement_mapping.ViewModel
             get { return this._height_scale; }
             set { this._height_scale = value; this.OnPropertyChanged("HeightScale"); }
         }
-
-        private int _quality_scale;
-        public int QualityScale
-        {
-            get { return this._quality_scale; }
-            set { this._quality_scale = value; this.OnPropertyChanged("QualityScale"); }
-        }
-
-        private int _clip_scale;
-        public int ClipScale
-        {
-            get { return this._clip_scale; }
-            set { this._clip_scale = value; this.OnPropertyChanged("ClipScale"); }
-        }
     }
 }
-

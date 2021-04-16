@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
-using OpenTK_cone_step_mapping.View;
-using OpenTK_cone_step_mapping.Model;
+using OpenTK_prallax_cone_step_mapping.View;
+using OpenTK_prallax_cone_step_mapping.Model;
 using OpenTK_libray_viewmodel.Control;
 using OpenTK.Wpf;
 
@@ -8,7 +8,7 @@ using OpenTK.Wpf;
 /// [opentk/GLWpfControl](https://github.com/opentk/GLWpfControl)
 /// </summary>
 
-namespace OpenTK_cone_step_mapping.ViewModel
+namespace OpenTK_prallax_cone_step_mapping.ViewModel
 {
     public class OpenTK_ViewModel
         : INotifyPropertyChanged

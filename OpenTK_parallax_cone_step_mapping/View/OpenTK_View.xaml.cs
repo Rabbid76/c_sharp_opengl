@@ -1,7 +1,7 @@
 ﻿using System.Windows;
-using OpenTK_parallax_mapping.ViewModel;
+using OpenTK_prallax_cone_step_mapping.ViewModel;
 
-namespace OpenTK_parallax_mapping.View
+namespace OpenTK_prallax_cone_step_mapping.View
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -17,4 +17,3 @@ namespace OpenTK_parallax_mapping.View
         }
     }
 }
-
