@@ -60,6 +60,8 @@ namespace OpenTK_libray_viewmodel.Control
             _glc.Start(settings);
         }
 
+        public int Framebuffer => _glc.Framebuffer;
+
 
         protected void GLC_OnDestroy(object sender, EventArgs e)
         {

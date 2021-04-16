@@ -177,6 +177,8 @@ namespace OpenTK_stereoscopic_example_1.Model
             set => _viewmodel = value; 
         }
 
+        public int DefaultFramebuffer => _viewmodel.DefaultFramebuffer;
+
         public IControls GetControls() => _controls;
 
         public float GetScale() => _model.SceneBox.MaxSize;
@@ -673,7 +675,7 @@ namespace OpenTK_stereoscopic_example_1.Model
 
             GL.Disable(EnableCap.DepthTest);
             GL.Disable(EnableCap.CullFace);
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, DefaultFramebuffer);
             //GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
             
             _stereo_prog.Use();

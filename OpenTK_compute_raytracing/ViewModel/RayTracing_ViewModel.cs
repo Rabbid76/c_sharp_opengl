@@ -10,7 +10,7 @@ using OpenTK.Wpf;
 
 namespace OpenTK_compute_raytracing.ViewModel
 {
-    class RayTracing_ViewModel
+    public class RayTracing_ViewModel
         : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -20,8 +20,12 @@ namespace OpenTK_compute_raytracing.ViewModel
         private GLWpfControlViewModel _glc_vm;
         private RayTracing_Model _gl_model = new RayTracing_Model();
 
+        public int DefaultFramebuffer => _glc.Framebuffer;
+
         public RayTracing_ViewModel()
-        { }
+        {
+            _gl_model.ViewModel = this;
+        }
 
         public RayTracingView Form
         {

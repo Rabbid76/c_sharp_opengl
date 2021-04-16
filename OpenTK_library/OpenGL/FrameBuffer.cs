@@ -296,22 +296,8 @@ namespace OpenTK_library.OpenGL
         // Blit to target
         public void Blit(Framebuffer draw_fbo, int x, int y, int w, int h, bool linear)
         {
-            BlitFramebufferFilter filter = linear ? BlitFramebufferFilter.Linear : BlitFramebufferFilter.Nearest;
-
-            if (_buffer_specification_4)
-            {
-                int fbo_d = draw_fbo == null ? 0 : draw_fbo.Object;
-                GL.BlitNamedFramebuffer(this._fbo, fbo_d, 0, 0, _cx, _cy, x, y, x + w, y + h, ClearBufferMask.ColorBufferBit, filter);
-            }
-            else
-            {
-                Bind(Target.Read);
-                if (draw_fbo == null)
-                    GL.BindFramebuffer(FramebufferTarget.DrawFramebuffer, 0);
-                else
-                    draw_fbo.Bind(Target.Draw);
-                GL.BlitFramebuffer(0, 0, _cx, _cy, x, y, x + w, y + h, ClearBufferMask.ColorBufferBit, filter);
-            }
+            int fbo_d = draw_fbo == null ? 0 : draw_fbo.Object;
+            Blit(fbo_d, x, y, w, h, linear);
         }
 
         public void Blit(int fbo_d, int x, int y, int w, int h, bool linear)

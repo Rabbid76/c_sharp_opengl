@@ -5,6 +5,7 @@ using OpenTK.Mathematics;
 using OpenTK_library.Controls;
 using OpenTK_library.OpenGL;
 using OpenTK_libray_viewmodel.Model;
+using OpenTK_compute_raytracing.ViewModel;
 
 namespace OpenTK_compute_raytracing.Model
 {
@@ -43,6 +44,7 @@ namespace OpenTK_compute_raytracing.Model
             }
         }
 
+        private RayTracing_ViewModel _viewmodel;
         private bool _disposed = false;
         private int _cx = 0;
         private int _cy = 0;
@@ -61,6 +63,14 @@ namespace OpenTK_compute_raytracing.Model
         public IControls GetControls() => _controls;
 
         public float GetScale() => 1.0f;
+
+        public RayTracing_ViewModel ViewModel
+        {
+            get => _viewmodel;
+            set => _viewmodel = value;
+        }
+
+        public int DefaultFramebuffer => _viewmodel.DefaultFramebuffer;
 
         public RayTracing_Model()
         { }
@@ -342,14 +352,14 @@ namespace OpenTK_compute_raytracing.Model
             GL.DispatchCompute(_image_cx, _image_cy, 1);
             GL.MemoryBarrier(MemoryBarrierFlags.ShaderImageAccessBarrierBit); // alternative:  MemoryBarrierFlags.AllBarrierBits;
 
-            GL.BindFramebuffer(FramebufferTarget.Framebuffer, 0);
+            GL.BindFramebuffer(FramebufferTarget.Framebuffer, DefaultFramebuffer);
             GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
 
             // Be aware, this won't work if the target framebuffer is a multisampling framebuffer
             if (this._cx > this._cy)
-                _fbos[i_write].Blit(null, (this._cx - this._cy) / 2, 0, this._cy, this._cy, false);
+                _fbos[i_write].Blit(DefaultFramebuffer, (this._cx - this._cy) / 2, 0, this._cy, this._cy, false);
             else
-                _fbos[i_write].Blit(null, 0, (this._cy - this._cx) / 2, this._cx, this._cx, false);
+                _fbos[i_write].Blit(DefaultFramebuffer, 0, (this._cy - this._cx) / 2, this._cx, this._cx, false);
         }
     }
 }

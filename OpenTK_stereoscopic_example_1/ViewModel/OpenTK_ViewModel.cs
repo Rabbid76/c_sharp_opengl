@@ -117,6 +117,8 @@ namespace OpenTK_stereoscopic_example_1.ViewModel
             set { this._focal_scale = value; this.OnPropertyChanged("FocalScale"); }
         }
 
+        public int DefaultFramebuffer => _glc.Framebuffer;
+
         private OpenTK_View _form;
         private GLWpfControl _glc;
         private GLWpfControlViewModel _glc_vm;
