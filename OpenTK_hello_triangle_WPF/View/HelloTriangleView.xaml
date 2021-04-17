@@ -1,0 +1,17 @@
+﻿<Window x:Class="OpenTK_hello_triangle_WPF.View.HelloTriangleView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OpenTK_hello_triangle_WPF"
+        xmlns:ViewModel="clr-namespace:OpenTK_hello_triangle_WPF.ViewModel"
+        xmlns:glWpfControl="clr-namespace:OpenTK.Wpf;assembly=GLWpfControl"
+        mc:Ignorable="d"
+        Title="Hello Trieangle WPF" Height="400" Width="400">
+    <Window.DataContext>
+        <ViewModel:HelloTriangleViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <glWpfControl:GLWpfControl x:Name="gl_control" Margin="5"/>
+    </Grid>
+</Window>

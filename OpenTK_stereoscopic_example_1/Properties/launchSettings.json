@@ -1,8 +1,7 @@
 {
   "profiles": {
     "OpenTK_stereoscopic_example_1": {
-      "commandName": "Project",
-      "workingDirectory": "..\\resource\\model\\wavefront"
+      "commandName": "Project"
     }
   }
 }
