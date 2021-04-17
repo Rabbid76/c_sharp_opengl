@@ -88,18 +88,29 @@ namespace OpenTK_library.OpenGL
             _stencil = false;
             _foramt = Format.RGBA_8;
 
+            float maxTextureMaxAnisotropy = GL.GetFloat((GetPName)0x84FF);
+            float textureMaxAnisotropy = maxTextureMaxAnisotropy;
+
             if (_buffer_specification_4)
             {
                 GL.CreateTextures(TextureTarget.Texture2D, 1, out this._tbo);
+                GL.TextureParameter(this._tbo, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
+                GL.TextureParameter(this._tbo, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+                GL.TextureParameter(this._tbo, (TextureParameterName)0x84FE, textureMaxAnisotropy);
                 GL.TextureStorage2D(this._tbo, 1, SizedInternalFormat.Rgba8, cx, cy);
                 GL.TextureSubImage2D<byte>(this._tbo, 0, 0, 0, cx, cy, PixelFormat.Rgba, PixelType.UnsignedByte, pixel);
                 GL.GenerateTextureMipmap(this._tbo); // TODO $$$ mipmaps for immutable texture?
             }
             else
             {
+                // create issue
+
                 this._tbo = GL.GenTexture();
                 GL.ActiveTexture(TextureUnit.Texture0);
                 GL.BindTexture(TextureTarget.Texture2D, this._tbo);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.LinearMipmapLinear);
+                GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+                GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)0x84FE, textureMaxAnisotropy);
                 GL.TexImage2D<byte>(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, cx, cy, 0, PixelFormat.Rgba, PixelType.UnsignedByte, pixel);
                 GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
             }
@@ -144,6 +155,7 @@ namespace OpenTK_library.OpenGL
             GL.TextureStorage2D(this._tbo, 1, internalFormat, cx, cy);
             GL.TextureParameter(this._tbo, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
             GL.TextureParameter(this._tbo, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+            //GL.TextureParameter(this._tbo, (TextureParameterName)0x84FE, 16);
         }
 
         private void Create2D(int cx, int cy, PixelInternalFormat internalFormat, PixelFormat format, PixelType type)
@@ -159,6 +171,7 @@ namespace OpenTK_library.OpenGL
             GL.TexImage2D(TextureTarget.Texture2D, 0, internalFormat, cx, cy, 0, format, type, IntPtr.Zero );
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Linear);
+            //GL.TexParameter(TextureTarget.Texture2D, (TextureParameterName)0x84FE, 16);
         }
 
         // bind the texture to target (for texture sampler)
