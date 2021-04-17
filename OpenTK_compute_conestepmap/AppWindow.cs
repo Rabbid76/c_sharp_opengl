@@ -56,7 +56,7 @@ namespace OpenTK_compute_conestepmap
                       Title = title,
                       APIVersion = new System.Version(4, 6),
                       API = ContextAPI.OpenGL,
-                      NumberOfSamples = 8,
+                      NumberOfSamples = 0,
                   })
         { }
 

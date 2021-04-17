@@ -138,8 +138,6 @@ namespace OpenTK_library.Controls
 
         public void Move(Vector3 move_vec)
         {
-            bool view_changed = false;
-
             // get view matrix
             (Matrix4 mat_view, Matrix4 inv_view) = view;
 

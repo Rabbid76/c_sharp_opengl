@@ -2,7 +2,7 @@
 
 # OpenTK examples
 
-[OpenTK 4.x](https://opentk.net/), .NET Core 3.1
+[OpenTK 4.x](https://opentk.net/), .NET 5.0 (widows)
 
 [A quad](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_example_1)
 
