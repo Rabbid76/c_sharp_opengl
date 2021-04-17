@@ -4,29 +4,53 @@
 
 [OpenTK 4.x](https://opentk.net/), .NET 5.0 (windows)
 
+## Hello Triangle
+
+[Hello Triangle](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_hello_triangle)
+
+[Hello Triangle - Windows Forms](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_hello_triangle_windows_forms)
+
+[Hello Triangle - WPF](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_hello_triangle_WPF)
+
+## 2D Geometry
+
 [A quad](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_example_1)
 
 [![](doc/image/OpenTK_example_1.png)](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_example_1)
 
-[3D mesh](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_example_3)
-
-[![](doc/image/OpenTK_example_2.png)](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_example_2)
+## Texture
 
 [Texture](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_example_3)
 
 [![](doc/image/OpenTK_example_3.png)](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_example_3)
 
-[Compute shader - Barnsley fern](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_example_4)
-
-[![](doc/image/OpenTK_example_4.png)](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_example_4)
+## Text
 
 [FreeType](https://www.freetype.org/) [TrueType Font Text](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_example_5)
 
 [![](doc/image/OpenTK_example_5.png)](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_example_5)
 
+## 3D Geometry
+
+[3D mesh](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_example_3)
+
+[![](doc/image/OpenTK_example_2.png)](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_example_2)
+
 [WPF 3D mesh](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_WPF_example_1)
 
 [![](doc/image/OpenTK_WPF_example_1.png)](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_WPF_example_1)
+
+## Compute shader
+
+[Compute shader - Barnsley fern](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_example_4)
+
+[![](doc/image/OpenTK_example_4.png)](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_example_4)
+
+[Compute shader raytracing](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_compute_raytracing)
+
+[![](doc/image/OpenTK_compute_raytracing.png)](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_compute_raytracing)
+
+## Navigation
 
 [WPF Orbit, pan, zoom](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_orbit)
 
@@ -35,6 +59,8 @@
 [WPF First person](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_controls_firstperson)
 
 [![](doc/image/OpenTK_controls_firstperson.png)](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_controls_firstperson)
+
+## Parallax mapping
 
 [WPF Parallax relief mapping](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_parallax_relief_mapping)
 
@@ -46,15 +72,13 @@
 
 [WPF Generalized_displacement_mapping](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_parallax_generalized_displacement_mapping)
 
-[![](doc/image/OpenTK_parallax_generalized_displacement_mapping.png)](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_parallax_generalized_displacement_mapping)
+[![](doc/image/OpenTK_generalized_displacement_mapping.png)](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_parallax_generalized_displacement_mapping)
+
+## Applications
 
 [Rubik's cube](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_rubiks)
 
 [![](doc/image/OpenTK_rubiks.png)](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_rubiks)
-
-[Compute shader raytracing](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_compute_raytracing)
-
-[![](doc/image/OpenTK_compute_raytracing.png)](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_compute_raytracing)
 
 [Open-Asset-Importer-Lib](http://www.assimp.org/) [Wavefront OBJ](https://de.wikipedia.org/wiki/Wavefront_OBJ) [model](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_assimp_example_1)
 
