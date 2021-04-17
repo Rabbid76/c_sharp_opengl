@@ -51,6 +51,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTK_parallax_relief_mapp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTK_parallax_generalized_displacement_mapping", "OpenTK_parallax_generalized_displacement_mapping\OpenTK_parallax_generalized_displacement_mapping.csproj", "{19A2FF2A-FF1C-41CA-9B70-85DFB0A353CE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_hello_triangle", "OpenTK_hello_triangle\OpenTK_hello_triangle.csproj", "{BFD53945-D3FC-4A1F-8B32-4D28378FB72C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -141,6 +143,10 @@ Global
 		{19A2FF2A-FF1C-41CA-9B70-85DFB0A353CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19A2FF2A-FF1C-41CA-9B70-85DFB0A353CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{19A2FF2A-FF1C-41CA-9B70-85DFB0A353CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BFD53945-D3FC-4A1F-8B32-4D28378FB72C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BFD53945-D3FC-4A1F-8B32-4D28378FB72C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BFD53945-D3FC-4A1F-8B32-4D28378FB72C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BFD53945-D3FC-4A1F-8B32-4D28378FB72C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
