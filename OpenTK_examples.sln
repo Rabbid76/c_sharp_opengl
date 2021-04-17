@@ -53,6 +53,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTK_parallax_generalized
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_hello_triangle", "OpenTK_hello_triangle\OpenTK_hello_triangle.csproj", "{BFD53945-D3FC-4A1F-8B32-4D28378FB72C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTK_hello_triangle_WPF", "OpenTK_hello_triangle_WPF\OpenTK_hello_triangle_WPF.csproj", "{B97E5C57-639F-43A3-B943-6E9CEB4FAB45}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -147,6 +149,10 @@ Global
 		{BFD53945-D3FC-4A1F-8B32-4D28378FB72C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFD53945-D3FC-4A1F-8B32-4D28378FB72C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFD53945-D3FC-4A1F-8B32-4D28378FB72C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B97E5C57-639F-43A3-B943-6E9CEB4FAB45}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B97E5C57-639F-43A3-B943-6E9CEB4FAB45}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B97E5C57-639F-43A3-B943-6E9CEB4FAB45}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B97E5C57-639F-43A3-B943-6E9CEB4FAB45}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

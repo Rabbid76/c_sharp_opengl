@@ -1,61 +1,27 @@
-﻿using OpenTK.Graphics.OpenGL4;
-using OpenTK.Windowing.Common;
-using OpenTK.Windowing.Desktop;
-using System;
+﻿using System;
+using System.Windows;
+using OpenTK.Graphics.OpenGL4;
 
-namespace OpenTK_hello_triangle
+namespace OpenTK_hello_triangle_WPF.Model
 {
-    public class HelloTriangle : GameWindow
+    public class HelloTriangle
     {
         private bool disposed;
         private int vertex_array_object;
         private int vertex_buffer_object;
         private int program;
 
-        public HelloTriangle()
-            : base(
-                  new GameWindowSettings()
-                  {
-                      // IsMultiThreaded
-                      // RenderFrequency
-                      // UpdateFrequency
-                  },
-                  new NativeWindowSettings()
-                  {
-                      Size = new OpenTK.Mathematics.Vector2i(400, 400),
-                      // Location
-                      // WindowBorder
-                      // WindowState
-                      // StartVisible
-                      // StartFocused
-                      Title = "Hello Triangle",
-                      // CurrentMonitor
-                      APIVersion = new System.Version(4, 6),
-                      // AutoLoadBindings
-                      // Flags
-                      // Profile
-                      API = ContextAPI.OpenGL,
-                      // IsEventDriven
-                      // Icon
-                      // SharedContext
-                      // IsFullscreen
-                      NumberOfSamples = 8,
-                  })
-        { }
-
-        protected override void Dispose(bool disposing)
+        public void Dispose(bool disposing)
         {
-            if (disposing && !disposed)
-            {
-                disposed = true;
-                GL.DeleteProgram(program);
-                GL.DeleteBuffer(vertex_buffer_object);
-                GL.DeleteVertexArray(vertex_array_object);
-            }
-            base.Dispose(disposing);
+            if (!disposing || disposed)
+                return;
+            disposed = true;
+            GL.DeleteProgram(program);
+            GL.DeleteBuffer(vertex_buffer_object);
+            GL.DeleteVertexArray(vertex_array_object);
         }
 
-        protected override void OnLoad()
+        public void Create()
         {
             // Equilateral triangle https://en.wikipedia.org/wiki/Equilateral_triangle
             float[] triangle =
@@ -127,21 +93,17 @@ namespace OpenTK_hello_triangle
             GL.UseProgram(program);
         }
 
-        protected override void OnResize(ResizeEventArgs e)
+        public void Resize(Size newSize)
         {
-            base.OnResize(e);
-            GL.Viewport(0, 0, e.Width, e.Height);
+            GL.Viewport(0, 0, (int)newSize.Width, (int)newSize.Height);
         }
 
-        protected override void OnUpdateFrame(FrameEventArgs e)
+        public void Render()
         {
             GL.ClearColor(0.2f, 0.3f, 0.3f, 1.0f);
             GL.Clear(ClearBufferMask.ColorBufferBit);
 
             GL.DrawArrays(PrimitiveType.Triangles, 0, 3);
-
-            Context.SwapBuffers();
-            base.OnUpdateFrame(e);
         }
     }
 }
