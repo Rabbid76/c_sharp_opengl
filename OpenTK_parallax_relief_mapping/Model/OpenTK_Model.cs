@@ -9,6 +9,7 @@ using OpenTK_library.Type;
 using OpenTK_library.Mesh;
 using OpenTK_library.Controls;
 using OpenTK_library.OpenGL;
+using OpenTK_library.OpenGL.OpenGL4DSA;
 using OpenTK_libray_viewmodel.Model;
 
 namespace OpenTK_parallax_relief_mapping.Model
@@ -52,6 +53,7 @@ namespace OpenTK_parallax_relief_mapping.Model
             }
         }
 
+        private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4DSA();
         private bool _disposed = false;
         private int _cx = 0;
         private int _cy = 0;
@@ -63,7 +65,7 @@ namespace OpenTK_parallax_relief_mapping.Model
         private Texture _texture;
         private Texture _normalmap;
         private Texture _displacementmap;
-        private OpenTK_library.OpenGL.Program _parallax_prog;
+        private IProgram _parallax_prog;
         private StorageBuffer<TMVP> _mvp_ssbo;
         private StorageBuffer<TLightSource> _light_ssbo;
 
@@ -280,7 +282,7 @@ namespace OpenTK_parallax_relief_mapping.Model
                 frag_color = vec4( lightCol.rgb, color.a );
             }";
 
-            this._parallax_prog = OpenTK_library.OpenGL.Program.VertexAndFragmentShaderProgram(vert_shader, frag_shader);
+            this._parallax_prog = openGLFactory.VertexAndFragmentShaderProgram(vert_shader, frag_shader);
             this._parallax_prog.Generate();
 
             // Model view projection shader storage block objects and buffers

@@ -5,6 +5,7 @@ using OpenTK_library.Type;
 using OpenTK_library.Mesh;
 using OpenTK_library.Controls;
 using OpenTK_library.OpenGL;
+using OpenTK_library.OpenGL.OpenGL4DSA;
 using OpenTK_libray_viewmodel.Model;
 
 namespace OpenTK_controls_orbit.Model
@@ -44,6 +45,7 @@ namespace OpenTK_controls_orbit.Model
             }
         }
 
+        private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4DSA();
         private bool _disposed = false;
         private int _cx = 0;
         private int _cy = 0;
@@ -52,7 +54,7 @@ namespace OpenTK_controls_orbit.Model
         private DebugCallback _debug_callback = new DebugCallback();
 
         private VertexArrayObject<float, uint> _test_vao;
-        private OpenTK_library.OpenGL.Program _test_prog;
+        private IProgram _test_prog;
         private StorageBuffer<TMVP> _mvp_ssbo;
         private StorageBuffer<TLightSource> _light_ssbo;
         private PixelPackBuffer<float> _depth_pack_buffer;
@@ -192,7 +194,7 @@ namespace OpenTK_controls_orbit.Model
                 frag_color = vec4( lightCol.rgb, inData.col.a );
             }";
 
-            this._test_prog = OpenTK_library.OpenGL.Program.VertexAndFragmentShaderProgram(vert_shader, frag_shader);
+            this._test_prog = openGLFactory.VertexAndFragmentShaderProgram(vert_shader, frag_shader);
             this._test_prog.Generate();
 
             // Model view projection shader storage block objects and buffers

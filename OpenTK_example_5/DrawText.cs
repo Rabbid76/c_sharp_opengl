@@ -3,19 +3,21 @@ using OpenTK.Graphics.OpenGL4; // GL
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK_library.OpenGL;
+using OpenTK_library.OpenGL.OpenGL4DSA;
 
 namespace OpenTK_example_5
 {
     public class DrawText
         : GameWindow
     {
+        private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4DSA();
         private bool _disposedValue = false;
 
         private OpenTK_library.OpenGL.Version _version = new OpenTK_library.OpenGL.Version();
         private Extensions _extensions = new Extensions();
         private DebugCallback _debug_callback = new DebugCallback();
 
-        private OpenTK_library.OpenGL.Program _text_prog;
+        private IProgram _text_prog;
         private FreeTypeFont _font;
 
         public static DrawText New(int width, int height)
@@ -103,7 +105,7 @@ namespace OpenTK_example_5
                 fragColor = vec4(textColor.rgb*text, text);
             }";
 
-            this._text_prog = OpenTK_library.OpenGL.Program.VertexAndFragmentShaderProgram(vert_shader, frag_shader);
+            this._text_prog = openGLFactory.VertexAndFragmentShaderProgram(vert_shader, frag_shader);
             this._text_prog.Generate();
             this._text_prog.Use();
 

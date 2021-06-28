@@ -14,6 +14,7 @@ using OpenTK.Graphics.OpenGL4; // GL
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK_library.OpenGL;
+using OpenTK_library.OpenGL.OpenGL4DSA;
 using System;
 
 namespace OpenTK_example_1
@@ -21,6 +22,7 @@ namespace OpenTK_example_1
     public class Game
         : GameWindow
     {
+        private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4DSA();
         private bool _disposedValue = false;
 
         private OpenTK_library.OpenGL.Version _version = new OpenTK_library.OpenGL.Version();
@@ -28,7 +30,7 @@ namespace OpenTK_example_1
         private DebugCallback _debug_callback = new DebugCallback();
 
         private VertexArrayObject<float, uint> _test_vao;
-        private OpenTK_library.OpenGL.Program _test_prog;
+        private IProgram _test_prog;
 
         public static Game New(int width, int height)
         {
@@ -127,7 +129,7 @@ namespace OpenTK_example_1
                 frag_color = v_color; 
             }";
 
-            this._test_prog = OpenTK_library.OpenGL.Program.VertexAndFragmentShaderProgram(vert_shader, frag_shader);
+            this._test_prog = openGLFactory.VertexAndFragmentShaderProgram(vert_shader, frag_shader);
             this._test_prog.Generate();
 
             this._test_prog.Use();

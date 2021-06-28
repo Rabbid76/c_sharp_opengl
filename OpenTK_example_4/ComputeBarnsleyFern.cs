@@ -4,6 +4,7 @@ using OpenTK.Graphics.OpenGL4; // GL
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK_library.OpenGL;
+using OpenTK_library.OpenGL.OpenGL4DSA;
 
 namespace OpenTK_exmaple_4
 {
@@ -38,13 +39,14 @@ namespace OpenTK_exmaple_4
             }
         }
 
+        private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4DSA();
         private bool _disposedValue = false;
 
         private OpenTK_library.OpenGL.Version _version = new OpenTK_library.OpenGL.Version();
         private Extensions _extensions = new Extensions();
         private DebugCallback _debug_callback = new DebugCallback();
 
-        private OpenTK_library.OpenGL.Program _compute_prog;
+        private IProgram _compute_prog;
         private StorageBuffer<TCoordinate> _coord_ssbo;
         private Framebuffer _fbo;
         private int _image_cx = 512;
@@ -158,7 +160,7 @@ namespace OpenTK_exmaple_4
                   imageStore(img_output, ivec2(pixel_coords), u_color);
             }";
 
-            this._compute_prog = OpenTK_library.OpenGL.Program.ComputeShaderProgram(compute_shader);
+            this._compute_prog = openGLFactory.ComputeShaderProgram(compute_shader);
             this._compute_prog.Generate();
 
             // Model view projection shader storage block objects and buffers

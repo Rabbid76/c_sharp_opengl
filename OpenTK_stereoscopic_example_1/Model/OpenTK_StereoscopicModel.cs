@@ -9,6 +9,7 @@ using OpenTK_library.Mathematics;
 using OpenTK_library.MeshBuilder;
 using OpenTK_library.Controls;
 using OpenTK_library.OpenGL;
+using OpenTK_library.OpenGL.OpenGL4DSA;
 using OpenTK_library_assimp.Builder;
 using OpenTK_libray_viewmodel.Model;
 
@@ -68,6 +69,7 @@ namespace OpenTK_stereoscopic_example_1.Model
             }
         }
 
+        private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4DSA();
         private OpenTK_ViewModel _viewmodel;
         private int _anaglyph_model_id = 0;
         private int _controls_id = 0;
@@ -83,8 +85,8 @@ namespace OpenTK_stereoscopic_example_1.Model
         private DebugCallback _debug_callback = new DebugCallback();
 
         private OpenTK_library.Scene.Model _model;
-        private OpenTK_library.OpenGL.Program _draw_prog;
-        private OpenTK_library.OpenGL.Program _stereo_prog;
+        private IProgram _draw_prog;
+        private IProgram _stereo_prog;
         private StorageBuffer<TVP> _vp_ssbo;
         private StorageBuffer<TMat44> _model_ssbo;
         private StorageBuffer<TLightSource> _light_ssbo;
@@ -324,7 +326,7 @@ namespace OpenTK_stereoscopic_example_1.Model
                 frag_color = vec4( lightCol.rgb, 1.0 );
             }";
 
-            this._draw_prog = OpenTK_library.OpenGL.Program.VertexAndFragmentShaderProgram(vert_shader_draw, frag_shader_draw);
+            this._draw_prog = openGLFactory.VertexAndFragmentShaderProgram(vert_shader_draw, frag_shader_draw);
             this._draw_prog.Generate();
 
             // Model view projection shader storage block objects and buffers
@@ -447,7 +449,7 @@ namespace OpenTK_stereoscopic_example_1.Model
                 frag_color = vec4(final_color, 1.0);
             }";
 
-            this._stereo_prog = OpenTK_library.OpenGL.Program.VertexAndFragmentShaderProgram(vert_shader_stereo, frag_shader_stereo);
+            this._stereo_prog = openGLFactory.VertexAndFragmentShaderProgram(vert_shader_stereo, frag_shader_stereo);
             this._stereo_prog.Generate();
 
             // quad vertex array

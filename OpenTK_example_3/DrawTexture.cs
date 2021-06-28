@@ -2,6 +2,7 @@
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK_library.OpenGL;
+using OpenTK_library.OpenGL.OpenGL4DSA;
 using System.Drawing;
 using System.IO;
 using System.Reflection;
@@ -11,6 +12,7 @@ namespace OpenTK_example_3
     public class DrawTexture
         : GameWindow
     {
+        private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4DSA();
         private bool _disposedValue = false;
 
         private OpenTK_library.OpenGL.Version _version = new OpenTK_library.OpenGL.Version();
@@ -18,7 +20,7 @@ namespace OpenTK_example_3
         private DebugCallback _debug_callback = new DebugCallback();
 
         private VertexArrayObject<float, uint> _test_vao;
-        private OpenTK_library.OpenGL.Program _test_prog;
+        private IProgram _test_prog;
         private Texture _test_texture;
 
         public static DrawTexture New(int width, int height)
@@ -128,7 +130,7 @@ namespace OpenTK_example_3
                 frag_color = texture(u_texture, v_uv).rgba; 
             }";
 
-            this._test_prog = OpenTK_library.OpenGL.Program.VertexAndFragmentShaderProgram(vert_shader, frag_shader);
+            this._test_prog = openGLFactory.VertexAndFragmentShaderProgram(vert_shader, frag_shader);
             this._test_prog.Generate();
 
             this._test_prog.Use();

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using OpenTK_library.OpenGL;
+using OpenTK_library.OpenGL.OpenGL4DSA;
 using OpenTK.Graphics.OpenGL4; // GL
 
 namespace OpenTK_library.Generator
@@ -8,6 +9,8 @@ namespace OpenTK_library.Generator
     public class TextureGenerator
         : IDisposable
     {
+        IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4DSA();
+
         private bool _disposed = false;
         //private bool _buffer_specification_4 = true;
 
@@ -18,7 +21,7 @@ namespace OpenTK_library.Generator
             cone_step_map
         }
 
-        private OpenTK_library.OpenGL.Program _compute_prog;
+        private IProgram _compute_prog;
         TType _type;
         private List<Texture> _out_textures;
         private List<Texture> _in_textures;
@@ -85,7 +88,7 @@ namespace OpenTK_library.Generator
             if (source_code == null || source_code == "")
                 return false;
 
-            _compute_prog = OpenTK_library.OpenGL.Program.ComputeShaderProgram(source_code);
+            _compute_prog = openGLFactory.ComputeShaderProgram(source_code);
             return _compute_prog.Generate();
         }
 

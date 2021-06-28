@@ -4,6 +4,7 @@ using OpenTK.Graphics.OpenGL4; // GL
 using OpenTK.Mathematics;
 using OpenTK_library.Controls;
 using OpenTK_library.OpenGL;
+using OpenTK_library.OpenGL.OpenGL4DSA;
 using OpenTK_libray_viewmodel.Model;
 using OpenTK_compute_raytracing.ViewModel;
 
@@ -44,6 +45,7 @@ namespace OpenTK_compute_raytracing.Model
             }
         }
 
+        private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4DSA();
         private RayTracing_ViewModel _viewmodel;
         private bool _disposed = false;
         private int _cx = 0;
@@ -52,7 +54,7 @@ namespace OpenTK_compute_raytracing.Model
         private Extensions _extensions = new Extensions();
         private DebugCallback _debug_callback = new DebugCallback();
 
-        private OpenTK_library.OpenGL.Program _compute_prog;
+        private IProgram _compute_prog;
         private List<Framebuffer> _fbos;
         private int _image_cx = 512; //1024;
         private int _image_cy = 512; //1024;
@@ -307,7 +309,7 @@ namespace OpenTK_compute_raytracing.Model
                   imageStore(img_output, pixel_coords, fragColor);
             }";
 
-            this._compute_prog = OpenTK_library.OpenGL.Program.ComputeShaderProgram(compute_shader);
+            this._compute_prog = openGLFactory.ComputeShaderProgram(compute_shader);
             this._compute_prog.Generate();
 
             // framebuffers

@@ -4,6 +4,7 @@ using OpenTK.Mathematics;
 using OpenTK_library.Type;
 using OpenTK_library.Controls;
 using OpenTK_library.OpenGL;
+using OpenTK_library.OpenGL.OpenGL4DSA;
 using OpenTK_libray_viewmodel.Model;
 
 
@@ -60,6 +61,7 @@ namespace OpenTK_rubiks.Model
             }
         }
 
+        private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4DSA();
         private bool _disposed = false;
         private int _cx = 0;
         private int _cy = 0;
@@ -68,7 +70,7 @@ namespace OpenTK_rubiks.Model
         private DebugCallback _debug_callback = new DebugCallback();
 
         private VertexArrayObject<float, uint> _vao;
-        private OpenTK_library.OpenGL.Program _prog;
+        private IProgram _prog;
         private StorageBuffer<TMVP> _mvp_ssbo;
         private StorageBuffer<TLightSource> _light_ssbo;
         private StorageBuffer<T_RUBIKS_DATA> _rubiks_ssbo;
@@ -280,7 +282,7 @@ namespace OpenTK_rubiks.Model
                 fragColor  = color;
             }";
 
-            this._prog = OpenTK_library.OpenGL.Program.VertexAndFragmentShaderProgram(vert_shader, frag_shader);
+            this._prog = openGLFactory.VertexAndFragmentShaderProgram(vert_shader, frag_shader);
             this._prog.Generate();
 
             // matrices

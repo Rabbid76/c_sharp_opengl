@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using OpenTK.Graphics.OpenGL4; // GL
 using OpenTK.Mathematics;
 using OpenTK_assimp_example_1.ViewModel;
@@ -9,6 +8,7 @@ using OpenTK_library.Type;
 using OpenTK_library.MeshBuilder;
 using OpenTK_library.Controls;
 using OpenTK_library.OpenGL;
+using OpenTK_library.OpenGL.OpenGL4DSA;
 using OpenTK_library_assimp.Builder;
 using OpenTK_libray_viewmodel.Model;
 
@@ -51,6 +51,7 @@ namespace OpenTK_assimp_example_1.Model
             }
         }
 
+        private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4DSA();
         private OpenTK_ViewModel _viewmodel;
         private int _controls_id = 0;
         private Dictionary<string, string> _model_names = new Dictionary<string, string>();
@@ -65,7 +66,7 @@ namespace OpenTK_assimp_example_1.Model
         private DebugCallback _debug_callback = new DebugCallback();
 
         private OpenTK_library.Scene.Model _model;
-        private OpenTK_library.OpenGL.Program _draw_prog;
+        private IProgram _draw_prog;
         private StorageBuffer<TVP> _vp_ssbo;
         private StorageBuffer<TMat44> _model_ssbo;
         private StorageBuffer<TLightSource> _light_ssbo;
@@ -252,7 +253,7 @@ namespace OpenTK_assimp_example_1.Model
                 frag_color = vec4( lightCol.rgb, 1.0 );
             }";
 
-            this._draw_prog = OpenTK_library.OpenGL.Program.VertexAndFragmentShaderProgram(vert_shader, frag_shader);
+            this._draw_prog = openGLFactory.VertexAndFragmentShaderProgram(vert_shader, frag_shader);
             this._draw_prog.Generate();
 
             // Model view projection shader storage block objects and buffers
