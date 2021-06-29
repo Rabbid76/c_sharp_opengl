@@ -9,7 +9,7 @@ namespace OpenTK_library.Generator
     public class TextureGenerator
         : IDisposable
     {
-        IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4DSA();
+        IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4DSA(); // TODO
 
         private bool _disposed = false;
         //private bool _buffer_specification_4 = true;

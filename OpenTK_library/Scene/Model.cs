@@ -22,7 +22,7 @@ namespace OpenTK_library.Scene
         protected List<(uint, uint)> _colorattrib;
         protected uint _tuple_size = 0;
         protected uint _face_size = 0;
-        protected VertexArrayObject<float, uint> _vao;
+        protected IVertexArrayObject _vao;
 
         protected override void DisposeObjects()
         {
@@ -91,7 +91,7 @@ namespace OpenTK_library.Scene
             set => _face_size = value;
         }
 
-        public VertexArrayObject<float, uint> VertexArray
+        public IVertexArrayObject VertexArray
         {
             get => _vao;
             set => _vao = value;

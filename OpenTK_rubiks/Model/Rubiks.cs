@@ -69,7 +69,7 @@ namespace OpenTK_rubiks.Model
         private Extensions _extensions = new Extensions();
         private DebugCallback _debug_callback = new DebugCallback();
 
-        private VertexArrayObject<float, uint> _vao;
+        private IVertexArrayObject _vao;
         private IProgram _prog;
         private StorageBuffer<TMVP> _mvp_ssbo;
         private StorageBuffer<TLightSource> _light_ssbo;
@@ -188,7 +188,7 @@ namespace OpenTK_rubiks.Model
                 new TVertexFormat(0, 1, 4, 3, false),
             };
 
-            _vao = new VertexArrayObject<float, uint>();
+            _vao = openGLFactory.NewVertexArrayObject();
             _vao.AppendVertexBuffer(0, 7, attributes);
             _vao.Create(format, indices);
             _vao.Bind();

@@ -2,7 +2,7 @@
 
 namespace OpenTK_library.OpenGL
 {
-    interface IObject
+    public interface IObject
         : IDisposable
     {}
 

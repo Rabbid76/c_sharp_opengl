@@ -3,6 +3,7 @@ using OpenTK_library.Mathematics;
 using OpenTK_library.Mesh;
 using OpenTK_library.Scene;
 using OpenTK_library.OpenGL;
+using OpenTK_library.OpenGL.OpenGL4DSA;
 
 namespace OpenTK_library.MeshBuilder
 {
@@ -19,6 +20,7 @@ namespace OpenTK_library.MeshBuilder
         public class TrefoilKnotBuilder
         {
             private TrefoilKnotModel _model = new TrefoilKnotModel();
+            private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4DSA(); // TODO
 
             public static implicit operator OpenTK_library.Scene.Model(TrefoilKnotBuilder builder)
             {
@@ -63,7 +65,7 @@ namespace OpenTK_library.MeshBuilder
                 };
                 
                 // setup vertex arrays and index array
-                var vao = new VertexArrayObject<float, uint>();
+                var vao = openGLFactory.NewVertexArrayObject();
                 vao.AppendVertexBuffer(0, (int)tuple_size, attributes);
                 vao.Create(format, indices);
 

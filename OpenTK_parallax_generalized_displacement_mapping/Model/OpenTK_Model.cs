@@ -64,7 +64,7 @@ namespace OpenTK_parallax_generalized_displacement_mapping.Model
         private List<Texture> _tbos;
         private int _image_cx = 512; //1024;
         private int _image_cy = 512; //1024;
-        private VertexArrayObject<float, uint> _cube_vao;
+        private IVertexArrayObject _cube_vao;
         private IProgram _parallax_prog;
         private StorageBuffer<TMVP> _mvp_ssbo;
         private StorageBuffer<TLightSource> _light_ssbo;
@@ -136,7 +136,7 @@ namespace OpenTK_parallax_generalized_displacement_mapping.Model
                 //new TVertexFormat(0, 2, 4, 8, false),
             };
 
-            _cube_vao = new VertexArrayObject<float, uint>();
+            _cube_vao = openGLFactory.NewVertexArrayObject();
             _cube_vao.AppendVertexBuffer(0, 12, attributes);
             _cube_vao.Create(format, indices);
             _cube_vao.Bind();

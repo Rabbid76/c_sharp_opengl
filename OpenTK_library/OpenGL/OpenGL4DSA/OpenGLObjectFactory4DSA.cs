@@ -4,5 +4,8 @@
     {
         public override IProgram NewProgram((ShaderType, string)[] shader_source) =>
             new Program4DSA(shader_source);
+
+        public override IVertexArrayObject NewVertexArrayObject() =>
+            new VertexArrayObject4DSA();
     }
 }

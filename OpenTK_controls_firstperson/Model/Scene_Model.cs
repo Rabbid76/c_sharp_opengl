@@ -53,7 +53,7 @@ namespace OpenTK_controls_firstperson.Model
         private Extensions _extensions = new Extensions();
         private DebugCallback _debug_callback = new DebugCallback();
 
-        private VertexArrayObject<float, uint> _test_vao;
+        private IVertexArrayObject _test_vao;
         private IProgram _test_prog;
         private StorageBuffer<TMVP> _mvp_ssbo;
         private StorageBuffer<TLightSource> _light_ssbo;
@@ -114,7 +114,7 @@ namespace OpenTK_controls_firstperson.Model
                 new TVertexFormat(0, 2, 4, 8, false),
             };
 
-            _test_vao = new VertexArrayObject<float, uint>();
+            _test_vao = openGLFactory.NewVertexArrayObject();
             _test_vao.AppendVertexBuffer(0, 12, attributes);
             _test_vao.Create(format, indices);
             _test_vao.Bind();

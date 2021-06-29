@@ -7,6 +7,7 @@ using Assimp.Configs;
 using OpenTK_library.Mathematics;
 using OpenTK_library.Scene;
 using OpenTK_library.OpenGL;
+using OpenTK_library.OpenGL.OpenGL4DSA;
 
 namespace OpenTK_library_assimp.Builder
 {
@@ -35,6 +36,7 @@ namespace OpenTK_library_assimp.Builder
         public class AssimpModelBuilder
         {
             private AssimpModel _model = new AssimpModel();
+            private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4DSA(); // TODO
 
             public static implicit operator OpenTK_library.Scene.Model(AssimpModelBuilder builder)
             {
@@ -238,7 +240,7 @@ namespace OpenTK_library_assimp.Builder
 
                         // setup vertex arrays and index array
                         TVertexFormat[] format = formalist.ToArray();
-                        var vao = new VertexArrayObject<float, uint>();
+                        var vao = openGLFactory.NewVertexArrayObject();
                         vao.AppendVertexBuffer(0, (int)tuple_index, attributes.ToArray());
                         vao.Create(format, indices.ToArray());
 

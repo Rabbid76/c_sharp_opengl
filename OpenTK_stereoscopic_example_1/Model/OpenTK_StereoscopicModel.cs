@@ -92,7 +92,7 @@ namespace OpenTK_stereoscopic_example_1.Model
         private StorageBuffer<TLightSource> _light_ssbo;
         private PixelPackBuffer<float> _depth_pack_buffer;
         private List<Framebuffer> _fbos;
-        private VertexArrayObject<float, uint> _quad_vao;
+        private IVertexArrayObject _quad_vao;
 
         private Matrix4 _view = Matrix4.Identity;
         private Matrix4 _projection = Matrix4.Identity;
@@ -457,7 +457,7 @@ namespace OpenTK_stereoscopic_example_1.Model
             float[] attributes = { -1, -1, 1, -1, 1, 1, -1, 1 };
             uint[] indices = { 0, 1, 2, 0, 2, 3 };
             TVertexFormat[] format = {new TVertexFormat(0, 0, 2, 0, false )};
-            _quad_vao = new VertexArrayObject<float, uint>();
+            _quad_vao = openGLFactory.NewVertexArrayObject();
             _quad_vao.AppendVertexBuffer(0, 2, attributes);
             _quad_vao.Create(format, indices);
             _quad_vao.Bind();

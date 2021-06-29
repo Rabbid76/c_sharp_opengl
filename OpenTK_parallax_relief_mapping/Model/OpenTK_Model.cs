@@ -61,7 +61,7 @@ namespace OpenTK_parallax_relief_mapping.Model
         private Extensions _extensions = new Extensions();
         private DebugCallback _debug_callback = new DebugCallback();
 
-        private VertexArrayObject<float, uint> _cube_vao;
+        private IVertexArrayObject _cube_vao;
         private Texture _texture;
         private Texture _normalmap;
         private Texture _displacementmap;
@@ -133,7 +133,7 @@ namespace OpenTK_parallax_relief_mapping.Model
                 //new TVertexFormat(0, 2, 4, 8, false),
             };
 
-            _cube_vao = new VertexArrayObject<float, uint>();
+            _cube_vao = openGLFactory.NewVertexArrayObject();
             _cube_vao.AppendVertexBuffer(0, 12, attributes);
             _cube_vao.Create(format, indices);
             _cube_vao.Bind();

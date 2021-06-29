@@ -19,7 +19,7 @@ namespace OpenTK_example_3
         private Extensions _extensions = new Extensions();
         private DebugCallback _debug_callback = new DebugCallback();
 
-        private VertexArrayObject<float, uint> _test_vao;
+        private IVertexArrayObject _test_vao;
         private IProgram _test_prog;
         private Texture _test_texture;
 
@@ -93,7 +93,7 @@ namespace OpenTK_example_3
                 new TVertexFormat(0, 1, 2, 3, false),
             };
 
-            _test_vao = new VertexArrayObject<float, uint>();
+            _test_vao = openGLFactory.NewVertexArrayObject();
             _test_vao.AppendVertexBuffer(0, 5, vquad);
             _test_vao.Create(format, iquad);
 
