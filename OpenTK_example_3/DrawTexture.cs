@@ -21,7 +21,7 @@ namespace OpenTK_example_3
 
         private IVertexArrayObject _test_vao;
         private IProgram _test_prog;
-        private Texture _test_texture;
+        private ITexture _test_texture;
 
         public static DrawTexture New(int width, int height)
         {
@@ -103,7 +103,7 @@ namespace OpenTK_example_3
             string[] names = assembly.GetManifestResourceNames();
             Stream resource_stream = assembly.GetManifestResourceStream("OpenTK_example_3.Resource.background.jpg");
             
-            _test_texture = new Texture();
+            _test_texture = openGLFactory.NewTexture();
             _test_texture.Create2D(new Bitmap(resource_stream));
 
             // Create shader program

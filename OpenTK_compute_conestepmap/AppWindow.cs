@@ -4,6 +4,7 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK_library.Controls;
 using OpenTK_library.OpenGL;
+using OpenTK_library.OpenGL.OpenGL4DSA;
 using OpenTK_library.Generator;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,7 @@ namespace OpenTK_compute_conestepmap
     public class AppWindow
         : GameWindow
     {
+        private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4DSA();
         private bool _disposed = false;
         private int _cx = 0;
         private int _cy = 0;
@@ -110,9 +112,9 @@ namespace OpenTK_compute_conestepmap
 
             // create generators
             this._generators = new List<TextureGenerator>();
-            this._generators.Add(new TextureGenerator(TextureGenerator.TType.texture_test1, new Texture[] { _fbos[0].Textures[0] }));
-            this._generators.Add(new TextureGenerator(TextureGenerator.TType.heightmap_test1, new Texture[] { _fbos[1].Textures[0] }));
-            this._generators.Add(new TextureGenerator(TextureGenerator.TType.cone_step_map, new Texture[] { _fbos[2].Textures[0] }, new Texture[] { _fbos[1].Textures[0] }));
+            this._generators.Add(new TextureGenerator(TextureGenerator.TType.texture_test1, new ITexture[] { _fbos[0].Textures[0] }));
+            this._generators.Add(new TextureGenerator(TextureGenerator.TType.heightmap_test1, new ITexture[] { _fbos[1].Textures[0] }));
+            this._generators.Add(new TextureGenerator(TextureGenerator.TType.cone_step_map, new ITexture[] { _fbos[2].Textures[0] }, new ITexture[] { _fbos[1].Textures[0] }));
 
             foreach (var generator in this._generators)
                 generator.GenetateProgram();

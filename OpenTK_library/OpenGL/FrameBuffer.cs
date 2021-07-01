@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using OpenTK.Mathematics;      // Color4       
 using OpenTK.Graphics.OpenGL4; // GL
+using OpenTK_library.OpenGL.OpenGL4DSA;
 
 namespace OpenTK_library.OpenGL
 {
@@ -16,9 +17,10 @@ namespace OpenTK_library.OpenGL
         private bool _disposed = false;
         private bool _buffer_specification_4 = true;
 
+        IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4DSA(); // TODO
         private int _fbo = 0;
         private List<Renderbuffer> _rbos;
-        private List<Texture> _tbos;
+        private List<ITexture> _tbos;
         private FramebufferErrorCode _error_code = FramebufferErrorCode.FramebufferComplete;
         private FramebufferStatus _status = FramebufferStatus.FramebufferComplete;
         private bool _valid;
@@ -28,8 +30,8 @@ namespace OpenTK_library.OpenGL
         private bool _stencil = false;
 
         public int Object { get { return this._fbo; } }
-        public List<Renderbuffer> Renderbuffers { get { return this._rbos; } }
-        public List<Texture> Textures { get { return this._tbos; } }
+        public List<Renderbuffer> Renderbuffers { get => this._rbos; }
+        public List<ITexture> Textures { get => this._tbos; }
 
         public Framebuffer()
         { }
@@ -88,34 +90,34 @@ namespace OpenTK_library.OpenGL
 
                 if (kind == Kind.texture)
                 {
-                    this._tbos = new List<Texture>();
+                    this._tbos = new List<ITexture>();
 
-                    var tbo_ca0 = new Texture();
+                    var tbo_ca0 = openGLFactory.NewTexture();
                     this._tbos.Add(tbo_ca0);
-                    Texture.Format texture_format = Texture.Format.RGBA_8;
+                    ITexture.Format texture_format = ITexture.Format.RGBA_8;
                     if (format == Format.RGBA_F32)
-                        texture_format = Texture.Format.RGBA_F32;
+                        texture_format = ITexture.Format.RGBA_F32;
                     tbo_ca0.Create2D(cx, cy, texture_format);
                     GL.NamedFramebufferTexture(this._fbo, FramebufferAttachment.ColorAttachment0, tbo_ca0.Object, 0);
 
                     if (depth || stencil)
                     {
-                        var tbo_ds = new Texture();
+                        var tbo_ds = openGLFactory.NewTexture();
                         this._tbos.Add(tbo_ds);
                         FramebufferAttachment attachment;
                         if (depth && stencil == false)
                         {
-                            tbo_ds.Create2D(cx, cy, Texture.Format.Depth);
+                            tbo_ds.Create2D(cx, cy, ITexture.Format.Depth);
                             attachment = FramebufferAttachment.DepthAttachment;
                         }
                         else if (depth == false && stencil)
                         {
-                            tbo_ds.Create2D(cx, cy, Texture.Format.DepthStencil);
+                            tbo_ds.Create2D(cx, cy, ITexture.Format.DepthStencil);
                             attachment = FramebufferAttachment.StencilAttachment;
                         }
                         else
                         {
-                            tbo_ds.Create2D(cx, cy, Texture.Format.DepthStencil);
+                            tbo_ds.Create2D(cx, cy, ITexture.Format.DepthStencil);
                             attachment = FramebufferAttachment.DepthStencilAttachment;
                         }
                         GL.NamedFramebufferTexture(this._fbo, attachment, tbo_ds.Object, 0);
@@ -154,34 +156,34 @@ namespace OpenTK_library.OpenGL
 
                 if (kind == Kind.texture)
                 {
-                    this._tbos = new List<Texture>();
+                    this._tbos = new List<ITexture>();
 
-                    var tbo_ca0 = new Texture();
+                    var tbo_ca0 = openGLFactory.NewTexture();
                     this._tbos.Add(tbo_ca0);
-                    Texture.Format texture_format = Texture.Format.RGBA_8;
+                    ITexture.Format texture_format = ITexture.Format.RGBA_8;
                     if (format == Format.RGBA_F32)
-                        texture_format = Texture.Format.RGBA_F32;
+                        texture_format = ITexture.Format.RGBA_F32;
                     tbo_ca0.Create2D(cx, cy, texture_format);
                     GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, TextureTarget.Texture2D, tbo_ca0.Object, 0);
 
                     if (depth || stencil)
                     {
-                        var tbo_ds = new Texture();
+                        var tbo_ds = openGLFactory.NewTexture();
                         this._tbos.Add(tbo_ds);
                         FramebufferAttachment attachment;
                         if (depth && stencil == false)
                         {
-                            tbo_ds.Create2D(cx, cy, Texture.Format.Depth);
+                            tbo_ds.Create2D(cx, cy, ITexture.Format.Depth);
                             attachment = FramebufferAttachment.DepthAttachment;
                         }
                         else if (depth == false && stencil)
                         {
-                            tbo_ds.Create2D(cx, cy, Texture.Format.DepthStencil);
+                            tbo_ds.Create2D(cx, cy, ITexture.Format.DepthStencil);
                             attachment = FramebufferAttachment.StencilAttachment;
                         }
                         else
                         {
-                            tbo_ds.Create2D(cx, cy, Texture.Format.DepthStencil);
+                            tbo_ds.Create2D(cx, cy, ITexture.Format.DepthStencil);
                             attachment = FramebufferAttachment.DepthStencilAttachment;
                         }
                         GL.FramebufferTexture2D(FramebufferTarget.Framebuffer, attachment, TextureTarget.Texture2D, tbo_ds.Object, 0);

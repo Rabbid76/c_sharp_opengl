@@ -342,8 +342,8 @@ namespace OpenTK_compute_raytracing.Model
             int i_read = (this._frame % 2) == 0 ? 1 : 0;
             int i_write = (this._frame % 2) == 0 ? 0 : 1;
 
-            _fbos[i_read].Textures[0].BindImage(1, Texture.Access.Read);
-            _fbos[i_write].Textures[0].BindImage(2, Texture.Access.Write);
+            _fbos[i_read].Textures[0].BindImage(1, ITexture.Access.Read);
+            _fbos[i_write].Textures[0].BindImage(2, ITexture.Access.Write);
             
             GL.ProgramUniform1(_compute_prog.Object, 1, this._frame);
             GL.ProgramUniform1(_compute_prog.Object, 2, (float)this._period);

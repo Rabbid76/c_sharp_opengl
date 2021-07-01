@@ -62,9 +62,9 @@ namespace OpenTK_parallax_relief_mapping.Model
         private DebugCallback _debug_callback = new DebugCallback();
 
         private IVertexArrayObject _cube_vao;
-        private Texture _texture;
-        private Texture _normalmap;
-        private Texture _displacementmap;
+        private ITexture _texture;
+        private ITexture _normalmap;
+        private ITexture _displacementmap;
         private IProgram _parallax_prog;
         private StorageBuffer<TMVP> _mvp_ssbo;
         private StorageBuffer<TLightSource> _light_ssbo;
@@ -146,11 +146,11 @@ namespace OpenTK_parallax_relief_mapping.Model
             Stream normalmap_stream = assembly.GetManifestResourceStream("OpenTK_parallax_relief_mapping.Resource.toy_box_normal.png");
             Stream displacementmap_stream = assembly.GetManifestResourceStream("OpenTK_parallax_relief_mapping.Resource.toy_box_disp.png");
 
-            _texture = new Texture();
+            _texture = openGLFactory.NewTexture();
             _texture.Create2D(new Bitmap(textue_stream));
-            _normalmap = new Texture();
+            _normalmap = openGLFactory.NewTexture();
             _normalmap.Create2D(new Bitmap(normalmap_stream));
-            _displacementmap = new Texture();
+            _displacementmap = openGLFactory.NewTexture();
             _displacementmap.Create2D(new Bitmap(displacementmap_stream));
 
             // Create shader program

@@ -23,8 +23,8 @@ namespace OpenTK_library.Generator
 
         private IProgram _compute_prog;
         TType _type;
-        private List<Texture> _out_textures;
-        private List<Texture> _in_textures;
+        private List<ITexture> _out_textures;
+        private List<ITexture> _in_textures;
         
         protected virtual void Dispose(bool disposing)
         {
@@ -44,12 +44,12 @@ namespace OpenTK_library.Generator
         ~TextureGenerator()
         {}
 
-        public TextureGenerator(TType type, Texture[] out_textures, Texture[] in_textures = null)
+        public TextureGenerator(TType type, ITexture[] out_textures, ITexture[] in_textures = null)
         {
             _type = type;
-            _out_textures = new List<Texture>(out_textures);
+            _out_textures = new List<ITexture>(out_textures);
             if (in_textures != null)
-                _in_textures = new List<Texture>(in_textures);
+                _in_textures = new List<ITexture>(in_textures);
         }
 
         public bool Generate()
@@ -63,12 +63,12 @@ namespace OpenTK_library.Generator
             if (_out_textures != null)
             {
                 foreach (var tob in _out_textures)
-                    tob.BindImage(i++, Texture.Access.Write);
+                    tob.BindImage(i++, ITexture.Access.Write);
             }
             if (_in_textures != null)
             {
                 foreach (var tob in _in_textures)
-                    tob.BindImage(i++, Texture.Access.Read);
+                    tob.BindImage(i++, ITexture.Access.Read);
             }
 
             _compute_prog.Use();
@@ -106,7 +106,7 @@ namespace OpenTK_library.Generator
 
             string final_code = "#version 460\n";
 
-            List<Texture> all_textures = new List<Texture>();
+            List<ITexture> all_textures = new List<ITexture>();
             all_textures?.AddRange(_out_textures);
             if (_in_textures != null)
                 all_textures?.AddRange(_in_textures);
@@ -115,8 +115,8 @@ namespace OpenTK_library.Generator
                 string format_str = "rgba8";
                 switch (all_textures[i].InternalFormat)
                 {
-                    case Texture.Format.RGBA_8: format_str = "rgba8"; break;
-                    case Texture.Format.RGBA_F32: format_str = "rgba32f"; break;
+                    case ITexture.Format.RGBA_8: format_str = "rgba8"; break;
+                    case ITexture.Format.RGBA_F32: format_str = "rgba32f"; break;
                 }
                 final_code += "#define IMAGE_FORMAT_" + i.ToString() + " " + format_str + "\n";
             }

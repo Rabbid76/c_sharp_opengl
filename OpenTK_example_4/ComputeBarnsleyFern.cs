@@ -193,7 +193,7 @@ namespace OpenTK_exmaple_4
 
             GL.Viewport(0, 0, this.Size.X, this.Size.Y);
 
-            _fbo.Textures[0].BindImage(1, Texture.Access.Write);
+            _fbo.Textures[0].BindImage(1, ITexture.Access.Write);
             
             float margin = 0.5f;
             Color4 color = new Color4(0.5f, 1.0f, 0.25f, 1.0f);

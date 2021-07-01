@@ -7,5 +7,8 @@
 
         public override IVertexArrayObject NewVertexArrayObject() =>
             new VertexArrayObject4();
+
+        public override ITexture NewTexture() =>
+            new Texture4();
     }
 }

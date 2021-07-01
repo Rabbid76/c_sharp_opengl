@@ -23,9 +23,11 @@
             (ShaderType, string)[] shader_source = { (ShaderType.ComputeShader, ComputeShaderSource) };
             return NewProgram(shader_source);
         }
+
         public abstract IProgram NewProgram((ShaderType, string)[] shader_source);
 
         public abstract IVertexArrayObject NewVertexArrayObject();
 
+        public abstract ITexture NewTexture();
     }
 }

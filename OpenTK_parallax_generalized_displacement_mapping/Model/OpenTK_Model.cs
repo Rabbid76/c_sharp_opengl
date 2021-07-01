@@ -61,7 +61,7 @@ namespace OpenTK_parallax_generalized_displacement_mapping.Model
         private DebugCallback _debug_callback = new DebugCallback();
 
         private List<TextureGenerator> _generators;
-        private List<Texture> _tbos;
+        private List<ITexture> _tbos;
         private int _image_cx = 512; //1024;
         private int _image_cy = 512; //1024;
         private IVertexArrayObject _cube_vao;
@@ -143,23 +143,23 @@ namespace OpenTK_parallax_generalized_displacement_mapping.Model
 
             // Create textures objects
 
-            _tbos = new List<Texture>();
-            _tbos.Add(new Texture());
-            _tbos[0].Create2D(_image_cx, _image_cy, Texture.Format.RGBA_8);
-            _tbos.Add(new Texture());
-            _tbos[1].Create2D(_image_cx, _image_cy, Texture.Format.RGBA_F32);
-            _tbos.Add(new Texture());
+            _tbos = new List<ITexture>();
+            _tbos.Add(openGLFactory.NewTexture());
+            _tbos[0].Create2D(_image_cx, _image_cy, ITexture.Format.RGBA_8);
+            _tbos.Add(openGLFactory.NewTexture());
+            _tbos[1].Create2D(_image_cx, _image_cy, ITexture.Format.RGBA_F32);
+            _tbos.Add(openGLFactory.NewTexture());
 
-            _tbos[2].Create2D(_image_cx, _image_cy, Texture.Format.RGBA_F32);
+            _tbos[2].Create2D(_image_cx, _image_cy, ITexture.Format.RGBA_F32);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Nearest);
             GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)TextureMagFilter.Nearest);
 
             // Create generators
 
             this._generators = new List<TextureGenerator>();
-            this._generators.Add(new TextureGenerator(TextureGenerator.TType.texture_test1, new Texture[] { _tbos[0] }));
-            this._generators.Add(new TextureGenerator(TextureGenerator.TType.heightmap_test1, new Texture[] { _tbos[1] }));
-            this._generators.Add(new TextureGenerator(TextureGenerator.TType.cone_step_map, new Texture[] { _tbos[2] }, new Texture[] { _tbos[1] }));
+            this._generators.Add(new TextureGenerator(TextureGenerator.TType.texture_test1, new ITexture[] { _tbos[0] }));
+            this._generators.Add(new TextureGenerator(TextureGenerator.TType.heightmap_test1, new ITexture[] { _tbos[1] }));
+            this._generators.Add(new TextureGenerator(TextureGenerator.TType.cone_step_map, new ITexture[] { _tbos[2] }, new ITexture[] { _tbos[1] }));
 
             // Create textures
 
