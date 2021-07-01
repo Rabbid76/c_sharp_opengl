@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using OpenTK.Graphics.OpenGL4; // GL, ShaderType
+using OpenTK.Graphics.OpenGL4;
 
 namespace OpenTK_library.OpenGL.OpenGL4
 {

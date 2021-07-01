@@ -4,7 +4,7 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK_library.Controls;
 using OpenTK_library.OpenGL;
-using OpenTK_library.OpenGL.OpenGL4DSA;
+using OpenTK_library.OpenGL.OpenGL4;
 using OpenTK_library.Generator;
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ namespace OpenTK_compute_conestepmap
     public class AppWindow
         : GameWindow
     {
-        private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4DSA();
+        private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4();
         private bool _disposed = false;
         private int _cx = 0;
         private int _cy = 0;

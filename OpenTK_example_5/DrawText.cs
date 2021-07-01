@@ -3,14 +3,14 @@ using OpenTK.Graphics.OpenGL4; // GL
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK_library.OpenGL;
-using OpenTK_library.OpenGL.OpenGL4DSA;
+using OpenTK_library.OpenGL.OpenGL4;
 
 namespace OpenTK_example_5
 {
     public class DrawText
         : GameWindow
     {
-        private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4DSA();
+        private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4();
         private bool _disposedValue = false;
 
         private OpenTK_library.OpenGL.Version _version = new OpenTK_library.OpenGL.Version();

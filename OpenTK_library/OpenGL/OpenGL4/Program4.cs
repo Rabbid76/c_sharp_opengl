@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using OpenTK.Graphics.OpenGL4; // GL, ShaderType
+using OpenTK.Graphics.OpenGL4;
 
 // TODO: map shader type sources / spire-v
 // create spire-v asynchronously

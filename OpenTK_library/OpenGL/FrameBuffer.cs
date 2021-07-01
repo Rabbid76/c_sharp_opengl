@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using OpenTK.Mathematics;      // Color4       
 using OpenTK.Graphics.OpenGL4; // GL
-using OpenTK_library.OpenGL.OpenGL4DSA;
+using OpenTK_library.OpenGL.OpenGL4;
 
 namespace OpenTK_library.OpenGL
 {
@@ -17,7 +17,7 @@ namespace OpenTK_library.OpenGL
         private bool _disposed = false;
         private bool _buffer_specification_4 = true;
 
-        IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4DSA(); // TODO
+        IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4(); // TODO
         private int _fbo = 0;
         private List<Renderbuffer> _rbos;
         private List<ITexture> _tbos;

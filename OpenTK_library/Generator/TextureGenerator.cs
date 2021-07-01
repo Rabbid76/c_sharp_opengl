@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using OpenTK_library.OpenGL;
-using OpenTK_library.OpenGL.OpenGL4DSA;
+using OpenTK_library.OpenGL.OpenGL4;
 using OpenTK.Graphics.OpenGL4; // GL
 
 namespace OpenTK_library.Generator
@@ -9,7 +9,7 @@ namespace OpenTK_library.Generator
     public class TextureGenerator
         : IDisposable
     {
-        IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4DSA(); // TODO
+        IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4(); // TODO
 
         private bool _disposed = false;
         //private bool _buffer_specification_4 = true;

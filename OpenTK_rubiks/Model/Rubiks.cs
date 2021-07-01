@@ -4,7 +4,7 @@ using OpenTK.Mathematics;
 using OpenTK_library.Type;
 using OpenTK_library.Controls;
 using OpenTK_library.OpenGL;
-using OpenTK_library.OpenGL.OpenGL4DSA;
+using OpenTK_library.OpenGL.OpenGL4;
 using OpenTK_libray_viewmodel.Model;
 
 
@@ -61,7 +61,7 @@ namespace OpenTK_rubiks.Model
             }
         }
 
-        private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4DSA();
+        private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4();
         private bool _disposed = false;
         private int _cx = 0;
         private int _cy = 0;

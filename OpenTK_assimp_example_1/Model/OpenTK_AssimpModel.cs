@@ -8,7 +8,7 @@ using OpenTK_library.Type;
 using OpenTK_library.MeshBuilder;
 using OpenTK_library.Controls;
 using OpenTK_library.OpenGL;
-using OpenTK_library.OpenGL.OpenGL4DSA;
+using OpenTK_library.OpenGL.OpenGL4;
 using OpenTK_library_assimp.Builder;
 using OpenTK_libray_viewmodel.Model;
 
@@ -51,7 +51,7 @@ namespace OpenTK_assimp_example_1.Model
             }
         }
 
-        private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4DSA();
+        private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4();
         private OpenTK_ViewModel _viewmodel;
         private int _controls_id = 0;
         private Dictionary<string, string> _model_names = new Dictionary<string, string>();

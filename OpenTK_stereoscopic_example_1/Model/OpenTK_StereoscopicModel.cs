@@ -9,7 +9,7 @@ using OpenTK_library.Mathematics;
 using OpenTK_library.MeshBuilder;
 using OpenTK_library.Controls;
 using OpenTK_library.OpenGL;
-using OpenTK_library.OpenGL.OpenGL4DSA;
+using OpenTK_library.OpenGL.OpenGL4;
 using OpenTK_library_assimp.Builder;
 using OpenTK_libray_viewmodel.Model;
 
@@ -69,7 +69,7 @@ namespace OpenTK_stereoscopic_example_1.Model
             }
         }
 
-        private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4DSA();
+        private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4();
         private OpenTK_ViewModel _viewmodel;
         private int _anaglyph_model_id = 0;
         private int _controls_id = 0;

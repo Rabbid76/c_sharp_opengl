@@ -7,7 +7,7 @@ using Assimp.Configs;
 using OpenTK_library.Mathematics;
 using OpenTK_library.Scene;
 using OpenTK_library.OpenGL;
-using OpenTK_library.OpenGL.OpenGL4DSA;
+using OpenTK_library.OpenGL.OpenGL4;
 
 namespace OpenTK_library_assimp.Builder
 {
@@ -36,7 +36,7 @@ namespace OpenTK_library_assimp.Builder
         public class AssimpModelBuilder
         {
             private AssimpModel _model = new AssimpModel();
-            private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4DSA(); // TODO
+            private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4(); // TODO
 
             public static implicit operator OpenTK_library.Scene.Model(AssimpModelBuilder builder)
             {

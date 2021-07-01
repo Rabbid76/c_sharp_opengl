@@ -3,7 +3,7 @@ using OpenTK_library.Mathematics;
 using OpenTK_library.Mesh;
 using OpenTK_library.Scene;
 using OpenTK_library.OpenGL;
-using OpenTK_library.OpenGL.OpenGL4DSA;
+using OpenTK_library.OpenGL.OpenGL4;
 
 namespace OpenTK_library.MeshBuilder
 {
@@ -20,7 +20,7 @@ namespace OpenTK_library.MeshBuilder
         public class TrefoilKnotBuilder
         {
             private TrefoilKnotModel _model = new TrefoilKnotModel();
-            private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4DSA(); // TODO
+            private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4(); // TODO
 
             public static implicit operator OpenTK_library.Scene.Model(TrefoilKnotBuilder builder)
             {

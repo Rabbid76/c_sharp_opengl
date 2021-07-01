@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using OpenTK.Graphics.OpenGL4; // GL, ShaderType
+using OpenTK.Graphics.OpenGL4;
 
-namespace OpenTK_library.OpenGL.OpenGL4DSA
+namespace OpenTK_library.OpenGL.OpenGL4
 {
-    internal class VertexArrayObject4DSA : Object, IVertexArrayObject
+    internal class VertexArrayObject4SeparateFormat : Object, IVertexArrayObject
     {
         // TODO
         // - T_DATA has to be `float` or `double`
@@ -21,7 +21,7 @@ namespace OpenTK_library.OpenGL.OpenGL4DSA
 
         public int Object { get { return this._vao; } }
 
-        public VertexArrayObject4DSA()
+        public VertexArrayObject4SeparateFormat()
         { }
 
         protected override void DisposeObjects()

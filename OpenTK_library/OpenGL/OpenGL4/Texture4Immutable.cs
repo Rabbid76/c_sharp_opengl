@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Drawing;
-using OpenTK.Graphics.OpenGL4; // GL, ShaderType
+using OpenTK.Graphics.OpenGL4;
 
-namespace OpenTK_library.OpenGL.OpenGL4DSA
+namespace OpenTK_library.OpenGL.OpenGL4
 {
     public class Texture4Immutable : ITexture
     {
