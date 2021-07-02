@@ -17,5 +17,8 @@
 
         public override IFramebuffer NewFramebuffer() =>
             dsa ? new Framebuffer4DSA(this) : new Framebuffer4(this);
+
+        public override IRenderbuffer NewRenderbuffer() =>
+            dsa ? new Renderbuffer4DSA() : new Renderbuffer4();
     }
 }

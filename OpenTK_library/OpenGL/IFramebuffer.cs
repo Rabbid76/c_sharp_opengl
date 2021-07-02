@@ -12,7 +12,7 @@ namespace OpenTK_library.OpenGL
 
         int Object { get; }
 
-        List<Renderbuffer> Renderbuffers { get; }
+        List<IRenderbuffer> Renderbuffers { get; }
         List<ITexture> Textures { get; }
 
         void Create(int cx, int cy, Kind kind, Format format, bool depth, bool stencil);

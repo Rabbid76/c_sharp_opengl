@@ -13,7 +13,7 @@ namespace OpenTK_library.OpenGL.OpenGL4
         
         private readonly IOpenGLObjectFactory openGLFactory;
         private int _fbo = 0;
-        private List<Renderbuffer> _rbos;
+        private List<IRenderbuffer> _rbos;
         private List<ITexture> _tbos;
         private FramebufferErrorCode _error_code = FramebufferErrorCode.FramebufferComplete;
         private FramebufferStatus _status = FramebufferStatus.FramebufferComplete;
@@ -24,7 +24,7 @@ namespace OpenTK_library.OpenGL.OpenGL4
         private bool _stencil = false;
 
         public int Object { get => this._fbo; }
-        public List<Renderbuffer> Renderbuffers { get => this._rbos; }
+        public List<IRenderbuffer> Renderbuffers { get => this._rbos; }
         public List<ITexture> Textures { get => this._tbos; }
 
         public Framebuffer4(IOpenGLObjectFactory openGLFactory)
@@ -113,16 +113,16 @@ namespace OpenTK_library.OpenGL.OpenGL4
             }
             else // if (kind == Kind.renderbuffer)
             {
-                this._rbos = new List<Renderbuffer>();
+                this._rbos = new List<IRenderbuffer>();
 
-                var rbo_ca0 = new Renderbuffer();
+                var rbo_ca0 = openGLFactory.NewRenderbuffer();
                 this._rbos.Add(rbo_ca0);
                 rbo_ca0.Create(cx, cy, false, false);
                 GL.FramebufferRenderbuffer(FramebufferTarget.Framebuffer, FramebufferAttachment.ColorAttachment0, RenderbufferTarget.Renderbuffer, rbo_ca0.Object);
 
                 if (depth || stencil)
                 {
-                    var rbo_ds = new Renderbuffer();
+                    var rbo_ds = openGLFactory.NewRenderbuffer();
                     this._rbos.Add(rbo_ds);
                     rbo_ds.Create(cx, cy, depth, stencil);
                     FramebufferAttachment attachment = FramebufferAttachment.DepthStencilAttachment;

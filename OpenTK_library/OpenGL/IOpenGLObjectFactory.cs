@@ -38,5 +38,7 @@
         public abstract ITexture NewTexture();
 
         public abstract IFramebuffer NewFramebuffer();
+
+        public abstract IRenderbuffer NewRenderbuffer();
     }
 }

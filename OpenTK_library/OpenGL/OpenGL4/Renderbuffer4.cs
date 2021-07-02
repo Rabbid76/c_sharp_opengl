@@ -1,25 +1,23 @@
 ﻿using System;
-using OpenTK.Graphics.OpenGL4; // GL
+using OpenTK.Graphics.OpenGL4;
 
-namespace OpenTK_library.OpenGL
+namespace OpenTK_library.OpenGL.OpenGL4
 {
-    public class Renderbuffer
-        : IDisposable
+    public class Renderbuffer4 : IRenderbuffer
     {
         private bool _disposed = false;
-        private bool _buffer_specification_4 = true;
-
+        
         private int _rbo = 0;
         private int _cx = 0;
         private int _cy = 0;
-        RenderbufferStorage _internal_format = RenderbufferStorage.Rgba8;
+        private RenderbufferStorage _internal_format = RenderbufferStorage.Rgba8;
 
-        public int Object { get { return this._rbo; } }
+        public int Object { get => this._rbo; }
 
-        public Renderbuffer()
+        public Renderbuffer4()
         { }
 
-        ~Renderbuffer()
+        ~Renderbuffer4()
         {
             GL.DeleteBuffer(this._rbo);
         }
@@ -54,18 +52,10 @@ namespace OpenTK_library.OpenGL
             else if (stencil)
                 this._internal_format = RenderbufferStorage.StencilIndex8;
 
-            if (this._buffer_specification_4)
-            {
-                GL.CreateRenderbuffers(1, out this._rbo);
-                GL.NamedRenderbufferStorage(this._rbo, _internal_format, _cx, _cy);
-            }
-            else
-            {
-                this._rbo = GL.GenRenderbuffer();
-                GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, this._rbo);
-                GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, _internal_format, _cx, _cy);
-                GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, 0);
-            }
+            this._rbo = GL.GenRenderbuffer();
+            GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, this._rbo);
+            GL.RenderbufferStorage(RenderbufferTarget.Renderbuffer, _internal_format, _cx, _cy);
+            GL.BindRenderbuffer(RenderbufferTarget.Renderbuffer, 0);
         }
     }
 }
