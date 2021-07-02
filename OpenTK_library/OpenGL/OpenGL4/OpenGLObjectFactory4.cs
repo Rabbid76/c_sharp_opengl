@@ -14,5 +14,8 @@
 
         public override ITexture NewTexture() =>
             immutableTexture ? new Texture4Immutable() : new Texture4();
+
+        public override IFramebuffer NewFramebuffer() =>
+            dsa ? new Framebuffer4DSA(this) : new Framebuffer4(this);
     }
 }

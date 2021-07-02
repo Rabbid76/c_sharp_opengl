@@ -48,7 +48,7 @@ namespace OpenTK_exmaple_4
 
         private IProgram _compute_prog;
         private StorageBuffer<TCoordinate> _coord_ssbo;
-        private Framebuffer _fbo;
+        private IFramebuffer _fbo;
         private int _image_cx = 512;
         private int _image_cy = 512;
         private int _frame = 0;
@@ -171,8 +171,8 @@ namespace OpenTK_exmaple_4
             
             // framebuffers
 
-            _fbo = new Framebuffer();
-            _fbo.Create(_image_cx, _image_cy, Framebuffer.Kind.texture, Framebuffer.Format.RGBA_F32, true, false);
+            _fbo = openGLFactory.NewFramebuffer();
+            _fbo.Create(_image_cx, _image_cy, IFramebuffer.Kind.texture, IFramebuffer.Format.RGBA_F32, true, false);
             _fbo.Clear(new Color4(0.2f, 0.1f, 0.0f, 1.0f));
 
             // states

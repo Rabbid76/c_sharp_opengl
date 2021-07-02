@@ -24,10 +24,19 @@
             return NewProgram(shader_source);
         }
 
+        public IFramebuffer CreateFrambuffer(int cx, int cy, IFramebuffer.Kind kind, bool depth, bool stencil)
+        {
+            var fb = NewFramebuffer();
+            fb.Create(cx, cy, kind, IFramebuffer.Format.RGBA_8, depth, stencil);
+            return fb;
+        }
+
         public abstract IProgram NewProgram((ShaderType, string)[] shader_source);
 
         public abstract IVertexArrayObject NewVertexArrayObject();
 
         public abstract ITexture NewTexture();
+
+        public abstract IFramebuffer NewFramebuffer();
     }
 }

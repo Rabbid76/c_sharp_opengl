@@ -91,7 +91,7 @@ namespace OpenTK_stereoscopic_example_1.Model
         private StorageBuffer<TMat44> _model_ssbo;
         private StorageBuffer<TLightSource> _light_ssbo;
         private PixelPackBuffer<float> _depth_pack_buffer;
-        private List<Framebuffer> _fbos;
+        private List<IFramebuffer> _fbos;
         private IVertexArrayObject _quad_vao;
 
         private Matrix4 _view = Matrix4.Identity;
@@ -627,12 +627,12 @@ namespace OpenTK_stereoscopic_example_1.Model
                     _fbos.Clear();
                 }
 
-                _fbos = new List<Framebuffer>();
-                _fbos.Add(new Framebuffer());
-                _fbos[0].Create(cx, cy, Framebuffer.Kind.texture, Framebuffer.Format.RGBA_F32, true, false);
+                _fbos = new List<IFramebuffer>();
+                _fbos.Add(openGLFactory.NewFramebuffer());
+                _fbos[0].Create(cx, cy, IFramebuffer.Kind.texture, IFramebuffer.Format.RGBA_F32, true, false);
                 _fbos[0].Clear();
-                _fbos.Add(new Framebuffer());
-                _fbos[1].Create(cx, cy, Framebuffer.Kind.texture, Framebuffer.Format.RGBA_F32, true, false);
+                _fbos.Add(openGLFactory.NewFramebuffer());
+                _fbos[1].Create(cx, cy, IFramebuffer.Kind.texture, IFramebuffer.Format.RGBA_F32, true, false);
                 _fbos[1].Clear();
             }
 

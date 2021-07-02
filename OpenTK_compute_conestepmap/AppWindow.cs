@@ -23,7 +23,7 @@ namespace OpenTK_compute_conestepmap
         private DebugCallback _debug_callback = new DebugCallback();
 
         private List<TextureGenerator> _generators;
-        private List<Framebuffer> _fbos;
+        private List<IFramebuffer> _fbos;
         private int _image_cx = 512; //1024;
         private int _image_cy = 512; //1024;
         private int _frame = 0;
@@ -99,15 +99,15 @@ namespace OpenTK_compute_conestepmap
 
             // framebuffers
 
-            _fbos = new List<Framebuffer>();
-            _fbos.Add(new Framebuffer());
-            _fbos[0].Create(_image_cx, _image_cy, Framebuffer.Kind.texture, Framebuffer.Format.RGBA_F32, true, false);
+            _fbos = new List<IFramebuffer>();
+            _fbos.Add(openGLFactory.NewFramebuffer());
+            _fbos[0].Create(_image_cx, _image_cy, IFramebuffer.Kind.texture, IFramebuffer.Format.RGBA_F32, true, false);
             _fbos[0].Clear();
-            _fbos.Add(new Framebuffer());
-            _fbos[1].Create(_image_cx, _image_cy, Framebuffer.Kind.texture, Framebuffer.Format.RGBA_F32, true, false);
+            _fbos.Add(openGLFactory.NewFramebuffer());
+            _fbos[1].Create(_image_cx, _image_cy, IFramebuffer.Kind.texture, IFramebuffer.Format.RGBA_F32, true, false);
             _fbos[1].Clear();
-            _fbos.Add(new Framebuffer());
-            _fbos[2].Create(_image_cx, _image_cy, Framebuffer.Kind.texture, Framebuffer.Format.RGBA_F32, true, false);
+            _fbos.Add(openGLFactory.NewFramebuffer());
+            _fbos[2].Create(_image_cx, _image_cy, IFramebuffer.Kind.texture, IFramebuffer.Format.RGBA_F32, true, false);
             _fbos[2].Clear();
 
             // create generators
