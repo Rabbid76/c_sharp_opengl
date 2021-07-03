@@ -80,9 +80,9 @@ namespace OpenTK_stereoscopic_example_1.Model
         private int _cx = 0;
         private int _cy = 0;
         private float _far = 100.0f;
-        private OpenTK_library.OpenGL.Version _version = new OpenTK_library.OpenGL.Version();
-        private Extensions _extensions = new Extensions();
-        private DebugCallback _debug_callback = new DebugCallback();
+        private IVersionInformation _version;
+        private IExtensionInformation _extensions;
+        private IDebugCallback _debug_callback;
 
         private OpenTK_library.Scene.Model _model;
         private IProgram _draw_prog;
@@ -117,6 +117,10 @@ namespace OpenTK_stereoscopic_example_1.Model
 
         public OpenTK_AssimpModel()
         {
+            _version = openGLFactory.NewVersionInformation(Console.WriteLine);
+            _extensions = openGLFactory.NewExtensionInformation();
+            _debug_callback = openGLFactory.NewDebugCallback(Console.WriteLine);
+
             // add "built-in" meshs
             _model_names[_name_trefoil_knot] = _name_trefoil_knot;
 

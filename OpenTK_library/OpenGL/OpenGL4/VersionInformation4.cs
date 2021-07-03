@@ -1,10 +1,11 @@
 ﻿using System;
-using OpenTK.Graphics.OpenGL4; // GL
+using OpenTK.Graphics.OpenGL4;
 
-namespace OpenTK_library.OpenGL
+namespace OpenTK_library.OpenGL.OpenGL4
 {
-    public class Version
+    internal class VersionInformation4 : IVersionInformation
     {
+        private readonly Action<string> _log;
         private string _vendor;
         private string _renderer;
         private string _version;
@@ -12,8 +13,10 @@ namespace OpenTK_library.OpenGL
         private int _major;
         private int _minor;
 
-        public Version()
-        {}
+        public VersionInformation4(Action<string> log)
+        {
+            _log = log;
+        }
 
         // Get OpenGL version information
         public void Retrieve()
@@ -25,11 +28,11 @@ namespace OpenTK_library.OpenGL
             this._major = GL.GetInteger(GetPName.MajorVersion);
             this._minor = GL.GetInteger(GetPName.MinorVersion);
 
-            Console.WriteLine("OpenGL vendor:   " + this._vendor);
-            Console.WriteLine("OpenGL renderer: " + this._renderer);
-            Console.WriteLine("OpenGL version:  " + this._version);
-            Console.WriteLine("GLSL   version:  " + this._glsl_version);
-            Console.WriteLine("OpenGL " + this._major.ToString() + "." + this._minor.ToString());
+            _log("OpenGL vendor:   " + this._vendor);
+            _log("OpenGL renderer: " + this._renderer);
+            _log("OpenGL version:  " + this._version);
+            _log("GLSL   version:  " + this._glsl_version);
+            _log("OpenGL " + this._major.ToString() + "." + this._minor.ToString());
         }
     }
 }

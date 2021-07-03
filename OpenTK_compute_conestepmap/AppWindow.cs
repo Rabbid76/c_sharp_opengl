@@ -18,9 +18,9 @@ namespace OpenTK_compute_conestepmap
         private bool _disposed = false;
         private int _cx = 0;
         private int _cy = 0;
-        private OpenTK_library.OpenGL.Version _version = new OpenTK_library.OpenGL.Version();
-        private Extensions _extensions = new Extensions();
-        private DebugCallback _debug_callback = new DebugCallback();
+        private IVersionInformation _version;
+        private IExtensionInformation _extensions;
+        private IDebugCallback _debug_callback;
 
         private List<TextureGenerator> _generators;
         private List<IFramebuffer> _fbos;
@@ -80,6 +80,10 @@ namespace OpenTK_compute_conestepmap
         //! On load window (once)
         protected override void OnLoad()
         {
+            _version = openGLFactory.NewVersionInformation(Console.WriteLine);
+            _extensions = openGLFactory.NewExtensionInformation();
+            _debug_callback = openGLFactory.NewDebugCallback(Console.WriteLine);
+
             // Version strings
             _version.Retrieve();
 

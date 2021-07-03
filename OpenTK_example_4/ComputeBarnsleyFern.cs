@@ -42,9 +42,9 @@ namespace OpenTK_exmaple_4
         private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4();
         private bool _disposedValue = false;
 
-        private OpenTK_library.OpenGL.Version _version = new OpenTK_library.OpenGL.Version();
-        private Extensions _extensions = new Extensions();
-        private DebugCallback _debug_callback = new DebugCallback();
+        private IVersionInformation _version;
+        private IExtensionInformation _extensions;
+        private IDebugCallback _debug_callback;
 
         private IProgram _compute_prog;
         private StorageBuffer<TCoordinate> _coord_ssbo;
@@ -96,6 +96,10 @@ namespace OpenTK_exmaple_4
         //! On load window (once)
         protected override void OnLoad()
         {
+            _version = openGLFactory.NewVersionInformation(Console.WriteLine);
+            _extensions = openGLFactory.NewExtensionInformation();
+            _debug_callback = openGLFactory.NewDebugCallback(Console.WriteLine);
+
             // Version strings
             _version.Retrieve();
 

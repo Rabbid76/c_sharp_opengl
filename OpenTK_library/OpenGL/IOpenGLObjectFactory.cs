@@ -1,4 +1,6 @@
-﻿namespace OpenTK_library.OpenGL
+﻿using System;
+
+namespace OpenTK_library.OpenGL
 {
     public abstract class IOpenGLObjectFactory
     {
@@ -40,5 +42,11 @@
         public abstract IFramebuffer NewFramebuffer();
 
         public abstract IRenderbuffer NewRenderbuffer();
+
+        public abstract IVersionInformation NewVersionInformation(Action<string> log);
+
+        public abstract IExtensionInformation NewExtensionInformation();
+
+        public abstract IDebugCallback NewDebugCallback(Action<string> log);
     }
 }

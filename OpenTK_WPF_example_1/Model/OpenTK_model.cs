@@ -49,9 +49,9 @@ namespace OpenTK_WPF_example_1.Model
         private bool _disposed = false;
         private int _cx = 0;
         private int _cy = 0;
-        private OpenTK_library.OpenGL.Version _version = new OpenTK_library.OpenGL.Version();
-        private Extensions _extensions = new Extensions();
-        private DebugCallback _debug_callback = new DebugCallback();
+        private IVersionInformation _version;
+        private IExtensionInformation _extensions;
+        private IDebugCallback _debug_callback;
 
         private IVertexArrayObject _test_vao;
         private IProgram _test_prog;
@@ -64,7 +64,11 @@ namespace OpenTK_WPF_example_1.Model
         double _period = 0;
 
         public OpenTK_Model()
-        { }
+        {
+            _version = openGLFactory.NewVersionInformation(Console.WriteLine);
+            _extensions = openGLFactory.NewExtensionInformation();
+            _debug_callback = openGLFactory.NewDebugCallback(Console.WriteLine);
+        }
 
         protected virtual void Dispose(bool disposing)
         {

@@ -4,7 +4,7 @@ using OpenTK.Graphics.OpenGL4;
 
 namespace OpenTK_library.OpenGL.OpenGL4
 {
-    public class Texture4 : ITexture
+    internal class Texture4 : ITexture
     {
         private bool _disposed = false;
         

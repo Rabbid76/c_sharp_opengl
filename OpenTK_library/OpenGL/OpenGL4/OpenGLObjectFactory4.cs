@@ -1,4 +1,6 @@
-﻿namespace OpenTK_library.OpenGL.OpenGL4
+﻿using System;
+
+namespace OpenTK_library.OpenGL.OpenGL4
 {
     public class OpenGLObjectFactory4 : IOpenGLObjectFactory
     {
@@ -20,5 +22,14 @@
 
         public override IRenderbuffer NewRenderbuffer() =>
             dsa ? new Renderbuffer4DSA() : new Renderbuffer4();
+
+        public override IVersionInformation NewVersionInformation(Action<string> log) =>
+            new VersionInformation4(log);
+
+        public override IExtensionInformation NewExtensionInformation() =>
+            new ExtensionInformation4();
+
+        public override IDebugCallback NewDebugCallback(Action<string> log) =>
+            new DebugCallback4(log);
     }
 }

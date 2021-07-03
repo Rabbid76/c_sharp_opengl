@@ -1,29 +1,31 @@
 ﻿using System;
 using System.Reflection;
-using OpenTK.Graphics.OpenGL4; // GL
-
 using System.Runtime.InteropServices;
+using OpenTK.Graphics.OpenGL4;
 
-namespace OpenTK_library.OpenGL
+namespace OpenTK_library.OpenGL.OpenGL4
 {
-    public class DebugCallback
+    internal class DebugCallback4 : IDebugCallback
     {
-        private bool _errors_only = false; 
+        private readonly Action<string> _log;
+        private bool _errors_only;
 
-        public bool ErrorsOnly 
+        public bool ErrorsOnly
         {
             get => _errors_only;
             //set => _errors_only = value; // TODO update message filter
         }
 
-        public DebugCallback()
-        {}
+        public DebugCallback4(Action<string> log)
+        {
+            _log = log;
+        }
 
         // Callback for OpenGL debug message
-        public static void DebugProcCallBack(DebugSource source, DebugType type, int id, DebugSeverity severity, int length, IntPtr message, IntPtr userParam)
+        public void DebugProcCallBack(DebugSource source, DebugType type, int id, DebugSeverity severity, int length, IntPtr message, IntPtr userParam)
         {
             string message_str = Marshal.PtrToStringAnsi(message);
-            Console.WriteLine(message_str);
+            _log(message_str);
         }
 
         // create end enable debug message callback

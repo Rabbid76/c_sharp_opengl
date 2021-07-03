@@ -54,9 +54,9 @@ namespace OpenTK_example_2
         private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4();
         private bool _disposed = false;
 
-        private OpenTK_library.OpenGL.Version _version = new OpenTK_library.OpenGL.Version();
-        private Extensions _extensions = new Extensions();
-        private DebugCallback _debug_callback = new DebugCallback();
+        private IVersionInformation _version;
+        private IExtensionInformation _extensions;
+        private IDebugCallback _debug_callback;
 
         private IVertexArrayObject _test_vao;
         private IProgram _test_prog;
@@ -113,6 +113,10 @@ namespace OpenTK_example_2
         //! On load window (once)
         protected override void OnLoad()
         {
+            _version = openGLFactory.NewVersionInformation(Console.WriteLine);
+            _extensions = openGLFactory.NewExtensionInformation();
+            _debug_callback = openGLFactory.NewDebugCallback(Console.WriteLine);
+
             // Version strings
             _version.Retrieve();
 

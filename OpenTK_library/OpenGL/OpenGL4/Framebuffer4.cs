@@ -5,7 +5,7 @@ using OpenTK.Graphics.OpenGL4;
 
 namespace OpenTK_library.OpenGL.OpenGL4
 {
-    public class Framebuffer4 : IFramebuffer
+    internal class Framebuffer4 : IFramebuffer
     {
         // TODO update framebuffer size
 

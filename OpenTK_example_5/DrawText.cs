@@ -1,4 +1,5 @@
-﻿using OpenTK.Mathematics;      // Vector2, Vector3, Vector4, Matrix4
+﻿using System;
+using OpenTK.Mathematics;      // Vector2, Vector3, Vector4, Matrix4
 using OpenTK.Graphics.OpenGL4; // GL
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
@@ -13,9 +14,9 @@ namespace OpenTK_example_5
         private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4();
         private bool _disposedValue = false;
 
-        private OpenTK_library.OpenGL.Version _version = new OpenTK_library.OpenGL.Version();
-        private Extensions _extensions = new Extensions();
-        private DebugCallback _debug_callback = new DebugCallback();
+        private IVersionInformation _version;
+        private IExtensionInformation _extensions;
+        private IDebugCallback _debug_callback;
 
         private IProgram _text_prog;
         private FreeTypeFont _font;
@@ -61,6 +62,10 @@ namespace OpenTK_example_5
         //! On load window (once)
         protected override void OnLoad()
         {
+            _version = openGLFactory.NewVersionInformation(Console.WriteLine);
+            _extensions = openGLFactory.NewExtensionInformation();
+            _debug_callback = openGLFactory.NewDebugCallback(Console.WriteLine);
+
             // Version strings
             _version.Retrieve();
 

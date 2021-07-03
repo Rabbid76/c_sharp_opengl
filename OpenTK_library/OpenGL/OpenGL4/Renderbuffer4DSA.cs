@@ -3,7 +3,7 @@ using OpenTK.Graphics.OpenGL4;
 
 namespace OpenTK_library.OpenGL.OpenGL4
 {
-    public class Renderbuffer4DSA : IRenderbuffer
+    internal class Renderbuffer4DSA : IRenderbuffer
     {
         private bool _disposed = false;
         
