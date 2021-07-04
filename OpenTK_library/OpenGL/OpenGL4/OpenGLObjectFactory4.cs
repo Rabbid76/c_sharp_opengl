@@ -8,6 +8,15 @@ namespace OpenTK_library.OpenGL.OpenGL4
         public bool vaoSeparateFormat = true;
         public bool immutableTexture = true;
 
+        public override IVersionInformation NewVersionInformation(Action<string> log) =>
+            new VersionInformation4(log);
+
+        public override IExtensionInformation NewExtensionInformation() =>
+            new ExtensionInformation4();
+
+        public override IDebugCallback NewDebugCallback(Action<string> log) =>
+            new DebugCallback4(log);
+
         public override IProgram NewProgram((ShaderType, string)[] shader_source) =>
             new Program4(shader_source);
 
@@ -23,13 +32,10 @@ namespace OpenTK_library.OpenGL.OpenGL4
         public override IRenderbuffer NewRenderbuffer() =>
             dsa ? new Renderbuffer4DSA() : new Renderbuffer4();
 
-        public override IVersionInformation NewVersionInformation(Action<string> log) =>
-            new VersionInformation4(log);
+        public override IStorageBuffer NewStorageBuffer() =>
+            dsa ? new StorageBuffer4DSA() : new StorageBuffer4();
 
-        public override IExtensionInformation NewExtensionInformation() =>
-            new ExtensionInformation4();
-
-        public override IDebugCallback NewDebugCallback(Action<string> log) =>
-            new DebugCallback4(log);
+        public override IPixelPackBuffer NewPixelPackBuffer() =>
+            dsa ? new PixelPackBuffer4DSA() : new PixelPackBuffer4();
     }
 }

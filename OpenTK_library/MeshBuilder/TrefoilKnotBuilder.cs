@@ -12,9 +12,9 @@ namespace OpenTK_library.MeshBuilder
     public class TrefoilKnotModel
         : OpenTK_library.Scene.Model
     {
-        public static TrefoilKnotBuilder Create(int slices = 256, int stacks = 32, float ra = 0.6f, float rb = 0.2f, float rc = 0.4f, float rd = 0.175f, float[] c = null)
+        public static TrefoilKnotBuilder Create(IOpenGLObjectFactory objectFactory, int slices = 256, int stacks = 32, float ra = 0.6f, float rb = 0.2f, float rc = 0.4f, float rd = 0.175f, float[] c = null)
         {
-            return new TrefoilKnotBuilder(slices, stacks, ra, rb, rc, rd, c);
+            return new TrefoilKnotBuilder(objectFactory, slices, stacks, ra, rb, rc, rd, c);
         }
 
         public class TrefoilKnotBuilder
@@ -28,12 +28,12 @@ namespace OpenTK_library.MeshBuilder
             }
 
 
-            public TrefoilKnotBuilder(int slices, int stacks, float ra, float rb, float rc, float rd, float[] c)
+            public TrefoilKnotBuilder(IOpenGLObjectFactory objectFactory, int slices, int stacks, float ra, float rb, float rc, float rd, float[] c)
             {
                 (float[] attributes, uint[] indices) = new TrefoilKnot(slices, stacks, ra, rb, rc, rd, c).Create();
                 int tuple_size = 12;
 
-                ModelNode node = new ModelNode();
+                ModelNode node = new ModelNode(objectFactory);
                 _model._root_node = node;
                 node.ModelMatrix = Matrix4.Identity;
                 AABB mesh_box = new AABB();

@@ -101,10 +101,11 @@ namespace OpenTK_library.Scene
     public class ModelNode
         : OpenTK_library.OpenGL.Object
     {
+        private readonly IOpenGLObjectFactory _openGLFactory;
         protected Matrix4 _model;
         protected List<Mesh> _meshs = new List<Mesh>();
         protected List<ModelNode> _children = new List<ModelNode>();
-        protected StorageBuffer<TMat44> _model_ssbo;
+        protected IStorageBuffer _model_ssbo;
         protected bool _model_ssbo_needs_update = true;
 
         protected override void DisposeObjects()
@@ -125,13 +126,13 @@ namespace OpenTK_library.Scene
             set => _model = value;
         }
 
-        public StorageBuffer<TMat44> ModelSSBO
+        public IStorageBuffer ModelSSBO
         {
             get
             {
                 if (_model_ssbo == null)
                 {
-                    _model_ssbo = new StorageBuffer<TMat44>();
+                    _model_ssbo = _openGLFactory.NewStorageBuffer();
                     TMat44 model = new TMat44(_model);
                     _model_ssbo.Create(ref model);
                 }
@@ -145,12 +146,17 @@ namespace OpenTK_library.Scene
             set => _model_ssbo_needs_update = value;
         }
 
+        public ModelNode(IOpenGLObjectFactory openGLFactory)
+        {
+            _openGLFactory = openGLFactory;
+        }
+
         public void UpdateModel(Matrix4 mode_matrix)
         {
             TMat44 model = new TMat44(mode_matrix);
             if (_model_ssbo == null)
             {
-                _model_ssbo = new StorageBuffer<TMat44>();
+                _model_ssbo = _openGLFactory.NewStorageBuffer();
                 _model_ssbo.Create(ref model);
             }
             else

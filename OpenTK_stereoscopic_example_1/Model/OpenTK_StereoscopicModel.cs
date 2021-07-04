@@ -87,10 +87,10 @@ namespace OpenTK_stereoscopic_example_1.Model
         private OpenTK_library.Scene.Model _model;
         private IProgram _draw_prog;
         private IProgram _stereo_prog;
-        private StorageBuffer<TVP> _vp_ssbo;
-        private StorageBuffer<TMat44> _model_ssbo;
-        private StorageBuffer<TLightSource> _light_ssbo;
-        private PixelPackBuffer<float> _depth_pack_buffer;
+        private IStorageBuffer _vp_ssbo;
+        private IStorageBuffer _model_ssbo;
+        private IStorageBuffer _light_ssbo;
+        private IPixelPackBuffer _depth_pack_buffer;
         private List<IFramebuffer> _fbos;
         private IVertexArrayObject _quad_vao;
 
@@ -335,22 +335,22 @@ namespace OpenTK_stereoscopic_example_1.Model
 
             // Model view projection shader storage block objects and buffers
             TVP vp = new TVP(Matrix4.Identity, Matrix4.Identity);
-            this._vp_ssbo = new StorageBuffer<TVP>();
+            this._vp_ssbo = openGLFactory.NewStorageBuffer();
             this._vp_ssbo.Create(ref vp);
             this._vp_ssbo.Bind(1);
 
             TMat44 model = new TMat44(Matrix4.Identity);
-            this._model_ssbo = new StorageBuffer<TMat44>();
+            this._model_ssbo = openGLFactory.NewStorageBuffer();
             this._model_ssbo.Create(ref model);
             this._model_ssbo.Bind(2);
 
             TLightSource light_source = new TLightSource(new Vector4(-1.0f, -1.0f, -5.0f, 0.0f), 0.0f, 1.0f, 0.0f, 10.0f);
-            this._light_ssbo = new StorageBuffer<TLightSource>();
+            this._light_ssbo = openGLFactory.NewStorageBuffer();
             this._light_ssbo.Create(ref light_source);
             this._light_ssbo.Bind(3);
 
-            this._depth_pack_buffer = new PixelPackBuffer<float>();
-            this._depth_pack_buffer.Create();
+            this._depth_pack_buffer = openGLFactory.NewPixelPackBuffer();
+            this._depth_pack_buffer.Create<float>();
 
             // Create stereoscopic filter shader program
 
@@ -506,7 +506,7 @@ namespace OpenTK_stereoscopic_example_1.Model
                     if (resource_name == _name_trefoil_knot)
                     {
                         // Create trefoil knot model
-                        _model = TrefoilKnotModel.Create(256, 32);
+                        _model = TrefoilKnotModel.Create(openGLFactory, 256, 32);
                     }
                     else
                     {
@@ -515,7 +515,7 @@ namespace OpenTK_stereoscopic_example_1.Model
                         //Assembly assembly = Assembly.GetExecutingAssembly();
                         //Stream resource_stream = assembly.GetManifestResourceStream(resource_name);
                         //_model = Model.Create(resource_stream);
-                        _model = AssimpModel.Create(resource_name);
+                        _model = AssimpModel.Create(openGLFactory, resource_name);
                     }
                     _models[_model_id] = _model;
                 }

@@ -1,26 +1,20 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using OpenTK.Graphics.OpenGL4; // GL
+using OpenTK.Graphics.OpenGL4;
 
-namespace OpenTK_library.OpenGL
+namespace OpenTK_library.OpenGL.OpenGL4
 {
-    public class StorageBuffer<T_DATA>
-        : IDisposable
-        where T_DATA : struct
+    internal class StorageBuffer4DSA : IStorageBuffer
     {
-        public enum Usage { Read, Write, ReadWrite };
-
         private bool _disposed = false;
-        private bool _buffer_specification_4 = true;
-
         private int _ssbo = 0;
 
-        public int Object { get { return this._ssbo; } }
+        public int Object { get => this._ssbo; }
 
-        public StorageBuffer()
+        public StorageBuffer4DSA()
         { }
 
-        ~StorageBuffer()
+        ~StorageBuffer4DSA()
         {
             GL.DeleteBuffer(this._ssbo);
         }
@@ -42,36 +36,20 @@ namespace OpenTK_library.OpenGL
         }
 
         //! Create shader storage buffer object
-        public void Create(ref T_DATA data, Usage usage = Usage.Write)
+        public void Create<T_DATA>(ref T_DATA data, IStorageBuffer.Usage usage = IStorageBuffer.Usage.Write)
         {
             int data_size = Marshal.SizeOf(default(T_DATA));
             IntPtr data_ptr = Marshal.AllocHGlobal(data_size);
             Marshal.StructureToPtr(data, data_ptr, false);
 
-            if (_buffer_specification_4)
-            {
-                BufferStorageFlags storage = BufferStorageFlags.DynamicStorageBit | BufferStorageFlags.MapPersistentBit;
-                if (usage == Usage.Write || usage == Usage.ReadWrite)
-                    storage = storage | BufferStorageFlags.MapWriteBit;
-                if (usage == Usage.Read || usage == Usage.ReadWrite)
-                    storage = storage | BufferStorageFlags.MapReadBit;
+            BufferStorageFlags storage = BufferStorageFlags.DynamicStorageBit | BufferStorageFlags.MapPersistentBit;
+            if (usage == IStorageBuffer.Usage.Write || usage == IStorageBuffer.Usage.ReadWrite)
+                storage = storage | BufferStorageFlags.MapWriteBit;
+            if (usage == IStorageBuffer.Usage.Read || usage == IStorageBuffer.Usage.ReadWrite)
+                storage = storage | BufferStorageFlags.MapReadBit;
 
-                GL.CreateBuffers(1, out this._ssbo);
-                GL.NamedBufferStorage(this._ssbo, data_size, data_ptr, storage);
-            }
-            else
-            {
-                BufferUsageHint hint = BufferUsageHint.DynamicCopy;
-                if (usage == Usage.Write)
-                    hint = BufferUsageHint.DynamicDraw;
-                else if (usage == Usage.Write)
-                    hint = BufferUsageHint.DynamicRead;
-
-                this._ssbo = GL.GenBuffer();
-                GL.BindBuffer(BufferTarget.ShaderStorageBuffer, this._ssbo);
-                GL.BufferData(BufferTarget.ShaderStorageBuffer, data_size, data_ptr, hint);
-                GL.BindBuffer(BufferTarget.ShaderStorageBuffer, 0);
-            }
+            GL.CreateBuffers(1, out this._ssbo);
+            GL.NamedBufferStorage(this._ssbo, data_size, data_ptr, storage);
 
             Marshal.FreeHGlobal(data_ptr);
         }
@@ -83,13 +61,13 @@ namespace OpenTK_library.OpenGL
         }
 
         //! Update Buffer data
-        public void Update(ref T_DATA data)
+        public void Update<T_DATA>(ref T_DATA data) where T_DATA : struct
         {
             // TODO 
             // map buffer (`_buffer_specification_4`)
 
             int data_size = Marshal.SizeOf(default(T_DATA));
-            
+
             GL.BindBuffer(BufferTarget.ShaderStorageBuffer, this._ssbo);
             GL.BufferSubData<T_DATA>(BufferTarget.ShaderStorageBuffer, IntPtr.Zero, data_size, ref data);
             GL.BindBuffer(BufferTarget.ShaderStorageBuffer, 0);
@@ -104,6 +82,5 @@ namespace OpenTK_library.OpenGL
             GL.BufferSubData(BufferTarget.ShaderStorageBuffer, offset_as_ptr, data_size, data_ptr);
             GL.BindBuffer(BufferTarget.ShaderStorageBuffer, 0);
         }
-
     }
 }

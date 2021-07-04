@@ -55,9 +55,9 @@ namespace OpenTK_controls_orbit.Model
 
         private IVertexArrayObject _test_vao;
         private IProgram _test_prog;
-        private StorageBuffer<TMVP> _mvp_ssbo;
-        private StorageBuffer<TLightSource> _light_ssbo;
-        private PixelPackBuffer<float> _depth_pack_buffer;
+        private IStorageBuffer _mvp_ssbo;
+        private IStorageBuffer _light_ssbo;
+        private IPixelPackBuffer _depth_pack_buffer;
 
         private Matrix4 _view = Matrix4.Identity;
         private Matrix4 _projection = Matrix4.Identity;
@@ -203,17 +203,17 @@ namespace OpenTK_controls_orbit.Model
 
             // Model view projection shader storage block objects and buffers
             TMVP mvp = new TMVP(Matrix4.Identity, Matrix4.Identity, Matrix4.Identity);
-            this._mvp_ssbo = new StorageBuffer<TMVP>();
+            this._mvp_ssbo = openGLFactory.NewStorageBuffer();
             this._mvp_ssbo.Create(ref mvp);
             this._mvp_ssbo.Bind(1);
 
             TLightSource light_source = new TLightSource(new Vector4(-1.0f, -0.5f, -2.0f, 0.0f), 0.2f, 0.8f, 0.8f, 10.0f);
-            this._light_ssbo = new StorageBuffer<TLightSource>();
+            this._light_ssbo = openGLFactory.NewStorageBuffer();
             this._light_ssbo.Create(ref light_source);
             this._light_ssbo.Bind(2);
 
-            this._depth_pack_buffer = new PixelPackBuffer<float>();
-            this._depth_pack_buffer.Create();
+            this._depth_pack_buffer = openGLFactory.NewPixelPackBuffer();
+            this._depth_pack_buffer.Create<float>();
 
             // states
 

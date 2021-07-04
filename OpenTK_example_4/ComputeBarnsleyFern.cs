@@ -47,7 +47,7 @@ namespace OpenTK_exmaple_4
         private IDebugCallback _debug_callback;
 
         private IProgram _compute_prog;
-        private StorageBuffer<TCoordinate> _coord_ssbo;
+        private IStorageBuffer _coord_ssbo;
         private IFramebuffer _fbo;
         private int _image_cx = 512;
         private int _image_cy = 512;
@@ -168,9 +168,9 @@ namespace OpenTK_exmaple_4
             this._compute_prog.Generate();
 
             // Model view projection shader storage block objects and buffers
-            _coord_ssbo = new StorageBuffer<TCoordinate>();
+            _coord_ssbo = openGLFactory.NewStorageBuffer();
             TCoordinate coord_data = new TCoordinate(Vector2.Zero);
-            this._coord_ssbo.Create(ref coord_data, StorageBuffer<TCoordinate>.Usage.ReadWrite);
+            this._coord_ssbo.Create(ref coord_data, IStorageBuffer.Usage.ReadWrite);
             this._coord_ssbo.Bind(1);
             
             // framebuffers

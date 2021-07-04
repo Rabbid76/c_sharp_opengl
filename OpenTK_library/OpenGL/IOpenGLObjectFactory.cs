@@ -33,6 +33,12 @@ namespace OpenTK_library.OpenGL
             return fb;
         }
 
+        public abstract IVersionInformation NewVersionInformation(Action<string> log);
+
+        public abstract IExtensionInformation NewExtensionInformation();
+
+        public abstract IDebugCallback NewDebugCallback(Action<string> log);
+
         public abstract IProgram NewProgram((ShaderType, string)[] shader_source);
 
         public abstract IVertexArrayObject NewVertexArrayObject();
@@ -43,10 +49,8 @@ namespace OpenTK_library.OpenGL
 
         public abstract IRenderbuffer NewRenderbuffer();
 
-        public abstract IVersionInformation NewVersionInformation(Action<string> log);
+        public abstract IStorageBuffer NewStorageBuffer();
 
-        public abstract IExtensionInformation NewExtensionInformation();
-
-        public abstract IDebugCallback NewDebugCallback(Action<string> log);
+        public abstract IPixelPackBuffer NewPixelPackBuffer();
     }
 }

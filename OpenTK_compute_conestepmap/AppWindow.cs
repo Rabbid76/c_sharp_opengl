@@ -116,9 +116,9 @@ namespace OpenTK_compute_conestepmap
 
             // create generators
             this._generators = new List<TextureGenerator>();
-            this._generators.Add(new TextureGenerator(TextureGenerator.TType.texture_test1, new ITexture[] { _fbos[0].Textures[0] }));
-            this._generators.Add(new TextureGenerator(TextureGenerator.TType.heightmap_test1, new ITexture[] { _fbos[1].Textures[0] }));
-            this._generators.Add(new TextureGenerator(TextureGenerator.TType.cone_step_map, new ITexture[] { _fbos[2].Textures[0] }, new ITexture[] { _fbos[1].Textures[0] }));
+            this._generators.Add(new TextureGenerator(openGLFactory, TextureGenerator.TType.texture_test1, new ITexture[] { _fbos[0].Textures[0] }));
+            this._generators.Add(new TextureGenerator(openGLFactory, TextureGenerator.TType.heightmap_test1, new ITexture[] { _fbos[1].Textures[0] }));
+            this._generators.Add(new TextureGenerator(openGLFactory, TextureGenerator.TType.cone_step_map, new ITexture[] { _fbos[2].Textures[0] }, new ITexture[] { _fbos[1].Textures[0] }));
 
             foreach (var generator in this._generators)
                 generator.GenetateProgram();

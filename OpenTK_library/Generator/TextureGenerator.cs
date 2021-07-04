@@ -9,10 +9,8 @@ namespace OpenTK_library.Generator
     public class TextureGenerator
         : IDisposable
     {
-        IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4(); // TODO
-
+        private readonly IOpenGLObjectFactory _openGLFactory;
         private bool _disposed = false;
-        //private bool _buffer_specification_4 = true;
 
         public enum TType
         { 
@@ -44,8 +42,9 @@ namespace OpenTK_library.Generator
         ~TextureGenerator()
         {}
 
-        public TextureGenerator(TType type, ITexture[] out_textures, ITexture[] in_textures = null)
+        public TextureGenerator(IOpenGLObjectFactory openGLFactory, TType type, ITexture[] out_textures, ITexture[] in_textures = null)
         {
+            _openGLFactory = openGLFactory;
             _type = type;
             _out_textures = new List<ITexture>(out_textures);
             if (in_textures != null)
@@ -88,7 +87,7 @@ namespace OpenTK_library.Generator
             if (source_code == null || source_code == "")
                 return false;
 
-            _compute_prog = openGLFactory.ComputeShaderProgram(source_code);
+            _compute_prog = _openGLFactory.ComputeShaderProgram(source_code);
             return _compute_prog.Generate();
         }
 

@@ -1,20 +1,18 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using OpenTK.Graphics.OpenGL4; // GL, ShaderType
+using OpenTK.Graphics.OpenGL4;
 
-namespace OpenTK_library.OpenGL
+namespace OpenTK_library.OpenGL.OpenGL4
 {
-    public class PixelPackBuffer<T_DATA>
+    internal class PixelPackBuffer4DSA : IPixelPackBuffer
     {
         private bool _disposed = false;
-        private bool _buffer_specification_4 = true;
-
         private int _ppbo = 0;
 
-        public PixelPackBuffer()
+        public PixelPackBuffer4DSA()
         { }
 
-        ~PixelPackBuffer()
+        ~PixelPackBuffer4DSA()
         {
             GL.DeleteBuffer(this._ppbo);
         }
@@ -35,30 +33,20 @@ namespace OpenTK_library.OpenGL
             GC.SuppressFinalize(this);
         }
 
-        public void Create()
+        public void Create<T_DATA>()
         {
             int data_size = Marshal.SizeOf(default(T_DATA));
 
-            if (_buffer_specification_4)
-            {
-                GL.CreateBuffers(1, out this._ppbo);
-                BufferStorageFlags storage = BufferStorageFlags.MapReadBit | BufferStorageFlags.MapPersistentBit;
-                GL.NamedBufferStorage(this._ppbo, data_size, IntPtr.Zero, storage);
-            }
-            else
-            {
-                this._ppbo = GL.GenBuffer();
-                GL.BindBuffer(BufferTarget.PixelPackBuffer, this._ppbo);
-                GL.BufferData(BufferTarget.PixelPackBuffer, data_size, IntPtr.Zero, BufferUsageHint.StreamCopy);
-                GL.BindBuffer(BufferTarget.PixelPackBuffer, 0);
-            }
+            GL.CreateBuffers(1, out this._ppbo);
+            BufferStorageFlags storage = BufferStorageFlags.MapReadBit | BufferStorageFlags.MapPersistentBit;
+            GL.NamedBufferStorage(this._ppbo, data_size, IntPtr.Zero, storage);
         }
 
-        public float[] ReadDepth(int x, int y, int w=1, int h=1)
+        public float[] ReadDepth(int x, int y, int w = 1, int h = 1)
         {
-            float[] depth = new float[w*h];
+            float[] depth = new float[w * h];
 
-            GL.ReadnPixels<float>(x, y, w, h, PixelFormat.DepthComponent, PixelType.Float, w*h*sizeof(float), depth);
+            GL.ReadnPixels<float>(x, y, w, h, PixelFormat.DepthComponent, PixelType.Float, w * h * sizeof(float), depth);
 
             /*
             TODO : That doesn't work, but at the moment it's completely unclear what causes the issue.

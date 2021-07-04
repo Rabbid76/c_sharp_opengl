@@ -23,20 +23,20 @@ namespace OpenTK_library_assimp.Builder
     public class AssimpModel
         : OpenTK_library.Scene.Model
     {
-        public static AssimpModelBuilder Create(string filename)
+        public static AssimpModelBuilder Create(IOpenGLObjectFactory openGLFactory, string filename)
         {
-            return new AssimpModelBuilder(filename);
+            return new AssimpModelBuilder(openGLFactory, filename);
         }
 
-        public static AssimpModelBuilder Create(Stream filestream)
+        public static AssimpModelBuilder Create(IOpenGLObjectFactory openGLFactory, Stream filestream)
         {
-            return new AssimpModelBuilder(filestream);
+            return new AssimpModelBuilder(openGLFactory, filestream);
         }
 
         public class AssimpModelBuilder
         {
             private AssimpModel _model = new AssimpModel();
-            private IOpenGLObjectFactory openGLFactory = new OpenGLObjectFactory4(); // TODO
+            private IOpenGLObjectFactory _openGLFactory;
 
             public static implicit operator OpenTK_library.Scene.Model(AssimpModelBuilder builder)
             {
@@ -47,8 +47,10 @@ namespace OpenTK_library_assimp.Builder
 
             PostProcessSteps flags = PostProcessPreset.TargetRealTimeMaximumQuality | PostProcessSteps.GenerateUVCoords;
 
-            public AssimpModelBuilder(string filename)
+            public AssimpModelBuilder(IOpenGLObjectFactory openGLFactory, string filename)
             {
+                _openGLFactory = openGLFactory;
+
                 AssimpContext importer = new AssimpContext();
                 importer.SetConfig(new NormalSmoothingAngleConfig(66.0f));
                 _assimpmodel = importer.ImportFile(filename, flags);
@@ -57,8 +59,10 @@ namespace OpenTK_library_assimp.Builder
                 CreateBuffers(_assimpmodel.RootNode, null, ref identity);
             }
 
-            public AssimpModelBuilder(Stream filestream)
+            public AssimpModelBuilder(IOpenGLObjectFactory openGLFactory, Stream filestream)
             {
+                _openGLFactory = openGLFactory;
+
                 AssimpContext importer = new AssimpContext();
                 importer.SetConfig(new NormalSmoothingAngleConfig(66.0f));
                 _assimpmodel = importer.ImportFileFromStream(filestream, flags);
@@ -70,7 +74,7 @@ namespace OpenTK_library_assimp.Builder
             private void CreateBuffers(Node assimpnode, ModelNode parent_node, ref Matrix4x4 model_matrix)
             {
                 // create new mesh
-                ModelNode node = new ModelNode();
+                ModelNode node = new ModelNode(_openGLFactory);
                 if (parent_node != null)
                     parent_node.AddChild(node);
                 else
@@ -240,7 +244,7 @@ namespace OpenTK_library_assimp.Builder
 
                         // setup vertex arrays and index array
                         TVertexFormat[] format = formalist.ToArray();
-                        var vao = openGLFactory.NewVertexArrayObject();
+                        var vao = _openGLFactory.NewVertexArrayObject();
                         vao.AppendVertexBuffer(0, (int)tuple_index, attributes.ToArray());
                         vao.Create(format, indices.ToArray());
 
