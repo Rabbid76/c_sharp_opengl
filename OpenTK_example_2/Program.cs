@@ -6,7 +6,7 @@ namespace OpenTK_example_2
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("create OpeTK window");
+            Console.WriteLine("create OpenTK window");
 
             using (AppWindow game = new AppWindow(400, 300, "OpenTK 3D mesh"))
             {

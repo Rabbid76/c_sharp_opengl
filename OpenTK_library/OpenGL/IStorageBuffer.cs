@@ -10,6 +10,8 @@ namespace OpenTK_library.OpenGL
 
         void Create<T_DATA>(ref T_DATA data, Usage usage = Usage.Write);
 
+        void Create<T_ELEM_TPYE>(T_ELEM_TPYE[] data, Usage usage = Usage.Write) where T_ELEM_TPYE : struct;
+
         void Bind(int binding_point);
 
         void Update<T_DATA>(ref T_DATA data) where T_DATA : struct;

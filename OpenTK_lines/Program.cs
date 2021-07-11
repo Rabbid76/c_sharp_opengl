@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace OpenTK_example_1
+namespace OpenTK_lines
 {
     class Program
     {
@@ -8,9 +8,9 @@ namespace OpenTK_example_1
         {
             Console.WriteLine("create OpenTK window");
 
-            using (Game game = new Game(400, 300, "OpenTK rotate"))
+            using (Lines2D lines = new Lines2D(400, 300, "OpenTK"))
             {
-                game.Run();
+                lines.Run();
             }
         }
     }

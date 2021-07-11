@@ -6,7 +6,7 @@ namespace OpenTK_exmaple_4
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("create OpeTK window");
+            Console.WriteLine("create OpenTK window");
 
             using (ComputeBarnsleyFern game = new ComputeBarnsleyFern(400, 400, "OpenTK compute shader - Barnsley fern"))
             {

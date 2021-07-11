@@ -56,6 +56,24 @@ namespace OpenTK_library.OpenGL.OpenGL4
             Marshal.FreeHGlobal(data_ptr);
         }
 
+        //! Create shader storage buffer object
+        public void Create<T_ELEM_TPYE>(T_ELEM_TPYE[] data, IStorageBuffer.Usage usage = IStorageBuffer.Usage.Write)
+            where T_ELEM_TPYE : struct
+        {
+            int data_size = data.Length * Marshal.SizeOf(typeof(T_ELEM_TPYE));
+
+            BufferUsageHint hint = BufferUsageHint.DynamicCopy;
+            if (usage == IStorageBuffer.Usage.Write)
+                hint = BufferUsageHint.DynamicDraw;
+            else if (usage == IStorageBuffer.Usage.Write)
+                hint = BufferUsageHint.DynamicRead;
+
+            this._ssbo = GL.GenBuffer();
+            GL.BindBuffer(BufferTarget.ShaderStorageBuffer, this._ssbo);
+            GL.BufferData(BufferTarget.ShaderStorageBuffer, data_size, data, hint);
+            GL.BindBuffer(BufferTarget.ShaderStorageBuffer, 0);
+        }
+
         //! Bind to binding point
         public void Bind(int binding_point)
         {

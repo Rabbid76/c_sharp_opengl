@@ -30,6 +30,12 @@
 
 [![](doc/image/OpenTK_example_5.png)](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_example_5)
 
+## Line
+
+[Line](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_lines)
+
+[![](doc/image/OpenTK_lines.png)](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_lines)
+
 ## 3D Geometry
 
 [3D mesh](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_example_3)
