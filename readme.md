@@ -32,7 +32,7 @@
 
 ## Line
 
-[Line](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_lines) - See also [Thick lines with OpenGL core profile](../documentation/thick_line_shader.md) and [Drawing a line in modern OpenGL](https://stackoverflow.com/questions/60440682/drawing-a-line-in-modern-opengl/60440937#60440937)  
+[Line](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_lines) - See also [Thick lines with OpenGL core profile](https://github.com/Rabbid76/graphics-snippets/blob/master/documentation/thick_line_shader.md) and [Drawing a line in modern OpenGL](https://stackoverflow.com/questions/60440682/drawing-a-line-in-modern-opengl/60440937#60440937)  
 
 [![](doc/image/OpenTK_lines.png)](https://github.com/Rabbid76/c_sharp_opengl/tree/master/OpenTK_lines)
 
