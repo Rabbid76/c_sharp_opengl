@@ -10,8 +10,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OpenTK" Version="4.6.3" />
-    <PackageReference Include="OpenTK.Windowing.Desktop" Version="4.6.3" />
+    <PackageReference Include="OpenTK" Version="4.7.1" />
+    <PackageReference Include="OpenTK.Windowing.Desktop" Version="4.7.1" />
   </ItemGroup>
 
   <ItemGroup>

@@ -14,8 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="OpenTK" Version="4.6.3" />
-    <PackageReference Include="OpenTK.Windowing.Desktop" Version="4.6.3" />
+    <PackageReference Include="OpenTK" Version="4.7.1" />
+    <PackageReference Include="OpenTK.Windowing.Desktop" Version="4.7.1" />
     <PackageReference Include="SharpFontCore" Version="0.1.1" />
     <PackageReference Include="SpaceWizards.SharpFont" Version="1.0.1" />
   </ItemGroup>

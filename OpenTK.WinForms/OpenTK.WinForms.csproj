@@ -21,7 +21,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="OpenTK" Version="4.4.0" />
+    <PackageReference Include="OpenTK" Version="4.7.1" />
   </ItemGroup>
 
   <ItemGroup>
