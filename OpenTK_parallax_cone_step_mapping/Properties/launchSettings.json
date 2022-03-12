@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "OpenTK_parallax_cone_step_mapping": {
+      "commandName": "Project",
+      "workingDirectory": "C:\\source\\c#\\c_sharp_opengl"
+    }
+  }
+}
