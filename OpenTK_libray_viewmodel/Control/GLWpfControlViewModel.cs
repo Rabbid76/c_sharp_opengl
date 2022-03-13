@@ -55,6 +55,7 @@ namespace OpenTK_libray_viewmodel.Control
                 MinorVersion = 6,
                 GraphicsContextFlags = OpenTK.Windowing.Common.ContextFlags.Default | OpenTK.Windowing.Common.ContextFlags.Debug,
                 // ContextToUse  = _context
+                //UseDeviceDpi = false
             };
            
             _glc.Start(settings);
@@ -80,8 +81,8 @@ namespace OpenTK_libray_viewmodel.Control
 
         protected void GLC_OnPaint(System.TimeSpan timespawn)
         {
-            _cx = _glc.ActualWidth;
-            _cy = _glc.ActualHeight;
+            _cx = _glc.FrameBufferWidth;
+            _cy = _glc.FrameBufferHeight;
 
             if (_initiliazed == false)
             {
